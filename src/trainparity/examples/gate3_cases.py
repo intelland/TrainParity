@@ -7,7 +7,7 @@ import random
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Protocol, cast
 
 import torch
 from torch import nn
@@ -15,6 +15,18 @@ from torch import nn
 from trainparity.protocols import StepObservation, TrainingState
 
 _HIDDEN_COUNTER = 0
+
+
+class _Scaler(Protocol):
+    def scale(self, outputs: torch.Tensor) -> torch.Tensor: ...
+
+    def step(self, optimizer: torch.optim.Optimizer) -> Any: ...
+
+    def update(self) -> None: ...
+
+    def state_dict(self) -> dict[str, Any]: ...
+
+    def load_state_dict(self, state_dict: dict[str, Any]) -> None: ...
 
 
 @dataclass
@@ -51,7 +63,12 @@ class DeterministicCase:
             ]
         )
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.7)
-        scaler = torch.amp.GradScaler(device.type, enabled=device.type == "cuda", growth_interval=1)
+        scaler = cast(
+            _Scaler,
+            torch.amp.GradScaler(  # type: ignore[attr-defined]
+                device.type, enabled=device.type == "cuda", growth_interval=1
+            ),
+        )
         return Gate3State(model, optimizer, scheduler, scaler=scaler)
 
     def train_step(self, state: TrainingState) -> None:
@@ -72,9 +89,8 @@ class DeterministicCase:
         state.optimizer.zero_grad(set_to_none=True)
         loss = (state.model(features) - target).square().mean()
         assert state.scaler is not None
-        scaler = state.scaler
-        assert isinstance(scaler, torch.amp.GradScaler)
-        scaler.scale(loss).backward()
+        scaler = cast(_Scaler, state.scaler)
+        scaler.scale(loss).backward()  # type: ignore[no-untyped-call]
         scaler.step(state.optimizer)
         scaler.update()
         assert state.scheduler is not None
@@ -96,7 +112,7 @@ class DeterministicCase:
         import numpy as np
 
         numpy_state = cast(tuple[str, Any, int, int, float], np.random.get_state(legacy=True))
-        scaler = cast(torch.amp.GradScaler | None, state.scaler)
+        scaler = cast(_Scaler | None, state.scaler)
         payload: dict[str, Any] = {
             "model": state.model.state_dict(),
             "gradients": {
@@ -104,7 +120,7 @@ class DeterministicCase:
                 for name, parameter in state.model.named_parameters()
             },
             "optimizer": state.optimizer.state_dict(),
-            "scheduler": None if state.scheduler is None else state.scheduler.state_dict(),
+            "scheduler": None if state.scheduler is None else state.scheduler.state_dict(),  # type: ignore[no-untyped-call]
             "scaler": None if scaler is None else scaler.state_dict(),
             "step": state.step,
             "cursor": state.cursor,
@@ -145,8 +161,8 @@ class DeterministicCase:
             assert state.scheduler is not None
             state.scheduler.load_state_dict(checkpoint["scheduler"])
         if "scaler" in checkpoint and checkpoint["scaler"] is not None:
-            assert isinstance(state.scaler, torch.amp.GradScaler)
-            state.scaler.load_state_dict(checkpoint["scaler"])
+            scaler = cast(_Scaler, state.scaler)
+            scaler.load_state_dict(checkpoint["scaler"])
         state.step = int(checkpoint.get("step", state.step))
         state.cursor = int(checkpoint.get("cursor", state.cursor))
         raw_ids = checkpoint.get("last_sample_ids")

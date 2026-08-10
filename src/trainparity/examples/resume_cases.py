@@ -33,7 +33,7 @@ class CorrectResumeCase:
 
     def save(self, state: TrainingState, path: Path) -> None:
         assert state.scheduler is not None
-        torch.save({"model": state.model.state_dict(), "optimizer": state.optimizer.state_dict(), "scheduler": state.scheduler.state_dict(), "step": state.step}, path)
+        torch.save({"model": state.model.state_dict(), "optimizer": state.optimizer.state_dict(), "scheduler": state.scheduler.state_dict(), "step": state.step}, path)  # type: ignore[no-untyped-call]
 
     def load(self, path: Path, seed: int) -> TrainingState:
         checkpoint: dict[str, Any] = torch.load(path, weights_only=True)
