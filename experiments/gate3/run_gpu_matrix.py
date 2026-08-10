@@ -47,13 +47,15 @@ def run_matrix(output: Path, *, repeats: int = 3) -> dict[str, Any]:
             for result in runs
         }
         matched = all(result["outcome"] == expected_outcome for result in runs)
+        component_matched = True
         if expected_component is not None:
-            matched = matched and all(
+            component_matched = all(
                 (result.get("primary_difference") or {}).get("path", "").startswith(
                     expected_component
                 )
                 for result in runs
             )
+            matched = matched and component_matched
         records.append(
             {
                 "name": name,
@@ -61,6 +63,7 @@ def run_matrix(output: Path, *, repeats: int = 3) -> dict[str, Any]:
                 "expected_outcome": expected_outcome,
                 "expected_component": expected_component,
                 "matched": matched,
+                "component_matched": component_matched,
                 "stable": len(signatures) == 1,
                 "runs": runs,
             }
@@ -103,4 +106,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

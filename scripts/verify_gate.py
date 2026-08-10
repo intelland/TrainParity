@@ -799,6 +799,7 @@ at the first divergent step remains available in the raw M3 matrix outputs.
 - CPU repeats: {report['metrics']['cpu_repeat_count']}
 - GPU repeats: {report['metrics']['gpu_repeat_count']}
 - GPU: {report['metrics']['gpu_name']} (Slurm job {report['metrics']['slurm_job_id']})
+- Tests / coverage: {report['metrics']['tests_passed']} passed / {report['metrics']['coverage_percent']}%
 
 ## Exact commands
 
@@ -815,6 +816,7 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
     """Verify fresh-process CPU/GPU resume-equivalence evidence."""
     cpu_path = root / "experiments" / "gate3" / "recorded" / "cpu_matrix.json"
     gpu_path = root / "experiments" / "gate3" / "recorded" / "gpu_matrix.json"
+    test_path = root / "experiments" / "gate3" / "recorded" / "test_summary.json"
     required = [
         root / "src" / "trainparity" / "runner.py",
         root / "src" / "trainparity" / "worker.py",
@@ -827,6 +829,7 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
         root / "docs" / "RESUME_EQUIVALENCE.md",
         cpu_path,
         gpu_path,
+        test_path,
     ]
     criteria: list[dict[str, Any]] = []
 
@@ -843,7 +846,7 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
             "recommendation": "REWORK",
             "summary": "Gate 3 required artifacts are missing; do not begin Gate 4.",
             "criteria": criteria,
-            "metrics": {"faults": [], "fault_count": 0, "faults_detected": 0, "components_matched": 0, "clean_false_positives": 0, "cpu_repeat_count": 0, "gpu_repeat_count": 0, "gpu_name": None, "slurm_job_id": None},
+            "metrics": {"faults": [], "fault_count": 0, "faults_detected": 0, "components_matched": 0, "clean_false_positives": 0, "cpu_repeat_count": 0, "gpu_repeat_count": 0, "gpu_name": None, "slurm_job_id": None, "tests_passed": 0, "coverage_percent": 0.0},
             "commands": ["python scripts/verify_gate.py 3"],
             "limitations": ["Verification stopped before recorded matrices could be loaded."],
         }
@@ -852,6 +855,7 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
 
     cpu = _load_json(cpu_path)
     gpu = _load_json(gpu_path)
+    tests = _load_json(test_path)
     cpu_metrics = cpu.get("metrics", {})
     cpu_faults = cpu.get("faults", [])
     gpu_cases = {item["name"]: item for item in gpu.get("cases", [])}
@@ -922,6 +926,13 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
         and set(gpu_cases) == {"clean", "missing_cuda_rng", "missing_grad_scaler"},
         f"gpu={gpu_environment.get('gpu_name')}, job={gpu_environment.get('slurm_job_id')}",
     )
+    criterion(
+        "unit, contract, and integration test coverage",
+        tests.get("outcome") == "PASS"
+        and tests.get("tests_failed") == 0
+        and tests.get("coverage_percent", 0) >= 90.0,
+        f"tests={tests.get('tests_passed')} passed, coverage={tests.get('coverage_percent')}%",
+    )
     preserved = {**GATE_0_EVIDENCE_HASHES, **GATE_1_EVIDENCE_HASHES, **GATE_2_EVIDENCE_HASHES}
     changed = [
         relative
@@ -972,6 +983,8 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
             "gpu_repeat_count": gpu.get("repeat_count"),
             "gpu_name": gpu_environment.get("gpu_name"),
             "slurm_job_id": gpu_environment.get("slurm_job_id"),
+            "tests_passed": tests.get("tests_passed"),
+            "coverage_percent": tests.get("coverage_percent"),
             "cpu_environment": cpu.get("environment"),
             "gpu_environment": gpu_environment,
         },

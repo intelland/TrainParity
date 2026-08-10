@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -78,6 +79,18 @@ def test_timeout_is_error(tmp_path: Path) -> None:
     result = run_case("SlowCase", tmp_path, timeout=0.2)
     assert result.outcome is Outcome.ERROR
     assert "timeout" in result.message
+
+
+def test_corrupt_worker_result_is_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def corrupt_result(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        result_path = Path(command[command.index("--result") + 1])
+        result_path.write_text("{not-json", encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr(subprocess, "run", corrupt_result)
+    result = run_case("DeterministicCase", tmp_path)
+    assert result.outcome is Outcome.ERROR
+    assert "result corruption" in result.message
 
 
 def test_invalid_runner_arguments() -> None:

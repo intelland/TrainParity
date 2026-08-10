@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "environment": {
+    "python": "3.11.15",
+    "pytorch": "2.7.0+cu126",
+    "executable": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python"
+  },
+  "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python -m pytest -q",
+  "tests_passed": 71,
+  "tests_failed": 0,
+  "coverage_percent": 94.86,
+  "coverage_threshold": 90.0,
+  "outcome": "PASS"
+}
