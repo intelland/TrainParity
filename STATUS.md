@@ -2,50 +2,42 @@
 
 ## Active gate
 
-Gate 3 — implemented and machine-verified; stopped for human review.
+Gate 4 — real-project integration and product-friction Go/No-Go.
 
 ## Objective
 
-Prove equivalence between continuous training and an interrupted checkpoint /
-real-process-exit / fresh-process-load / resumed execution. Establish precise
-step-boundary alignment, initial-equivalence and baseline-self-consistency
-prechecks, strict four-state outcomes, data-trajectory priority, and actionable
-first-observed-divergence reports.
+Measure TrainParity integration effort and diagnostic value against three real,
+commit-pinned external PyTorch recipes: image classification, language modeling,
+and an Engine-based loop with extra resumable state. Exercise each upstream
+project's own checkpoint save/load path with clean and realistic faulty resume
+runs, without optimizing the snapshot backend.
 
 ## Constraints
 
-- Implement Gate 3 only and stop for human acceptance.
+- Implement Gate 4 only and stop for human acceptance.
 - Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
 - Keep every environment, cache, checkout, log, and output under
   `/scratch/mp25/jwuu0254/zxh/TrainParity`.
 - Preserve all accepted Gate 0 evidence unchanged.
 - Preserve all accepted Gate 0 and Gate 1 evidence unchanged.
-- Define snapshot `step=N` as state after exactly N completed optimizer updates;
-  use only the `completed_training_step` phase in this Gate.
-- Compare two initial snapshots before resume attribution and run an independent
-  baseline self-consistency precheck; nondeterminism returns `ABSTAIN`.
-- Cross a real checkpoint file boundary and a genuinely new Python process;
-  record distinct pre-save and post-load PIDs and rebuild model, optimizer,
-  scheduler, and scaler objects in the child process.
-- Keep `PASS`, `FAIL`, `ABSTAIN`, and `ERROR` distinct. Import, launch, timeout,
-  checkpoint, load, and corrupt-result failures are `ERROR`, not parity failures.
-- Capture sample IDs when supplied, otherwise a deterministic batch fingerprint;
-  unavailable stable data identity causes `ABSTAIN` rather than a false pass.
-- Preserve every difference at the first divergent step, with deterministic
-  primary ordering and no inferred root-cause claim.
-- Include at least ten formal fault fixtures, including hidden module-global
-  state and off-by-one resume/data-cursor cases, and repeat each stable result
-  three times.
-- Validate clean, CUDA RNG omission, and GradScaler omission on at least one real
-  GPU inside one Slurm allocation; never compare different GPU models.
+- Pin three external repositories to exact commits and record their licenses;
+  keep at least two projects external rather than copying their code.
+- Exercise original upstream checkpoint save/load implementations; do not replace
+  them with TrainParity-authored clean checkpoint routines.
+- Record adapter, supporting glue, upstream modified, and total integration LOC.
+- Target median adapter logical LOC <= 30 and explain integrations over 50 total LOC.
+- Use tiny generated data and one realistic resume fault per project; adapters
+  must not specialize their comparison behavior to the injected fault.
+- Compare integration effort and diagnostics with a minimal hand-written test.
+- Measure runtime, peak memory, checkpoint/snapshot size, and comparison overhead.
 - Do not add runtime LLM/agent dependencies, distributed support, a web UI,
   service, registry, or platform functionality.
-- Do not implement phase tracing, snapshot performance optimization,
-  accumulation, full sample-coverage policy, or any other later-gate feature.
+- Do not implement framework-specific production adapters, distributed support,
+  later checks, a dashboard, service, or snapshot optimization.
 - Continue to describe outputs as first observed divergence, never root cause.
 - Preserve the user's uncommitted `CODEX_REMOTE_DEVELOPMENT.md` changes exactly.
 
-## Verification commands
+## Planned verification commands
 
 Run from the M3 repository checkout unless noted otherwise:
 
@@ -54,17 +46,17 @@ make lint
 make typecheck
 make test
 make build
-python -m experiments.gate3.run_cpu_matrix \
-  --output "$PROJECT_ROOT/outputs/gate3/cpu_matrix.json"
-sbatch scripts/slurm_gpu_matrix.sbatch --gate 3
-python scripts/verify_gate.py 3
+python -m experiments.gate4.run_matrix \
+  --external-root "$PROJECT_ROOT/external/gate4" \
+  --output "$PROJECT_ROOT/outputs/gate4/matrix.json"
+python scripts/verify_gate.py 4
 git diff --check
 ```
 
-The final Gate 3 report records initial/self-consistency evidence, process PIDs
-and object identities, first divergent steps and all same-step differences,
-CPU/GPU fault matrices, three-run repeatability, coverage, exact commands, and
-known limitations.
+The final Gate 4 report will record repository commits and licenses, original
+checkpoint paths, clean/fault results, LOC categories, upstream diffs, hand-test
+comparison, runtime/memory/artifact measurements, CI evidence, and a candid
+GO/REWORK/STOP recommendation.
 
 ## Current state
 
@@ -81,7 +73,7 @@ fault paths, clean controls, immutable capture, parameter-name optimizer state,
 separate comparison policies, `ABSTAIN` behavior, coverage, evidence
 preservation, and hosted CI confirmation.
 
-Gate 3 machine verification is `PASS` with recommendation `GO`. The CPU matrix
+Gate 3 was accepted by the human reviewer on 2026-08-11. Its CPU matrix
 has 0 clean false positives, detects 11/11 stable CPU faults with 11/11 expected
 first components, returns `ABSTAIN` for baseline nondeterminism and `ERROR` for
 child failure, and records distinct pre-save/post-load PIDs. The A100 matrix in
@@ -95,7 +87,7 @@ ByteTensors were loaded onto CUDA instead of CPU. Its raw evidence remains at
 `outputs/gate3/gpu_matrix_attempt1.json`; the corrected restoration was verified
 by the passing job above.
 
-Gate 3 evidence and reports form the fully verified final checkpoint prepared
-for one fast-forward from `gate-3` to `main`. No Gate 4 work has started.
-
-No Gate 4 work is authorized.
+Gate 4 is authorized and in progress on the dedicated `gate-4` branch. The
+candidate external repositories are `pytorch/examples`, `karpathy/nanoGPT`, and
+`pytorch/ignite`; commit and license evidence is being verified before adapters
+are implemented. No Gate 5 work is authorized.

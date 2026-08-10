@@ -249,3 +249,23 @@
 - **Reason:** `map_location=cuda` otherwise maps RNG tensors to CUDA, while the
   PyTorch RNG restoration API requires CPU ByteTensors. This was a load error,
   not a training parity failure.
+
+## D-0024: Accept Gate 3 and authorize Gate 4 only
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** The human reviewer accepted Gate 3 and authorized only the
+  three-project product-friction evaluation defined by Gate 4 and its additional
+  constraints. Gate 5 accumulation work remains unauthorized.
+- **Reason:** The fresh-process Resume Equivalence MVP met clean, fault,
+  diagnostic, four-state, GPU, repeatability, coverage, CI, and evidence
+  preservation requirements. Real external project effort is the next Go/No-Go.
+
+## D-0025: Evaluate Gate 4 on a dedicated branch
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Develop and run Gate 4 on `gate-4`; only a final verified
+  checkpoint may be integrated into `main`.
+- **Reason:** Real-project setup is expected to expose compatibility failures.
+  Keeping intermediate work off `main` prevents avoidable CI notification email.
