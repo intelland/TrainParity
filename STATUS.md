@@ -101,9 +101,9 @@ These are observations, not root-cause claims. The machine verifier returns
 `PASS` with recommendation `GO`. Gate 5 has not been started and remains
 unauthorized pending human review.
 
-The GitHub Actions workflow is configured to clone the pinned nanoGPT commit and
-run a real Gate 4 clean/fault case before `verify_gate.py 4`. Its hosted result
-for the final Gate 4 commit was not independently verified: the connected
-GitHub App cannot access the private repository and the local environment has no
-authenticated `gh` CLI. This is recorded as a review limitation, not presented
-as a successful hosted run.
+The GitHub Actions workflow cloned the pinned nanoGPT commit and ran a real Gate
+4 clean/fault case before `verify_gate.py 4`. Pull-request run `31414864786` for
+commit `59876afdd744ca40e2add625113320fc75168385` completed successfully, including
+lint, strict typing, 76 tests, build, Gate 3 verification, the pinned nanoGPT
+integration, and Gate 4 verification. The hosted result is recorded in
+`experiments/gate4/recorded/ci.json`.

@@ -1063,6 +1063,7 @@ Median adapter logical LOC: {report['metrics']['adapter_median_logical_loc']}.
 Shared integration logical LOC: {report['metrics']['shared_integration_logical_loc']}.
 Minimal hand-written comparator logical LOC: {report['metrics']['handwritten_comparator_logical_loc']}.
 Tests / coverage: {report['metrics']['tests_passed']} passed / {report['metrics']['coverage_percent']}%.
+Hosted CI: run `{report['metrics']['ci_run_id']}` at commit `{report['metrics']['ci_head_sha']}`.
 
 ## Resource measurements
 
@@ -1093,10 +1094,12 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
     """Verify the Gate 4 real-project integration evidence."""
     matrix_path = root / "experiments" / "gate4" / "recorded" / "matrix.json"
     test_path = root / "experiments" / "gate4" / "recorded" / "test_summary.json"
+    ci_path = root / "experiments" / "gate4" / "recorded" / "ci.json"
     integration_doc = root / "docs" / "GATE4_INTEGRATIONS.md"
     required = [
         matrix_path,
         test_path,
+        ci_path,
         integration_doc,
         root / "experiments" / "gate4" / "run_matrix.py",
         root / "tests" / "test_gate4_contract.py",
@@ -1133,6 +1136,7 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
 
     matrix = _load_json(matrix_path)
     tests = _load_json(test_path)
+    ci = _load_json(ci_path)
     projects = matrix.get("projects", [])
     by_name = {item.get("name"): item for item in projects}
     expected = {
@@ -1246,13 +1250,25 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
     ]
     criterion("accepted Gate 0-3 evidence preserved", not changed, "hashes unchanged" if not changed else f"changed={changed}")
     workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-    criterion(
-        "CI is configured for one real external case and Gate 4 verifier",
+    ci_configured = (
         expected["nanogpt"][0] in workflow
         and "--project nanogpt" in workflow
         and "verify_gate.py 4" in workflow
-        and all(command in workflow for command in ("make lint", "make typecheck", "make test", "make build")),
-        "nanoGPT real case plus lint, types, tests, build, and Gate 4 verifier configured",
+        and all(command in workflow for command in ("make lint", "make typecheck", "make test", "make build"))
+    )
+    ci_verified = (
+        ci.get("conclusion") == "success"
+        and ci.get("event") == "pull_request"
+        and ci.get("workflow") == "CI"
+        and isinstance(ci.get("run_id"), int)
+        and len(ci.get("head_sha", "")) == 40
+        and "pinned nanoGPT Gate 4 integration" in ci.get("verified_steps", [])
+        and "python scripts/verify_gate.py 4" in ci.get("verified_steps", [])
+    )
+    criterion(
+        "hosted CI executes one real external case and Gate 4 verifier",
+        ci_configured and ci_verified,
+        f"run={ci.get('run_id')}, conclusion={ci.get('conclusion')}, pinned nanoGPT and Gate 4 verifier passed",
     )
     passed = all(item["passed"] for item in criteria)
     stop = isinstance(median_loc, (int, float)) and median_loc > 30
@@ -1311,6 +1327,9 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
             "handwritten_comparator_logical_loc": matrix.get("handwritten_comparator_logical_loc"),
             "tests_passed": tests.get("tests_passed"),
             "coverage_percent": tests.get("coverage_percent"),
+            "ci_run_id": ci.get("run_id"),
+            "ci_head_sha": ci.get("head_sha"),
+            "ci_url": ci.get("url"),
             "environment": environment,
         },
         "commands": [
@@ -1328,7 +1347,6 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
             "Gate 4 command drivers and state normalizers are experiment-only, not framework-specific production adapters.",
             "Ignite RunningAverage is excluded because the upstream Engine resets that reporting-only derived metric after loading; trainer, model, optimizer, and scheduler remain compared.",
             "PyTorch 2.6+ requires TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for the pinned Ignite example's original trusted checkpoint load call.",
-            "The hosted GitHub Actions result for the final Gate 4 commit was not independently verified because the connected App cannot access the private repository and gh is unavailable; the workflow configuration is machine-checked.",
             "Only completed-training-step resume is evaluated; distributed and accumulation behavior remain outside Gate 4.",
             "Every reported path is a first observed divergence, not a root-cause claim.",
         ],

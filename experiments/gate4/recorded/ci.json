@@ -1,0 +1,22 @@
+{
+  "conclusion": "success",
+  "created_at": "2026-08-10T17:36:29Z",
+  "event": "pull_request",
+  "head_sha": "59876afdd744ca40e2add625113320fc75168385",
+  "job_id": 93541366784,
+  "job_name": "verify",
+  "run_id": 31414864786,
+  "schema_version": 1,
+  "updated_at": "2026-08-10T17:39:34Z",
+  "url": "https://github.com/intelland/TrainParity/actions/runs/31414864786",
+  "verified_steps": [
+    "make lint",
+    "make typecheck",
+    "make test",
+    "make build",
+    "python scripts/verify_gate.py 3",
+    "pinned nanoGPT Gate 4 integration",
+    "python scripts/verify_gate.py 4"
+  ],
+  "workflow": "CI"
+}

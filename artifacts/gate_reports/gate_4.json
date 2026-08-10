@@ -80,8 +80,8 @@
       "passed": true
     },
     {
-      "evidence": "nanoGPT real case plus lint, types, tests, build, and Gate 4 verifier configured",
-      "name": "CI is configured for one real external case and Gate 4 verifier",
+      "evidence": "run=31414864786, conclusion=success, pinned nanoGPT and Gate 4 verifier passed",
+      "name": "hosted CI executes one real external case and Gate 4 verifier",
       "passed": true
     }
   ],
@@ -92,12 +92,14 @@
     "Gate 4 command drivers and state normalizers are experiment-only, not framework-specific production adapters.",
     "Ignite RunningAverage is excluded because the upstream Engine resets that reporting-only derived metric after loading; trainer, model, optimizer, and scheduler remain compared.",
     "PyTorch 2.6+ requires TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for the pinned Ignite example's original trusted checkpoint load call.",
-    "The hosted GitHub Actions result for the final Gate 4 commit was not independently verified because the connected App cannot access the private repository and gh is unavailable; the workflow configuration is machine-checked.",
     "Only completed-training-step resume is evaluated; distributed and accumulation behavior remain outside Gate 4.",
     "Every reported path is a first observed divergence, not a root-cause claim."
   ],
   "metrics": {
     "adapter_median_logical_loc": 24,
+    "ci_head_sha": "59876afdd744ca40e2add625113320fc75168385",
+    "ci_run_id": 31414864786,
+    "ci_url": "https://github.com/intelland/TrainParity/actions/runs/31414864786",
     "clean_passed": 3,
     "coverage_percent": 94.86,
     "environment": {

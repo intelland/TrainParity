@@ -22,7 +22,7 @@ Three pinned external projects satisfy the Gate 4 product-friction criteria. Hum
 - [x] full unit, contract, and integration suite: tests=76 passed, coverage=94.86%
 - [x] single real M3 GPU execution recorded: gpu=NVIDIA L40S, job=58960426
 - [x] accepted Gate 0-3 evidence preserved: hashes unchanged
-- [x] CI is configured for one real external case and Gate 4 verifier: nanoGPT real case plus lint, types, tests, build, and Gate 4 verifier configured
+- [x] hosted CI executes one real external case and Gate 4 verifier: run=31414864786, conclusion=success, pinned nanoGPT and Gate 4 verifier passed
 
 ## External integrations
 
@@ -36,6 +36,7 @@ Median adapter logical LOC: 24.
 Shared integration logical LOC: 322.
 Minimal hand-written comparator logical LOC: 12.
 Tests / coverage: 76 passed / 94.86%.
+Hosted CI: run `31414864786` at commit `59876afdd744ca40e2add625113320fc75168385`.
 
 ## Resource measurements
 
@@ -70,6 +71,5 @@ root-cause claims.
 - Gate 4 command drivers and state normalizers are experiment-only, not framework-specific production adapters.
 - Ignite RunningAverage is excluded because the upstream Engine resets that reporting-only derived metric after loading; trainer, model, optimizer, and scheduler remain compared.
 - PyTorch 2.6+ requires TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for the pinned Ignite example's original trusted checkpoint load call.
-- The hosted GitHub Actions result for the final Gate 4 commit was not independently verified because the connected App cannot access the private repository and gh is unavailable; the workflow configuration is machine-checked.
 - Only completed-training-step resume is evaluated; distributed and accumulation behavior remain outside Gate 4.
 - Every reported path is a first observed divergence, not a root-cause claim.
