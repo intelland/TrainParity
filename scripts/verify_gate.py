@@ -34,6 +34,13 @@ GATE_1_EVIDENCE_HASHES = {
     "artifacts/gate_reports/gate_1.md": "998443c965f919ff1b4b7aacef1a088906c5b7193fb799b32b0c82ee3b4ccf00",
     "experiments/gate1/recorded/adapter_evaluation.json": "a9e9618cea4ca0c1494c64a0f059eff447232f781a18e89ad7bafdb212714054",
 }
+GATE_2_EVIDENCE_HASHES = {
+    "artifacts/gate_reports/gate_2.json": "a80035c2847d3420593349825fb65fc974cada603a7d8dd09cb46155f1afaeb6",
+    "artifacts/gate_reports/gate_2.md": "5ec23b90b34f30ff5f34d4ba8f483edc2d24852b18c0340bfaae42ead9a03680",
+    "experiments/gate2/recorded/fault_suite.json": "bc9a4365c62b68a7f66e9ea81a2af43d75bca01d98048d4f1487ff9f5e3c3186",
+    "experiments/gate2/recorded/coverage.json": "27e0e06409360d5d8e0f9cf43765daba9069bcbddde75e450d48e7f851129abd",
+    "experiments/gate2/recorded/ci_ae75212.json": "ac3d0f9268057d4d3a5bdf7133954b628eb6c09a378b30a1a0491cdba32c9bda",
+}
 EXPECTED_GATE_2_FAULTS = {
     "nested_value": "extra.nested.items[0].value",
     "tensor_shape": "extra.tensor",
@@ -748,6 +755,249 @@ def verify_gate_2(root: Path) -> dict[str, Any]:
     return report
 
 
+def _write_gate_3_reports(root: Path, report: dict[str, Any]) -> None:
+    report_dir = root / "artifacts" / "gate_reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "gate_3.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    criteria = "\n".join(
+        f"- [{'x' if item['passed'] else ' '}] {item['name']}: {item['evidence']}"
+        for item in report["criteria"]
+    )
+    faults = "\n".join(
+        f"- `{item['name']}`: step {item['observed_step']}, "
+        f"`{item['observed_component']}`"
+        for item in report["metrics"]["faults"]
+    )
+    commands = "\n".join(f"- `{command}`" for command in report["commands"])
+    limitations = "\n".join(f"- {item}" for item in report["limitations"])
+    markdown = f"""# Gate 3 report
+
+## Outcome
+
+**{report['status']} — recommendation: {report['recommendation']}**
+
+{report['summary']}
+
+## Acceptance criteria
+
+{criteria}
+
+## First observed fault divergences
+
+{faults}
+
+These are first observed divergences, not root-cause claims. Every difference
+at the first divergent step remains available in the raw M3 matrix outputs.
+
+## Metrics
+
+- Clean false positives: {report['metrics']['clean_false_positives']}
+- Stable faults detected: {report['metrics']['faults_detected']}/{report['metrics']['fault_count']}
+- Expected first component: {report['metrics']['components_matched']}/{report['metrics']['fault_count']}
+- CPU repeats: {report['metrics']['cpu_repeat_count']}
+- GPU repeats: {report['metrics']['gpu_repeat_count']}
+- GPU: {report['metrics']['gpu_name']} (Slurm job {report['metrics']['slurm_job_id']})
+
+## Exact commands
+
+{commands}
+
+## Remaining limitations
+
+{limitations}
+"""
+    (report_dir / "gate_3.md").write_text(markdown, encoding="utf-8")
+
+
+def verify_gate_3(root: Path) -> dict[str, Any]:
+    """Verify fresh-process CPU/GPU resume-equivalence evidence."""
+    cpu_path = root / "experiments" / "gate3" / "recorded" / "cpu_matrix.json"
+    gpu_path = root / "experiments" / "gate3" / "recorded" / "gpu_matrix.json"
+    required = [
+        root / "src" / "trainparity" / "runner.py",
+        root / "src" / "trainparity" / "worker.py",
+        root / "src" / "trainparity" / "results.py",
+        root / "src" / "trainparity" / "serialization.py",
+        root / "src" / "trainparity" / "assertions.py",
+        root / "src" / "trainparity" / "examples" / "gate3_cases.py",
+        root / "tests" / "test_runner.py",
+        root / "scripts" / "slurm_gpu_matrix.sbatch",
+        root / "docs" / "RESUME_EQUIVALENCE.md",
+        cpu_path,
+        gpu_path,
+    ]
+    criteria: list[dict[str, Any]] = []
+
+    def criterion(name: str, passed: bool, evidence: str) -> None:
+        criteria.append({"name": name, "passed": bool(passed), "evidence": evidence})
+
+    missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
+    criterion("Gate 3 implementation and evidence files", not missing, "present" if not missing else f"missing={missing}")
+    if missing:
+        report = {
+            "schema_version": 1,
+            "gate": 3,
+            "status": "BLOCKED",
+            "recommendation": "REWORK",
+            "summary": "Gate 3 required artifacts are missing; do not begin Gate 4.",
+            "criteria": criteria,
+            "metrics": {"faults": [], "fault_count": 0, "faults_detected": 0, "components_matched": 0, "clean_false_positives": 0, "cpu_repeat_count": 0, "gpu_repeat_count": 0, "gpu_name": None, "slurm_job_id": None},
+            "commands": ["python scripts/verify_gate.py 3"],
+            "limitations": ["Verification stopped before recorded matrices could be loaded."],
+        }
+        _write_gate_3_reports(root, report)
+        return report
+
+    cpu = _load_json(cpu_path)
+    gpu = _load_json(gpu_path)
+    cpu_metrics = cpu.get("metrics", {})
+    cpu_faults = cpu.get("faults", [])
+    gpu_cases = {item["name"]: item for item in gpu.get("cases", [])}
+    criterion(
+        "clean fixtures have zero false positives",
+        cpu_metrics.get("clean_false_positives") == 0
+        and all(item.get("outcome") == "PASS" for item in cpu.get("clean", []))
+        and gpu_cases.get("clean", {}).get("matched") is True,
+        "three CPU and three same-device GPU clean runs passed",
+    )
+    cpu_detected = sum(item.get("detected") is True for item in cpu_faults)
+    gpu_faults = [gpu_cases.get("missing_cuda_rng", {}), gpu_cases.get("missing_grad_scaler", {})]
+    gpu_detected = sum(item.get("matched") is True for item in gpu_faults)
+    fault_count = len(cpu_faults) + len(gpu_faults)
+    detected = cpu_detected + gpu_detected
+    criterion(
+        "formal stable fault suite detects every fault",
+        len(cpu_faults) >= 10
+        and detected == fault_count
+        and all(item.get("stable") is True for item in [*cpu_faults, *gpu_faults]),
+        f"detected={detected}/{fault_count}",
+    )
+    cpu_components = sum(item.get("component_matched") is True for item in cpu_faults)
+    gpu_components = sum(item.get("component_matched") is True for item in gpu_faults)
+    components = cpu_components + gpu_components
+    criterion(
+        "expected first component threshold",
+        fault_count > 0 and components / fault_count >= 0.8,
+        f"matched={components}/{fault_count}",
+    )
+    cpu_pids = all(
+        item.get("pre_save_pid") != item.get("post_load_pid") for item in cpu.get("clean", [])
+    )
+    gpu_pids = all(
+        run.get("pre_save", {}).get("pid") != run.get("post_load", {}).get("pid")
+        for case in gpu_cases.values()
+        for run in case.get("runs", [])
+    )
+    criterion(
+        "real process boundary",
+        cpu_metrics.get("distinct_resume_pids") is True and cpu_pids and gpu_pids,
+        "all recorded pre-save and post-load PIDs are distinct",
+    )
+    criterion(
+        "strict ABSTAIN and ERROR controls",
+        cpu.get("nondeterministic_control", {}).get("outcome") == "ABSTAIN"
+        and cpu.get("child_exception_control", {}).get("outcome") == "ERROR",
+        "baseline nondeterminism=ABSTAIN, child exception=ERROR",
+    )
+    trajectory = cpu.get("trajectory", {})
+    contract = (root / "docs" / "RESUME_EQUIVALENCE.md").read_text(encoding="utf-8")
+    criterion(
+        "formal aligned step and data semantics",
+        trajectory.get("total_steps") == 4
+        and trajectory.get("split_step") == 2
+        and trajectory.get("phase") == "completed_training_step"
+        and any(item.get("name") == "data_cursor_offset" and item.get("observed_component", "").startswith("batch.sample_ids") for item in cpu_faults)
+        and "exactly `N` optimizer updates" in contract,
+        "step N follows N updates; cursor fault first observed at batch.sample_ids",
+    )
+    gpu_environment = gpu.get("environment", {})
+    criterion(
+        "single real GPU same-device matrix",
+        gpu.get("all_matched") is True
+        and gpu_environment.get("gpu_name")
+        and gpu_environment.get("slurm_job_id")
+        and gpu_environment.get("cuda_visible_devices") is not None
+        and set(gpu_cases) == {"clean", "missing_cuda_rng", "missing_grad_scaler"},
+        f"gpu={gpu_environment.get('gpu_name')}, job={gpu_environment.get('slurm_job_id')}",
+    )
+    preserved = {**GATE_0_EVIDENCE_HASHES, **GATE_1_EVIDENCE_HASHES, **GATE_2_EVIDENCE_HASHES}
+    changed = [
+        relative
+        for relative, digest in preserved.items()
+        if not (root / relative).is_file() or _sha256(root / relative) != digest
+    ]
+    criterion("accepted Gate 0-2 evidence preserved", not changed, "hashes unchanged" if not changed else f"changed={changed}")
+    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    criterion(
+        "CI runs Gate 3 verifier",
+        "verify_gate.py 3" in workflow
+        and all(command in workflow for command in ("make lint", "make typecheck", "make test", "make build")),
+        "lint, type-check, tests, build, and Gate 3 verifier configured",
+    )
+    passed = all(item["passed"] for item in criteria)
+    faults = [
+        {"name": item["name"], "observed_step": item["observed_step"], "observed_component": item["observed_component"]}
+        for item in cpu_faults
+    ]
+    for name in ("missing_cuda_rng", "missing_grad_scaler"):
+        item = gpu_cases[name]
+        first = item["runs"][0]
+        faults.append(
+            {
+                "name": name,
+                "observed_step": first["first_divergent_step"],
+                "observed_component": first["primary_difference"]["path"],
+            }
+        )
+    report = {
+        "schema_version": 1,
+        "gate": 3,
+        "status": "PASS" if passed else "BLOCKED",
+        "recommendation": "GO" if passed else "REWORK",
+        "summary": (
+            "Gate 3 proves the tiny reference cases across real process and same-device GPU boundaries. Human review is required before Gate 4."
+            if passed
+            else "One or more Gate 3 criteria failed; do not begin Gate 4."
+        ),
+        "criteria": criteria,
+        "metrics": {
+            "faults": faults,
+            "fault_count": fault_count,
+            "faults_detected": detected,
+            "components_matched": components,
+            "clean_false_positives": cpu_metrics.get("clean_false_positives"),
+            "cpu_repeat_count": trajectory.get("repeat_count"),
+            "gpu_repeat_count": gpu.get("repeat_count"),
+            "gpu_name": gpu_environment.get("gpu_name"),
+            "slurm_job_id": gpu_environment.get("slurm_job_id"),
+            "cpu_environment": cpu.get("environment"),
+            "gpu_environment": gpu_environment,
+        },
+        "commands": [
+            "make lint",
+            "make typecheck",
+            "make test",
+            "make build",
+            "python -m experiments.gate3.run_cpu_matrix --output $PROJECT_ROOT/outputs/gate3/cpu_matrix.json",
+            "sbatch scripts/slurm_gpu_matrix.sbatch --gate 3",
+            "python scripts/verify_gate.py 3",
+            "git diff --check",
+        ],
+        "limitations": [
+            "Only tiny single-process cases and one A100 were evaluated; real-project friction belongs to Gate 4.",
+            "Only the completed-training-step phase is supported; accumulation and phase tracing are not implemented.",
+            "The full-value snapshot backend prioritizes correctness and has not been performance-optimized.",
+            "Stable sample identity is required; missing identity returns ABSTAIN.",
+            "Exact comparison is used and no numeric tolerance is inferred.",
+            "First observed divergence is not presented as root cause.",
+        ],
+    }
+    _write_gate_3_reports(root, report)
+    return report
+
+
 def main() -> None:
     """Parse the Gate number, verify it, and return a process status."""
     parser = argparse.ArgumentParser()
@@ -760,6 +1010,8 @@ def main() -> None:
         report = verify_gate_1(root)
     elif args.gate == 2:
         report = verify_gate_2(root)
+    elif args.gate == 3:
+        report = verify_gate_3(root)
     else:
         raise SystemExit(f"gate {args.gate} is not implemented")
     print(

@@ -5,9 +5,9 @@ user-declared training equivalence. It is designed to report the first
 **observed** divergence between two controlled executions; it does not infer a
 root cause or diagnose arbitrary training scripts.
 
-Gate 2 adds the deterministic full-value snapshot reference backend and
-separate exact/explicit-tolerance comparison policies. A fresh-process resume
-runner is not yet implemented.
+Gate 3 adds a resume-equivalence runner that crosses a real checkpoint and
+fresh Python process boundary. It compares complete trajectories with exact
+semantics after initial-equivalence and baseline-self-consistency prechecks.
 
 ## Adapter contract
 
@@ -19,6 +19,7 @@ class MyCase:
     def train_step(self, state: TrainingState) -> None: ...
     def save(self, state: TrainingState, path: Path) -> None: ...
     def load(self, path: Path, seed: int) -> TrainingState: ...
+    def observe(self, state: TrainingState) -> StepObservation: ...
 ```
 
 The user owns construction, one logical training step, and checkpoint
@@ -31,8 +32,14 @@ The Gate 1 example can be inspected after installation:
 trainparity inspect trainparity.examples.resume_cases:CorrectResumeCase
 ```
 
-This command validates only import and protocol shape. It does not claim
-resume equivalence.
+This command validates only import and protocol shape. Run a full check with:
+
+```bash
+trainparity resume trainparity.examples.gate3_cases:DeterministicCase
+```
+
+The command emits JSON. `PASS`, `FAIL`, `ABSTAIN`, and `ERROR` remain distinct;
+only `FAIL` means the controlled training trajectories were observed to differ.
 
 ## Development
 
@@ -43,7 +50,7 @@ make lint
 make typecheck
 make test
 make build
-python scripts/verify_gate.py 2
+python scripts/verify_gate.py 3
 ```
 
 ## Runtime dependency
@@ -71,11 +78,12 @@ See [docs/SNAPSHOT_CONTRACT.md](docs/SNAPSHOT_CONTRACT.md).
 
 ## Current limitations
 
-- Gate 2 provides a one-snapshot comparison core, not trajectory execution.
-- There is no production resume runner yet.
+- Gate 3 supports only one process and one GPU, with one completed-step phase.
+- Cases must be ordinary importable zero-argument classes and must expose
+  stable batch sample IDs or a deterministic fingerprint.
 - There is no support for distributed training, Lightning, Transformers,
   services, dashboards, registries, or runtime LLM/agent integration.
-- The examples are tiny CPU fixtures, not evidence of broad compatibility.
+- The examples are tiny fixtures, not evidence of broad project compatibility.
 
 See [docs/PRODUCT_CONTRACT.md](docs/PRODUCT_CONTRACT.md) and
 [docs/API_PROTOTYPES.md](docs/API_PROTOTYPES.md) for the precise boundaries.

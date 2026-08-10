@@ -55,6 +55,7 @@ omit = [
   "src/trainparity/importing.py",
   "src/trainparity/protocols.py",
   "src/trainparity/prototypes.py",
+  "src/trainparity/worker.py",
 ]
 
 [tool.ruff]
