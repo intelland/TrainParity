@@ -1,0 +1,179 @@
+{
+  "commands": [
+    "make lint",
+    "make typecheck",
+    "make test",
+    "make build",
+    "python -m experiments.gate3.run_cpu_matrix --output $PROJECT_ROOT/outputs/gate3/cpu_matrix.json",
+    "sbatch scripts/slurm_gpu_matrix.sbatch --gate 3",
+    "python scripts/verify_gate.py 3",
+    "git diff --check"
+  ],
+  "criteria": [
+    {
+      "evidence": "present",
+      "name": "Gate 3 implementation and evidence files",
+      "passed": true
+    },
+    {
+      "evidence": "three CPU and three same-device GPU clean runs passed",
+      "name": "clean fixtures have zero false positives",
+      "passed": true
+    },
+    {
+      "evidence": "detected=13/13",
+      "name": "formal stable fault suite detects every fault",
+      "passed": true
+    },
+    {
+      "evidence": "matched=13/13",
+      "name": "expected first component threshold",
+      "passed": true
+    },
+    {
+      "evidence": "all recorded pre-save and post-load PIDs are distinct",
+      "name": "real process boundary",
+      "passed": true
+    },
+    {
+      "evidence": "baseline nondeterminism=ABSTAIN, child exception=ERROR",
+      "name": "strict ABSTAIN and ERROR controls",
+      "passed": true
+    },
+    {
+      "evidence": "step N follows N updates; cursor fault first observed at batch.sample_ids",
+      "name": "formal aligned step and data semantics",
+      "passed": true
+    },
+    {
+      "evidence": "gpu=NVIDIA A100 80GB PCIe, job=58957857",
+      "name": "single real GPU same-device matrix",
+      "passed": true
+    },
+    {
+      "evidence": "tests=71 passed, coverage=94.86%",
+      "name": "unit, contract, and integration test coverage",
+      "passed": true
+    },
+    {
+      "evidence": "hashes unchanged",
+      "name": "accepted Gate 0-2 evidence preserved",
+      "passed": true
+    },
+    {
+      "evidence": "lint, type-check, tests, build, and Gate 3 verifier configured",
+      "name": "CI runs Gate 3 verifier",
+      "passed": true
+    }
+  ],
+  "gate": 3,
+  "limitations": [
+    "Only tiny single-process cases and one A100 were evaluated; real-project friction belongs to Gate 4.",
+    "Only the completed-training-step phase is supported; accumulation and phase tracing are not implemented.",
+    "The full-value snapshot backend prioritizes correctness and has not been performance-optimized.",
+    "Stable sample identity is required; missing identity returns ABSTAIN.",
+    "Exact comparison is used and no numeric tolerance is inferred.",
+    "First observed divergence is not presented as root cause."
+  ],
+  "metrics": {
+    "clean_false_positives": 0,
+    "components_matched": 13,
+    "coverage_percent": 94.86,
+    "cpu_environment": {
+      "cuda_build": "12.6",
+      "device": "cpu",
+      "python": "3.11.15",
+      "python_executable": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+      "pytorch": "2.7.0+cu126"
+    },
+    "cpu_repeat_count": 3,
+    "fault_count": 13,
+    "faults": [
+      {
+        "name": "missing_model",
+        "observed_component": "model.bias",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_optimizer",
+        "observed_component": "optimizer.param_groups[0].lr",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_scheduler",
+        "observed_component": "scheduler._last_lr[0]",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_python_rng",
+        "observed_component": "rng.python[1][0]",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_numpy_rng",
+        "observed_component": "rng.numpy.keys.values[0]",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_torch_cpu_rng",
+        "observed_component": "rng.torch_cpu",
+        "observed_step": 2
+      },
+      {
+        "name": "data_cursor_offset",
+        "observed_component": "batch.sample_ids[0]",
+        "observed_step": 3
+      },
+      {
+        "name": "resume_step_off_by_one",
+        "observed_component": "step",
+        "observed_step": 2
+      },
+      {
+        "name": "optimizer_parameter_group_mismatch",
+        "observed_component": "optimizer.param_groups[0].lr",
+        "observed_step": 2
+      },
+      {
+        "name": "extra_scheduler_step",
+        "observed_component": "scheduler._step_count",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_hidden_module_global",
+        "observed_component": "extra.hidden_module_counter",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_cuda_rng",
+        "observed_component": "rng.torch_cuda.device_0",
+        "observed_step": 2
+      },
+      {
+        "name": "missing_grad_scaler",
+        "observed_component": "scaler.scale",
+        "observed_step": 2
+      }
+    ],
+    "faults_detected": 13,
+    "gpu_environment": {
+      "cuda_runtime": "12.6",
+      "cuda_visible_devices": "0",
+      "gpu_name": "NVIDIA A100 80GB PCIe",
+      "gpu_total_memory": 85093777408,
+      "hostname": "m3n101",
+      "python": "3.11.15",
+      "python_executable": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+      "pytorch": "2.7.0+cu126",
+      "slurm_job_id": "58957857"
+    },
+    "gpu_name": "NVIDIA A100 80GB PCIe",
+    "gpu_repeat_count": 3,
+    "slurm_job_id": "58957857",
+    "tests_passed": 71
+  },
+  "recommendation": "GO",
+  "schema_version": 1,
+  "status": "PASS",
+  "summary": "Gate 3 proves the tiny reference cases across real process and same-device GPU boundaries. Human review is required before Gate 4."
+}

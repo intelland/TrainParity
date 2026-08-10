@@ -213,3 +213,39 @@
 - **Reason:** The CI workflow intentionally triggers only on `main` pushes.
   Keeping intermediate checkpoints off `main` avoids failure-notification email
   while preserving Git synchronization and checkpoint history.
+
+## D-0021: Define Gate 3 around completed-step fresh-process trajectories
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Snapshot `step=N` is the state after exactly N completed
+  optimizer updates. Compare two independent continuous baselines and initial
+  states before attribution. The checkpoint writer exits before a new ordinary
+  Python process constructs and restores model, optimizer, scheduler, scaler,
+  RNG, data position, gradients, and declared extra state.
+- **Reason:** This alignment makes the loaded split boundary observable, keeps
+  nondeterminism as `ABSTAIN`, and proves a real rather than simulated process
+  boundary.
+
+## D-0022: Treat data identity as a Gate 3 prerequisite
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Every completed step must expose sample IDs or a deterministic
+  batch fingerprint. Missing identity returns `ABSTAIN`. Stable path ordering
+  places batch identity first, so the cursor-offset fixture is first observed
+  at `batch.sample_ids[0]` on the next consumed step.
+- **Reason:** Model or optimizer differences caused by the wrong batch are
+  downstream observations; the data trajectory must be checked first without
+  claiming a root cause.
+
+## D-0023: Restore serialized CUDA RNG bytes on CPU
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Move each loaded CUDA RNG ByteTensor to CPU before calling
+  `torch.cuda.set_rng_state_all`. Preserve the failed job `58957648` as `ERROR`
+  evidence and accept corrected same-A100 job `58957857` as the formal result.
+- **Reason:** `map_location=cuda` otherwise maps RNG tensors to CUDA, while the
+  PyTorch RNG restoration API requires CPU ByteTensors. This was a load error,
+  not a training parity failure.
