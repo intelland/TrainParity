@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from importlib import import_module
-from typing import cast
-
 from trainparity.protocols import ResumeCase
 
 
@@ -29,5 +27,4 @@ def load_case(spec: str) -> ResumeCase:
         raise CaseImportError(f"case class {spec!r} must have a zero-argument constructor") from error
     if not isinstance(instance, ResumeCase):
         raise CaseImportError(f"case {spec!r} does not implement ResumeCase")
-    return cast(ResumeCase, instance)
-
+    return instance
