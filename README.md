@@ -11,6 +11,12 @@ exact-commit external projects through their original checkpoint paths. The
 external integrations remain experiment evidence rather than production
 framework adapters.
 
+Gate 4B adds a framework-neutral command-oriented runner. A project supplies
+only its original command, checkpoint location, and explicit observed state;
+TrainParity owns continuous/interrupted planning, checkpoint staging, fresh
+processes, immutable snapshot IPC, comparison, timeout/temp paths, deterministic
+reports, and four-state outcomes.
+
 ## Adapter contract
 
 A resume case is an importable, zero-argument class implementing four methods:
@@ -43,6 +49,27 @@ trainparity resume trainparity.examples.gate3_cases:DeterministicCase
 The command emits JSON. `PASS`, `FAIL`, `ABSTAIN`, and `ERROR` remain distinct;
 only `FAIL` means the controlled training trajectories were observed to differ.
 
+## Command-oriented process contract
+
+```python
+class MyProcessCase:
+    name, split_step, total_step = "my_project", 2, 4
+
+    def command(self, plan: ProcessExecutionPlan) -> list[str]: ...
+    def checkpoint_path(self, run_dir: Path) -> Path: ...
+    def observe_checkpoint(self, path: Path) -> dict[str, object]: ...
+
+result = ProcessResumeRunner().run(
+    "my_package.trainparity_adapter:MyProcessCase",
+    environment={"TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD": "1"},
+)
+```
+
+Environment values are propagated explicitly to every child but are never
+written to the report; only sorted key names are recorded. The production
+runner has no project or framework branches. `FullValueBackend` remains the
+exact correctness reference.
+
 ## Development
 
 All runtime verification for this repository is performed on M3:
@@ -53,6 +80,7 @@ make typecheck
 make test
 make build
 python scripts/verify_gate.py 4
+python scripts/verify_gate4b.py
 ```
 
 ## Runtime dependency

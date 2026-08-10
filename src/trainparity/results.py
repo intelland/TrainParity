@@ -43,3 +43,37 @@ class ResumeResult:
         payload["outcome"] = self.outcome.value
         return payload
 
+
+@dataclass(frozen=True)
+class ExternalProcessEvidence:
+    """Non-secret evidence from one original external training process."""
+
+    phase: str
+    pid: int
+    elapsed_seconds: float
+    returncode: int
+
+
+@dataclass(frozen=True)
+class ProcessResumeResult:
+    """Four-state result for one command-oriented fresh-process resume test."""
+
+    outcome: Outcome
+    message: str
+    case: str
+    first_divergent_step: int | None = None
+    primary_difference: Difference | None = None
+    all_differences: tuple[Difference, ...] = ()
+    processes: tuple[ExternalProcessEvidence, ...] = ()
+    fresh_resume_processes_distinct: bool = False
+    propagated_environment_keys: tuple[str, ...] = ()
+    timing_seconds: dict[str, float] | None = None
+    snapshot_ipc_bytes: int = 0
+    checkpoint_max_bytes: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a stable JSON-compatible representation without environment values."""
+        payload = asdict(self)
+        payload["outcome"] = self.outcome.value
+        return payload
+

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol, runtime_checkable
@@ -63,3 +63,32 @@ class ResumeExecutionCase(ResumeCase, Protocol):
 
     def observe(self, state: TrainingState) -> StepObservation:
         """Describe the most recently completed batch and supported extra state."""
+
+
+@dataclass(frozen=True)
+class ProcessExecutionPlan:
+    """One framework-neutral external training-process invocation."""
+
+    phase: str
+    cwd: Path
+    run_dir: Path
+    end_step: int
+    resume_from: Path | None = None
+
+
+@runtime_checkable
+class ProcessResumeCase(Protocol):
+    """Project semantics required by the generic command-oriented runner."""
+
+    name: str
+    split_step: int
+    total_step: int
+
+    def command(self, plan: ProcessExecutionPlan) -> Sequence[str]:
+        """Return the original project command for one execution plan."""
+
+    def checkpoint_path(self, run_dir: Path) -> Path:
+        """Return the original project checkpoint path inside ``run_dir``."""
+
+    def observe_checkpoint(self, path: Path) -> Mapping[str, object]:
+        """Select explicit comparable state from an original checkpoint."""

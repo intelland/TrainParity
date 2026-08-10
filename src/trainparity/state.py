@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ctypes
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -43,7 +44,8 @@ class FrozenTensor:
             raise ValueError(f"unsupported tensor layout: {value.layout}")
         original_device = str(value.device)
         frozen = value.detach().cpu().contiguous().clone()
-        data = b"" if frozen.numel() == 0 else bytes(frozen.untyped_storage())
+        byte_count = frozen.numel() * frozen.element_size()
+        data = b"" if byte_count == 0 else ctypes.string_at(frozen.data_ptr(), byte_count)
         return cls(
             shape=tuple(value.shape),
             dtype=str(value.dtype),

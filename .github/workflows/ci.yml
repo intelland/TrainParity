@@ -22,6 +22,9 @@ jobs:
       - run: make typecheck
       - run: make test
       - run: make build
+      - run: python scripts/verify_gate.py 0
+      - run: python scripts/verify_gate.py 1
+      - run: python scripts/verify_gate.py 2
       - run: python scripts/verify_gate.py 3
       - name: Run pinned nanoGPT Gate 4 integration
         run: |
@@ -35,3 +38,19 @@ jobs:
             --output "$RUNNER_TEMP/gate4-output/matrix.json" \
             --project nanogpt
       - run: python scripts/verify_gate.py 4
+      - run: python scripts/verify_gate4_friction_audit.py
+      - name: Run Gate 4B wheel-installed nanoGPT fresh-clone case
+        run: |
+          export TRAINPARITY_GATE4_DEVICE=cpu
+          export TRAINPARITY_GATE4_SITE="$(python -c 'import site; print(site.getsitepackages()[0])')"
+          python -m experiments.gate4b.run_matrix \
+            --output-root "$RUNNER_TEMP/gate4b-run" \
+            --output "$RUNNER_TEMP/gate4b-matrix.json" \
+            --profile-pre experiments/gate4b/recorded/profile_pre.json \
+            --profile-post experiments/gate4b/recorded/profile_post.json \
+            --project nanogpt
+      - name: Verify Gate 4B report when present
+        run: |
+          if [ -f artifacts/gate_reports/gate_4b.json ]; then
+            python scripts/verify_gate4b.py
+          fi

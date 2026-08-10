@@ -2,20 +2,19 @@
 
 ## Active gate
 
-Gate 4 rework — friction audit complete with evidence `PASS` and recommendation
-`REWORK`; awaiting human review. Gate 5 has not been started.
+Gate 4B production-integration-surface verification is complete on M3 and is
+awaiting hosted CI evidence and final human review. Gate 5 has not been started.
 
 ## Objective
 
-Audit the complete user-visible integration and end-to-end cost against fresh
-clones of the three accepted, commit-pinned Gate 4 repositories. Separate user
-adapter/glue, reusable library, and benchmark-only LOC; retain the weak control;
-and add a closer fresh-process hand-written comparison without changing the
-production API or optimizing the snapshot backend.
+Move only generic resume-test orchestration into the production library, retain
+small explicit project-semantics adapters, and reproduce all three pinned Gate 4
+projects from fresh clones within the Gate 4B LOC, wall-time, artifact, behavior,
+and evidence-preservation thresholds.
 
 ## Constraints
 
-- Implement Gate 4 only and stop for human acceptance.
+- Implement Gate 4B only and stop for human acceptance.
 - Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
 - Keep every environment, cache, checkout, log, and output under
   `/scratch/mp25/jwuu0254/zxh/TrainParity`.

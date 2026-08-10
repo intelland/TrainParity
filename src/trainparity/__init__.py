@@ -7,10 +7,23 @@ from trainparity.comparison import (
     ExactComparison,
     ToleranceComparison,
 )
-from trainparity.importing import CaseImportError, load_case
+from trainparity.importing import CaseImportError, load_case, load_process_case
 from trainparity.outcomes import Outcome
-from trainparity.protocols import ResumeCase, ResumeExecutionCase, StepObservation, TrainingState
-from trainparity.results import ProcessEvidence, ResumeResult
+from trainparity.process_resume import ProcessResumeRunner
+from trainparity.protocols import (
+    ProcessExecutionPlan,
+    ProcessResumeCase,
+    ResumeCase,
+    ResumeExecutionCase,
+    StepObservation,
+    TrainingState,
+)
+from trainparity.results import (
+    ExternalProcessEvidence,
+    ProcessEvidence,
+    ProcessResumeResult,
+    ResumeResult,
+)
 from trainparity.runner import ResumeRunner
 from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot
 
@@ -20,8 +33,13 @@ __all__ = [
     "ComparisonResult",
     "Difference",
     "ExactComparison",
+    "ExternalProcessEvidence",
     "Outcome",
     "ProcessEvidence",
+    "ProcessExecutionPlan",
+    "ProcessResumeCase",
+    "ProcessResumeResult",
+    "ProcessResumeRunner",
     "ResumeCase",
     "ResumeExecutionCase",
     "ResumeResult",
@@ -33,5 +51,6 @@ __all__ = [
     "assert_resume_equivalent",
     "capture_snapshot",
     "load_case",
+    "load_process_case",
 ]
-__version__ = "0.1.0.dev3"
+__version__ = "0.1.0.dev5"

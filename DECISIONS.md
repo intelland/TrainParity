@@ -317,3 +317,16 @@
   reproduction, but command-oriented external use currently requires substantial
   orchestration outside the production API. Expanding that API is not authorized
   by this audit and must be a separate human product decision.
+
+## D-0030: Move only generic process orchestration into production for Gate 4B
+
+- **Status:** Proposed for human review
+- **Date:** 2026-08-11
+- **Decision:** Add one framework-neutral command-oriented process runner and
+  snapshot worker. Keep original commands, checkpoint paths, and observed-state
+  selection in small explicit project adapters; keep fixtures, fault injection,
+  measurements, cloning, and reporting under Gate 4B experiments. Retain
+  `FullValueBackend` as the exact correctness reference and stop before Gate 5.
+- **Reason:** Fresh-clone user integration falls from 266-275 LOC to 30-32 LOC
+  without upstream edits, framework branches, weaker comparison, or loss of
+  fresh-process/four-state/first-divergence behavior.

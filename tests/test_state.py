@@ -44,6 +44,23 @@ def test_tensor_capture_breaks_mutable_alias_and_round_trips() -> None:
     assert frozen.to_tensor().tolist() == [1.0, -0.0]
 
 
+@pytest.mark.parametrize(
+    "source",
+    [
+        torch.tensor([1, -2], dtype=torch.int64),
+        torch.tensor([True, False], dtype=torch.bool),
+        torch.tensor([1 + 2j, -3 + 0j], dtype=torch.complex64),
+        torch.arange(12, dtype=torch.float32).reshape(3, 4).transpose(0, 1),
+    ],
+)
+def test_fast_tensor_capture_preserves_the_reference_raw_bytes(source: torch.Tensor) -> None:
+    reference = source.detach().cpu().contiguous().clone()
+    expected = bytes(reference.untyped_storage())
+    frozen = FrozenTensor.capture(source)
+    assert frozen.data == expected
+    assert torch.equal(frozen.to_tensor(), reference)
+
+
 def test_empty_tensor_and_dtype_metadata_round_trip() -> None:
     frozen = FrozenTensor.capture(torch.empty((0, 2), dtype=torch.int64))
     restored = frozen.to_tensor()

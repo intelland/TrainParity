@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0.dev5 - 2026-08-11
+
+- Move framework-neutral continuous/interrupted planning, checkpoint staging,
+  fresh-process execution, snapshot IPC, timeout/temp handling, deterministic
+  reports, environment propagation, and four-state outcomes into production.
+- Reduce the three fresh-clone user surfaces to 30, 31, and 32 logical LOC with
+  zero upstream modifications and no framework-specific production adapters.
+- Replace byte-at-a-time tensor-storage extraction while preserving exact raw
+  bytes and `FullValueBackend` comparison semantics.
+- Add Gate 4B profiling, full end-to-end/resource evidence, contract tests, a
+  dedicated verifier, and hosted fresh-clone CI coverage.
+
 ## 0.1.0.dev4 - 2026-08-11
 
 - Evaluate three exact-commit external PyTorch projects through their original
