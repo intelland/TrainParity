@@ -4,7 +4,6 @@ import random
 from collections.abc import Mapping
 
 import numpy as np
-import pytest
 import torch
 from torch import nn
 
@@ -153,4 +152,3 @@ def test_backend_with_invalid_root_errors() -> None:
 
     result = capture_snapshot(ModelWithBuffer(), backend=Backend())
     assert result.outcome is Outcome.ERROR
-

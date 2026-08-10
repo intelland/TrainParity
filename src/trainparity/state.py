@@ -77,7 +77,7 @@ class FrozenSequence:
     items: tuple[FrozenValue, ...]
 
 
-FrozenScalar: TypeAlias = None | bool | int | float | str | bytes
+FrozenScalar: TypeAlias = bool | int | float | str | bytes | None
 FrozenValue: TypeAlias = FrozenScalar | FrozenTensor | FrozenMapping | FrozenSequence
 
 
