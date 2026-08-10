@@ -133,6 +133,12 @@ def evaluate() -> dict[str, Any]:
             snapshot({"extra": torch.ones(1)}),
             "extra",
         ),
+        "none_vs_zero": (snapshot({"extra": None}), snapshot({"extra": 0}), "extra"),
+        "missing_vs_none": (
+            snapshot({"extra": {}}),
+            snapshot({"extra": {"value": None}}),
+            "extra.value",
+        ),
         "device_metadata": (*devices, "extra"),
         "parameter_group_order": (*groups, "optimizer.param_groups[0].lr"),
         "sgd_momentum": (*momentum, "optimizer.state.weight.momentum_buffer"),

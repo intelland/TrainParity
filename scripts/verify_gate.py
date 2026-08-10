@@ -42,6 +42,8 @@ EXPECTED_GATE_2_FAULTS = {
     "nan": "extra",
     "inf": "extra",
     "empty_tensor": "extra",
+    "none_vs_zero": "extra",
+    "missing_vs_none": "extra.value",
     "device_metadata": "extra",
     "parameter_group_order": "optimizer.param_groups[0].lr",
     "sgd_momentum": "optimizer.state.weight.momentum_buffer",
@@ -606,13 +608,13 @@ def verify_gate_2(root: Path) -> dict[str, Any]:
     criterion(
         "fault suite expected stable paths",
         not mismatches,
-        "15/15 exact paths" if not mismatches else f"mismatched={mismatches}",
+        "17/17 exact paths" if not mismatches else f"mismatched={mismatches}",
     )
     false_positives = [name for name, item in clean.items() if item.get("outcome") != "PASS"]
     criterion(
         "clean suite zero false positives",
         set(clean) == set(EXPECTED_GATE_2_FAULTS) and not false_positives,
-        "0/15" if not false_positives else f"false_positives={false_positives}",
+        "0/17" if not false_positives else f"false_positives={false_positives}",
     )
     detailed = all(
         item.get("difference", {}).get("reason")
