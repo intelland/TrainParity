@@ -1,0 +1,842 @@
+{
+  "environment": {
+    "cuda_available": true,
+    "device": "cuda",
+    "gpu_name": "NVIDIA L40S",
+    "python": "3.11.15",
+    "slurm_job_id": "58960426",
+    "torch": "2.7.0+cu126"
+  },
+  "gate": 4,
+  "handwritten_comparator_logical_loc": 12,
+  "metrics": {
+    "adapter_median_logical_loc": 24,
+    "clean_passed": 3,
+    "faults_detected": 3,
+    "project_count": 3,
+    "upstream_modified_loc": 0
+  },
+  "projects": [
+    {
+      "checkpoint_implementation": {
+        "load": "imagenet/main.py --resume torch.load and load_state_dict",
+        "save": "imagenet/main.py save_checkpoint"
+      },
+      "clean": {
+        "all_differences": [],
+        "first_divergent_step": null,
+        "outcome": "PASS",
+        "primary_difference": null
+      },
+      "executions": [
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.imagenet",
+            "prepare",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/data"
+          ],
+          "elapsed_seconds": 0.21600286604370922,
+          "peak_rss_kib": 15052,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/prepare/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/prepare/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.imagenet",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/pytorch-examples",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/data",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/baseline_2",
+            "2"
+          ],
+          "elapsed_seconds": 9.931652751984075,
+          "peak_rss_kib": 1147460,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/baseline_2/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/baseline_2/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.imagenet",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/pytorch-examples",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/data",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/baseline_3",
+            "3"
+          ],
+          "elapsed_seconds": 4.823882263968699,
+          "peak_rss_kib": 1153852,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/baseline_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/baseline_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.imagenet",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/pytorch-examples",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/data",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/clean_3",
+            "3",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/clean_3/checkpoint.pth.tar"
+          ],
+          "elapsed_seconds": 4.573134384001605,
+          "peak_rss_kib": 1144536,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/clean_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/clean_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.imagenet",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/pytorch-examples",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/data",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/fault_3",
+            "3",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/fault_3/checkpoint.pth.tar"
+          ],
+          "elapsed_seconds": 4.62705529097002,
+          "peak_rss_kib": 1162372,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/fault_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/pytorch_examples_imagenet/fault_3/stdout.log"
+        }
+      ],
+      "fault": "scheduler_last_epoch_off_by_one",
+      "fault_result": {
+        "all_differences": [
+          {
+            "baseline": "3",
+            "candidate": "2",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "scheduler.last_epoch",
+            "reason": "value"
+          }
+        ],
+        "first_divergent_step": 3,
+        "outcome": "FAIL",
+        "primary_difference": {
+          "baseline": "3",
+          "candidate": "2",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "scheduler.last_epoch",
+          "reason": "value"
+        }
+      },
+      "handwritten": {
+        "clean_outcome": "PASS",
+        "diagnostic": "final model states are equal",
+        "fault_outcome": "PASS"
+      },
+      "loc": {
+        "adapter_logical": 24,
+        "supporting_glue_logical": 48,
+        "total_new_project_integration": 72,
+        "upstream_modified": 0
+      },
+      "name": "pytorch_examples_imagenet",
+      "repository": {
+        "commit": "acc295dc7b90714f1bf47f06004fc19a7fe235c4",
+        "license": "BSD-3-Clause",
+        "license_file": "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/pytorch-examples/LICENSE",
+        "license_sha256": "7e5dc9b5cf276166c4a0678d33e53b14e3d7ef47eee9356ab786c4ba45414efd",
+        "repository": "https://github.com/pytorch/examples.git",
+        "upstream_modified_loc": 0
+      },
+      "resources": {
+        "checkpoint_max_bytes": 11136602,
+        "comparison_process_peak_rss_kib": 486124,
+        "comparison_seconds": 0.006758773932233453,
+        "runtime_overhead_percent": 0.027961484822730705,
+        "snapshot_max_bytes": 14712711,
+        "upstream_peak_rss_kib": 1162372,
+        "upstream_runtime_seconds": 24.171727556968108
+      },
+      "structure": "conventional image classifier"
+    },
+    {
+      "checkpoint_implementation": {
+        "load": "train.py init_from=resume torch.load",
+        "save": "train.py torch.save checkpoint"
+      },
+      "clean": {
+        "all_differences": [],
+        "first_divergent_step": null,
+        "outcome": "PASS",
+        "primary_difference": null
+      },
+      "executions": [
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "prepare",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt"
+          ],
+          "elapsed_seconds": 0.21572680003009737,
+          "peak_rss_kib": 21772,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/prepare/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/prepare/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_2",
+            "2"
+          ],
+          "elapsed_seconds": 4.272580984979868,
+          "peak_rss_kib": 1013196,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_2/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_2/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_3",
+            "3"
+          ],
+          "elapsed_seconds": 4.074207858997397,
+          "peak_rss_kib": 1018068,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_4",
+            "4"
+          ],
+          "elapsed_seconds": 4.122748699970543,
+          "peak_rss_kib": 1015552,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_4/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/baseline_4/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/clean_3",
+            "3",
+            "resume"
+          ],
+          "elapsed_seconds": 3.971965221920982,
+          "peak_rss_kib": 1018388,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/clean_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/clean_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/clean_4",
+            "4",
+            "resume"
+          ],
+          "elapsed_seconds": 4.072214902960695,
+          "peak_rss_kib": 1017108,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/clean_4/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/clean_4/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/fault_3",
+            "3",
+            "resume"
+          ],
+          "elapsed_seconds": 4.122230247943662,
+          "peak_rss_kib": 1027376,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/fault_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/fault_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.nanogpt",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/fault_4",
+            "4",
+            "resume"
+          ],
+          "elapsed_seconds": 4.222476593917236,
+          "peak_rss_kib": 1026428,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/fault_4/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/nanogpt/fault_4/stdout.log"
+        }
+      ],
+      "fault": "resume_iteration_off_by_one",
+      "fault_result": {
+        "all_differences": [
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[2.708693504333496])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[2.692511796951294])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "best_val_loss",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[0.013432507403194904, 0.03972328454256058, -0.025324083864688873, -0.014132467098534107])",
+            "candidate": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[0.01442466676235199, 0.03871858865022659, -0.02432013489305973, -0.013165191747248173])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"lm_head.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(24, 8), dtype=torch.float32, device=cpu, values=[-0.012306736782193184, -0.021428970620036125, -0.03127800673246384, 0.03426803648471832])",
+            "candidate": "tensor(shape=(24, 8), dtype=torch.float32, device=cpu, values=[-0.013219610787928104, -0.02047857642173767, -0.031542692333459854, 0.03425618261098862])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.h.0.attn.c_attn.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[-0.011211049742996693, -0.008305136114358902, -0.028982732445001602, 0.016907505691051483])",
+            "candidate": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[-0.01202965434640646, -0.007314903661608696, -0.02995973639190197, 0.017852075397968292])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.h.0.attn.c_proj.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[0.9990482926368713, 1.0025678873062134, 1.0029977560043335, 0.997033953666687])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[0.9997099041938782, 1.0034433603286743, 1.0039923191070557, 0.9960902333259583])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.h.0.ln_1.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[1.002889633178711, 1.0029122829437256, 1.002964735031128, 0.9988024234771729])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[1.0038387775421143, 1.003869891166687, 1.00394606590271, 0.9994226694107056])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.h.0.ln_2.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(32, 8), dtype=torch.float32, device=cpu, values=[-0.015008607879281044, 0.004279359243810177, -0.01778220944106579, 0.00030389451421797276])",
+            "candidate": "tensor(shape=(32, 8), dtype=torch.float32, device=cpu, values=[-0.015810098499059677, 0.005255026742815971, -0.018429068848490715, -0.0006923902546986938])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.h.0.mlp.c_fc.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 32), dtype=torch.float32, device=cpu, values=[0.0021636842284351587, 0.015857169404625893, 0.024984104558825493, -0.013023421168327332])",
+            "candidate": "tensor(shape=(8, 32), dtype=torch.float32, device=cpu, values=[0.002591050462797284, 0.016831982880830765, 0.025834452360868454, -0.014021365903317928])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.h.0.mlp.c_proj.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[1.0029855966567993, 1.0027633905410767, 0.997126042842865, 1.0005255937576294])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[1.0039716958999634, 1.0036541223526, 0.9963756799697876, 1.0013737678527832])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.ln_f.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[0.023805946111679077, -0.010638856329023838, -0.011895687319338322, 0.0031598173081874847])",
+            "candidate": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[0.02402985841035843, -0.011637003161013126, -0.012803138233721256, 0.004153014626353979])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.wpe.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[0.013432507403194904, 0.03972328454256058, -0.025324083864688873, -0.014132467098534107])",
+            "candidate": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[0.01442466676235199, 0.03871858865022659, -0.02432013489305973, -0.013165191747248173])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "model[\"transformer.wte.weight\"]",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[-0.009219415485858917, 0.023991653695702553, -0.0034899369347840548, -0.0049866121262311935])",
+            "candidate": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[-0.011320831254124641, 0.030667047947645187, -0.004588922020047903, -0.0057327947579324245])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"0\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[0.00016625893476884812, 0.0011170333018526435, 2.3633416276425123e-05, 5.000652890885249e-05])",
+            "candidate": "tensor(shape=(16, 8), dtype=torch.float32, device=cpu, values=[0.0002036494406638667, 0.0014729198301211, 3.293495683465153e-05, 5.525438245967962e-05])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"0\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"0\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[-0.0010556488996371627, 0.014985103160142899, 0.002081305719912052, -0.0050895242020487785])",
+            "candidate": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[-0.00042447340092621744, 0.018891625106334686, 0.0022143847309052944, -0.00625227065756917])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"1\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[4.354974862508243e-06, 0.0004363950283732265, 9.192581273964606e-06, 5.067535676062107e-05])",
+            "candidate": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[5.518558737094281e-06, 0.0005606471677310765, 9.315072020399384e-06, 6.211447907844558e-05])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"1\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"1\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(24, 8), dtype=torch.float32, device=cpu, values=[5.833357477058598e-07, -1.4992133401392493e-06, -3.315143430882017e-07, 5.4176121011551e-07])",
+            "candidate": "tensor(shape=(24, 8), dtype=torch.float32, device=cpu, values=[1.073227167580626e-06, -2.449433623041841e-06, 4.938751203553693e-07, 9.730070082980546e-09])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"2\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(24, 8), dtype=torch.float32, device=cpu, values=[6.806353440927393e-13, 4.616647775873561e-12, 2.2902146758901898e-12, 9.86624410642678e-13])",
+            "candidate": "tensor(shape=(24, 8), dtype=torch.float32, device=cpu, values=[2.1493570812047835e-12, 1.043737318795479e-11, 5.313909035020714e-12, 2.0790203326265244e-12])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"2\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"2\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[0.000445993326138705, -0.0009107153164222836, 0.0027446539606899023, -0.0018553810659796])",
+            "candidate": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[0.00044057623017579317, -0.001186838373541832, 0.003199934959411621, -0.002087691565975547])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"3\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[4.688339458880364e-07, 1.6659766970406054e-06, 1.4803051271883305e-05, 7.117263066902524e-06])",
+            "candidate": "tensor(shape=(8, 8), dtype=torch.float32, device=cpu, values=[4.5306848051041015e-07, 2.256836978631327e-06, 1.6725547538953833e-05, 7.634387657162733e-06])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"3\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"3\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(32, 8), dtype=torch.float32, device=cpu, values=[0.00014103394642006606, -0.00023457614588551223, 4.118027845834149e-06, 0.00043055653804913163])",
+            "candidate": "tensor(shape=(32, 8), dtype=torch.float32, device=cpu, values=[0.0001442490320187062, -0.00035124976420775056, 1.4876620298309717e-05, 0.000528789300005883])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"4\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(32, 8), dtype=torch.float32, device=cpu, values=[5.1697114145099476e-08, 1.1043516678910237e-07, 2.1146426276708041e-10, 3.6004985304316506e-07])",
+            "candidate": "tensor(shape=(32, 8), dtype=torch.float32, device=cpu, values=[5.0611905777486754e-08, 2.0309722970068833e-07, 8.24779688990418e-10, 4.4185944148011913e-07])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"4\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"4\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 32), dtype=torch.float32, device=cpu, values=[-1.6663610949763097e-05, -0.0007944529061205685, -0.0007116580381989479, 0.000692731118761003])",
+            "candidate": "tensor(shape=(8, 32), dtype=torch.float32, device=cpu, values=[-7.038502371869981e-05, -0.0009381257114000618, -0.000679961871355772, 0.00089376320829615])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"5\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8, 32), dtype=torch.float32, device=cpu, values=[2.8588262424023014e-08, 1.262066803064954e-06, 1.041260247802711e-06, 9.362498758491711e-07])",
+            "candidate": "tensor(shape=(8, 32), dtype=torch.float32, device=cpu, values=[4.2497877217329005e-08, 1.4478719094768167e-06, 9.969865004677558e-07, 1.2547618553071516e-06])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"5\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"5\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[-6.349341219902271e-06, -1.9031618649023585e-05, -0.00035258469870314, 4.996487041353248e-05])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[-2.1601730622933246e-05, -3.282225952716544e-05, -0.0004321537562645972, 5.524246807908639e-05])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"6\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[4.311071222229401e-10, 1.0238337955215115e-09, 2.423185492261837e-07, 5.1013171464830975e-09])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[1.6715870909678188e-09, 2.2041195535393854e-09, 2.9612942853418645e-07, 5.37403543887649e-09])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"6\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"6\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[-0.00010560089867794886, -0.00010696979006752372, -0.0001459274353692308, -1.8084203475154936e-05])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[-0.00016265980957541615, -0.0001627606397960335, -0.00020917304209433496, -7.400784670608118e-05])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"7\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[2.4423687960961615e-08, 2.4428217670902086e-08, 4.311375434440379e-08, 5.961465099346697e-09])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[4.606415160424149e-08, 4.5309967333651e-08, 7.125211709535506e-08, 2.2328347171196583e-08])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"7\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"7\"].step",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[-0.0016096321633085608, -0.0005652319523505867, 0.0006722050602547824, -0.0002960030105896294])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[-0.0023296026047319174, -0.0010143317049369216, 0.0006069365772418678, -0.0005698016611859202])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"8\"].exp_avg",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[5.129493729327805e-06, 7.954197940307495e-07, 1.0801519465530873e-06, 2.6054127033603436e-07])",
+            "candidate": "tensor(shape=(8,), dtype=torch.float32, device=cpu, values=[8.753239853831474e-06, 2.0339214188425103e-06, 1.0261634315611445e-06, 7.077688337631116e-07])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"8\"].exp_avg_sq",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[3.0])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[4.0])",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.state[\"8\"].step",
+            "reason": "tensor_value"
+          }
+        ],
+        "first_divergent_step": 3,
+        "outcome": "FAIL",
+        "primary_difference": {
+          "baseline": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[2.708693504333496])",
+          "candidate": "tensor(shape=(), dtype=torch.float32, device=cpu, values=[2.692511796951294])",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "best_val_loss",
+          "reason": "tensor_value"
+        }
+      },
+      "handwritten": {
+        "clean_outcome": "PASS",
+        "diagnostic": "final model states differ",
+        "fault_outcome": "FAIL"
+      },
+      "loc": {
+        "adapter_logical": 24,
+        "supporting_glue_logical": 57,
+        "total_new_project_integration": 81,
+        "upstream_modified": 0
+      },
+      "name": "nanogpt",
+      "repository": {
+        "commit": "3adf61e154c3fe3fca428ad6bc3818b27a3b8291",
+        "license": "MIT",
+        "license_file": "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/nanogpt/LICENSE",
+        "license_sha256": "a59ec5cdb1c1e447e5266a014b3e7ded511f8d6e5a08931e931c87490ff821fe",
+        "repository": "https://github.com/karpathy/nanoGPT.git",
+        "upstream_modified_loc": 0
+      },
+      "resources": {
+        "checkpoint_max_bytes": 24051,
+        "comparison_process_peak_rss_kib": 486124,
+        "comparison_seconds": 0.001400111010298133,
+        "runtime_overhead_percent": 0.004815655650047716,
+        "snapshot_max_bytes": 24518,
+        "upstream_peak_rss_kib": 1027376,
+        "upstream_runtime_seconds": 29.07415131072048
+      },
+      "structure": "small language model"
+    },
+    {
+      "checkpoint_implementation": {
+        "load": "examples/mnist/mnist_save_resume_engine.py torch.load and Checkpoint.load_objects",
+        "save": "examples/mnist/mnist_save_resume_engine.py Checkpoint and DiskSaver"
+      },
+      "clean": {
+        "all_differences": [],
+        "first_divergent_step": null,
+        "outcome": "PASS",
+        "primary_difference": null
+      },
+      "executions": [
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "prepare"
+          ],
+          "elapsed_seconds": 1.768453206983395,
+          "peak_rss_kib": 381280,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/prepare/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/prepare/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_2",
+            "2"
+          ],
+          "elapsed_seconds": 5.3744453199906275,
+          "peak_rss_kib": 1110768,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_2/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_2/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_3",
+            "3"
+          ],
+          "elapsed_seconds": 4.875147034996189,
+          "peak_rss_kib": 1107656,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_4",
+            "4"
+          ],
+          "elapsed_seconds": 4.874441550113261,
+          "peak_rss_kib": 1105292,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_4/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/baseline_4/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_3",
+            "3",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_3/checkpoint.pt"
+          ],
+          "elapsed_seconds": 4.823283631005324,
+          "peak_rss_kib": 1107304,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_4",
+            "4",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_4/checkpoint.pt"
+          ],
+          "elapsed_seconds": 4.923712913063355,
+          "peak_rss_kib": 1108380,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_4/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/clean_4/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_3",
+            "3",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_3/checkpoint.pt"
+          ],
+          "elapsed_seconds": 4.923821386997588,
+          "peak_rss_kib": 1108856,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_3/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_3/stdout.log"
+        },
+        {
+          "command": [
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+            "-m",
+            "experiments.gate4.drivers.ignite_mnist",
+            "run",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_4",
+            "4",
+            "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_4/checkpoint.pt"
+          ],
+          "elapsed_seconds": 4.773125329986215,
+          "peak_rss_kib": 1110624,
+          "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_4/stderr.log",
+          "stdout": "/scratch/mp25/jwuu0254/zxh/TrainParity/outputs/gate4/runs/ignite_mnist_engine/fault_4/stdout.log"
+        }
+      ],
+      "fault": "scheduler_last_epoch_off_by_one",
+      "fault_result": {
+        "all_differences": [
+          {
+            "baseline": "3",
+            "candidate": "2",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "lr_scheduler.last_epoch",
+            "reason": "value"
+          }
+        ],
+        "first_divergent_step": 3,
+        "outcome": "FAIL",
+        "primary_difference": {
+          "baseline": "3",
+          "candidate": "2",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "lr_scheduler.last_epoch",
+          "reason": "value"
+        }
+      },
+      "handwritten": {
+        "clean_outcome": "PASS",
+        "diagnostic": "final model states are equal",
+        "fault_outcome": "PASS"
+      },
+      "loc": {
+        "adapter_logical": 24,
+        "supporting_glue_logical": 44,
+        "total_new_project_integration": 68,
+        "upstream_modified": 0
+      },
+      "name": "ignite_mnist_engine",
+      "repository": {
+        "commit": "e08ff9257ed18d8d805304e32ba85a44553195fc",
+        "license": "BSD-3-Clause",
+        "license_file": "/scratch/mp25/jwuu0254/zxh/TrainParity/external/gate4/ignite/LICENSE",
+        "license_sha256": "4b026f6919b2d6a97e93dfe72f85a7111e3f3834cc17d7d6a0ff475e4a22720c",
+        "repository": "https://github.com/pytorch/ignite.git",
+        "upstream_modified_loc": 0
+      },
+      "resources": {
+        "checkpoint_max_bytes": 194474,
+        "comparison_process_peak_rss_kib": 486124,
+        "comparison_seconds": 0.00197802297770977,
+        "runtime_overhead_percent": 0.0054436359251517205,
+        "snapshot_max_bytes": 294570,
+        "upstream_peak_rss_kib": 1110768,
+        "upstream_runtime_seconds": 36.336430373135954
+      },
+      "structure": "trainer engine with scheduler state"
+    }
+  ],
+  "schema_version": 1,
+  "shared_integration_logical_loc": 322
+}

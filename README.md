@@ -6,8 +6,10 @@ user-declared training equivalence. It is designed to report the first
 root cause or diagnose arbitrary training scripts.
 
 Gate 3 adds a resume-equivalence runner that crosses a real checkpoint and
-fresh Python process boundary. It compares complete trajectories with exact
-semantics after initial-equivalence and baseline-self-consistency prechecks.
+fresh Python process boundary. Gate 4 evaluates that design against three
+exact-commit external projects through their original checkpoint paths. The
+external integrations remain experiment evidence rather than production
+framework adapters.
 
 ## Adapter contract
 
@@ -50,7 +52,7 @@ make lint
 make typecheck
 make test
 make build
-python scripts/verify_gate.py 3
+python scripts/verify_gate.py 4
 ```
 
 ## Runtime dependency
@@ -78,12 +80,16 @@ See [docs/SNAPSHOT_CONTRACT.md](docs/SNAPSHOT_CONTRACT.md).
 
 ## Current limitations
 
-- Gate 3 supports only one process and one GPU, with one completed-step phase.
+- Resume equivalence supports only one process and one GPU, with one
+  completed-step phase.
 - Cases must be ordinary importable zero-argument classes and must expose
   stable batch sample IDs or a deterministic fingerprint.
 - There is no support for distributed training, Lightning, Transformers,
   services, dashboards, registries, or runtime LLM/agent integration.
-- The examples are tiny fixtures, not evidence of broad project compatibility.
+- Gate 4 covers three tiny external recipes on one L40S; it is not evidence of
+  broad project compatibility, training quality, or scale.
 
 See [docs/PRODUCT_CONTRACT.md](docs/PRODUCT_CONTRACT.md) and
 [docs/API_PROTOTYPES.md](docs/API_PROTOTYPES.md) for the precise boundaries.
+The Gate 4 repository pins, licenses, checkpoint paths, and LOC explanations
+are in [docs/GATE4_INTEGRATIONS.md](docs/GATE4_INTEGRATIONS.md).

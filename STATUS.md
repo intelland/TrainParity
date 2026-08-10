@@ -2,7 +2,7 @@
 
 ## Active gate
 
-Gate 4 — real-project integration and product-friction Go/No-Go.
+Gate 4 — complete with machine recommendation `GO`; awaiting human review.
 
 ## Objective
 
@@ -37,7 +37,7 @@ runs, without optimizing the snapshot backend.
 - Continue to describe outputs as first observed divergence, never root cause.
 - Preserve the user's uncommitted `CODEX_REMOTE_DEVELOPMENT.md` changes exactly.
 
-## Planned verification commands
+## Verification commands
 
 Run from the M3 repository checkout unless noted otherwise:
 
@@ -87,7 +87,16 @@ ByteTensors were loaded onto CUDA instead of CPU. Its raw evidence remains at
 `outputs/gate3/gpu_matrix_attempt1.json`; the corrected restoration was verified
 by the passing job above.
 
-Gate 4 is authorized and in progress on the dedicated `gate-4` branch. The
-candidate external repositories are `pytorch/examples`, `karpathy/nanoGPT`, and
-`pytorch/ignite`; commit and license evidence is being verified before adapters
-are implemented. No Gate 5 work is authorized.
+Gate 4 completed on the dedicated `gate-4` branch. The formal M3 L40S matrix in
+Slurm job `58960426` passed all three clean controls and detected all three
+faults. All adapters are 24 logical lines (median 24); project-specific glue is
+48, 57, and 44 logical lines; upstream modified LOC is zero. The exact external
+commits, license hashes, original checkpoint paths, resource measurements, and
+LOC explanations are recorded in `docs/GATE4_INTEGRATIONS.md` and
+`artifacts/gate_reports/gate_4.*`.
+
+The first observed fault paths are `scheduler.last_epoch` for the ImageNet
+recipe, `best_val_loss` for nanoGPT, and `lr_scheduler.last_epoch` for Ignite.
+These are observations, not root-cause claims. The machine verifier returns
+`PASS` with recommendation `GO`. Gate 5 has not been started and remains
+unauthorized pending human review.

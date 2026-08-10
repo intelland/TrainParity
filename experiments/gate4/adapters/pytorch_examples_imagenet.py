@@ -16,7 +16,7 @@ class ImageNetAdapter:
     license_id = "BSD-3-Clause"
     structure = "conventional image classifier"
     fault_name = "scheduler_last_epoch_off_by_one"
-    split_step, total_step = 2, 4
+    split_step, total_step = 2, 3
 
     def prepare_command(self, checkout: Path, data_root: Path) -> list[str]:
         return ["python", "-m", "experiments.gate4.drivers.imagenet", "prepare", str(data_root)]

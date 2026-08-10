@@ -269,3 +269,26 @@
   checkpoint may be integrated into `main`.
 - **Reason:** Real-project setup is expected to expose compatibility failures.
   Keeping intermediate work off `main` prevents avoidable CI notification email.
+
+## D-0026: Keep all Gate 4 integrations external and experiment-only
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Pin `pytorch/examples`, `karpathy/nanoGPT`, and
+  `pytorch/ignite` as external M3 checkouts, execute their original checkpoint
+  save/load paths, and keep command drivers and state normalizers outside the
+  production package. Modify zero tracked upstream lines.
+- **Reason:** This preserves real-project friction and prevents Gate 4 evidence
+  code from becoming premature framework-specific production adapters.
+
+## D-0027: Recommend GO after Gate 4 and stop for review
+
+- **Status:** Proposed for human review
+- **Date:** 2026-08-11
+- **Decision:** Recommend `GO` based on 3/3 clean passes, 3/3 fault detections,
+  median adapter LOC 24, zero upstream modifications, original checkpoint
+  execution, and path-level diagnostics that outperform the minimal final-model
+  control. Do not start Gate 5.
+- **Reason:** The product-friction threshold is met, while the documented glue
+  cost, tiny-data scope, one-GPU scope, and correctness-first backend remain
+  explicit limitations for the human reviewer.

@@ -12,14 +12,9 @@ def prepare(data_root: Path) -> None:
     from PIL import Image
 
     for split in ("train", "val"):
-        for class_index, class_name in enumerate(("dark", "light")):
-            directory = data_root / split / class_name
-            directory.mkdir(parents=True, exist_ok=True)
-            for image_index in range(2):
-                value = 32 + class_index * 160 + image_index * 8
-                Image.new("RGB", (256, 256), color=(value, value, value)).save(
-                    directory / f"{image_index}.png"
-                )
+        directory = data_root / split / "only"
+        directory.mkdir(parents=True, exist_ok=True)
+        Image.new("RGB", (256, 256), color=(128, 128, 128)).save(directory / "0.png")
 
 
 def run(checkout: Path, data_root: Path, run_dir: Path, end_step: int, resume: Path | None) -> None:
@@ -30,7 +25,7 @@ def run(checkout: Path, data_root: Path, run_dir: Path, end_step: int, resume: P
         str(checkout / "imagenet" / "main.py"),
         str(data_root),
         "--arch",
-        "resnet18",
+        "shufflenet_v2_x0_5",
         "--workers",
         "0",
         "--epochs",

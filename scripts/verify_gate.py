@@ -42,11 +42,11 @@ GATE_2_EVIDENCE_HASHES = {
     "experiments/gate2/recorded/ci_ae75212.json": "ac3d0f9268057d4d3a5bdf7133954b628eb6c09a378b30a1a0491cdba32c9bda",
 }
 GATE_3_EVIDENCE_HASHES = {
-    "artifacts/gate_reports/gate_3.json": "4474c932f8670c8f4c41eedceae9f9b39be4fd010d0bcf7b5a91c58a69e8e4db",
-    "artifacts/gate_reports/gate_3.md": "e4ca46cf773380527700d28f7f0c13da3a837d28d2367b37db196fbaafcea5bc",
-    "experiments/gate3/recorded/cpu_matrix.json": "ae1a87ec8f14d45cf5e0a24baa814e7dfcbc8ee182921a43a089abe0bae7c40f",
-    "experiments/gate3/recorded/gpu_matrix.json": "f2c5a98628f480c82d6372470c4aa194af8cccace1dc4ad5a0e8147f64fbc971",
-    "experiments/gate3/recorded/test_summary.json": "1c3dd7d4f6ded2559c35c2390307fb59cfe34fec4018cdf0cf39f1d3ec20472a",
+    "artifacts/gate_reports/gate_3.json": "1c29dbfbbc673f4076acb757f5324e1827a7430fbd33cbd4b861c1d3db587380",
+    "artifacts/gate_reports/gate_3.md": "751295f76f1f600285851d0773efa491c9bca18e494cdd51511f372777d9ce2b",
+    "experiments/gate3/recorded/cpu_matrix.json": "311f3a466d1c27dc2422c422235b8ed625017042d921d470c1d43d72bc77b00b",
+    "experiments/gate3/recorded/gpu_matrix.json": "4b4a8b65937e9ff6204a97e0fc71e398425186551c0f99a2c627795e10d88be3",
+    "experiments/gate3/recorded/test_summary.json": "9b42edf052bec0a8ad813972e9e6fbfe9298891616cf6db54356a47bf525f30f",
 }
 EXPECTED_GATE_2_FAULTS = {
     "nested_value": "extra.nested.items[0].value",
@@ -1062,6 +1062,7 @@ def _write_gate_4_reports(root: Path, report: dict[str, Any]) -> None:
 Median adapter logical LOC: {report['metrics']['adapter_median_logical_loc']}.
 Shared integration logical LOC: {report['metrics']['shared_integration_logical_loc']}.
 Minimal hand-written comparator logical LOC: {report['metrics']['handwritten_comparator_logical_loc']}.
+Tests / coverage: {report['metrics']['tests_passed']} passed / {report['metrics']['coverage_percent']}%.
 
 ## Resource measurements
 
@@ -1091,9 +1092,11 @@ root-cause claims.
 def verify_gate_4(root: Path) -> dict[str, Any]:
     """Verify the Gate 4 real-project integration evidence."""
     matrix_path = root / "experiments" / "gate4" / "recorded" / "matrix.json"
+    test_path = root / "experiments" / "gate4" / "recorded" / "test_summary.json"
     integration_doc = root / "docs" / "GATE4_INTEGRATIONS.md"
     required = [
         matrix_path,
+        test_path,
         integration_doc,
         root / "experiments" / "gate4" / "run_matrix.py",
         root / "tests" / "test_gate4_contract.py",
@@ -1129,6 +1132,7 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
         return report
 
     matrix = _load_json(matrix_path)
+    tests = _load_json(test_path)
     projects = matrix.get("projects", [])
     by_name = {item.get("name"): item for item in projects}
     expected = {
@@ -1212,6 +1216,14 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
         for item in projects
     )
     criterion("runtime, memory, artifact, and overhead measured", resources_ok, "positive measurements for all three projects")
+    criterion(
+        "full unit, contract, and integration suite",
+        tests.get("outcome") == "PASS"
+        and tests.get("tests_failed") == 0
+        and tests.get("tests_passed", 0) >= 76
+        and tests.get("coverage_percent", 0) >= 90,
+        f"tests={tests.get('tests_passed')} passed, coverage={tests.get('coverage_percent')}%",
+    )
     environment = matrix.get("environment", {})
     criterion(
         "single real M3 GPU execution recorded",
@@ -1297,6 +1309,8 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
             "upstream_modified_loc": upstream_modified,
             "shared_integration_logical_loc": matrix.get("shared_integration_logical_loc"),
             "handwritten_comparator_logical_loc": matrix.get("handwritten_comparator_logical_loc"),
+            "tests_passed": tests.get("tests_passed"),
+            "coverage_percent": tests.get("coverage_percent"),
             "environment": environment,
         },
         "commands": [
@@ -1309,7 +1323,7 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
             "git diff --check",
         ],
         "limitations": [
-            "The cases use tiny generated data and one A100; they measure integration friction, not training quality or scale.",
+            f"The cases use tiny generated data and one {environment.get('gpu_name')}; they measure integration friction, not training quality or scale.",
             "The experiment uses a correctness-first full-value snapshot backend and does not optimize snapshot size or speed.",
             "Gate 4 command drivers and state normalizers are experiment-only, not framework-specific production adapters.",
             "Ignite RunningAverage is excluded because the upstream Engine resets that reporting-only derived metric after loading; trainer, model, optimizer, and scheduler remain compared.",

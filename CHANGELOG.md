@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0.dev4 - 2026-08-11
+
+- Evaluate three exact-commit external PyTorch projects through their original
+  checkpoint save/load implementations with zero upstream source changes.
+- Add experiment-only adapters for ImageNet, nanoGPT, and an Ignite Engine
+  recipe, with one realistic resume fault and a minimal hand-written control.
+- Record adapter and glue LOC, licenses, runtime, peak memory, artifact size,
+  full-value snapshot size, overhead, and every first-step difference.
+- Add a real pinned nanoGPT CI integration and the Gate 4 verifier/report.
+
 ## 0.1.0.dev3 - 2026-08-11
 
 - Add real-process continuous versus checkpoint/resume trajectory execution.

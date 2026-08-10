@@ -63,7 +63,7 @@ Logical LOC means nonblank, noncomment lines and is counted automatically.
 
 | Integration | Adapter LOC | Supporting glue LOC | Upstream modified LOC | Total newly written project LOC |
 |---|---:|---:|---:|---:|
-| `pytorch_examples_imagenet` | 24 | 53 | 0 | 77 |
+| `pytorch_examples_imagenet` | 24 | 48 | 0 | 72 |
 | `nanogpt` | 24 | 57 | 0 | 81 |
 | `ignite_mnist_engine` | 24 | 44 | 0 | 68 |
 
@@ -71,7 +71,11 @@ All three totals exceed 50 lines, although the median adapter is 24 lines:
 
 - `pytorch_examples_imagenet` needs deterministic tiny ImageFolder generation,
   command-line construction, process replacement, and resume-path routing. The
-  training and checkpoint algorithms remain upstream.
+  training and checkpoint algorithms remain upstream. It uses the upstream
+  `shufflenet_v2_x0_5` architecture and the minimal split=2, total=3 trajectory
+  so the unoptimized full-value backend is evaluated without materializing a
+  much larger ResNet snapshot. One fixed training sample removes shuffled batch
+  ordering as a clean-control variable across fresh processes.
 - `nanogpt` needs a tiny binary token dataset and metadata plus explicit
   upstream configuration arguments that shrink the real model and disable
   compilation and logging. No nanoGPT training logic is reproduced.
