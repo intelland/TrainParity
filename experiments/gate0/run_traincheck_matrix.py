@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import importlib.metadata
 import json
 import os
@@ -27,7 +28,7 @@ CASES = (
 PHASE_TIMEOUT_SECONDS = 240
 
 
-def _tail(text: str, limit: int = 12_000) -> str:
+def _tail(text: str, limit: int = 3_000) -> str:
     return text[-limit:]
 
 
@@ -84,16 +85,49 @@ def _failed_count(check_phase: dict[str, Any]) -> int | None:
     return int(match.group(1)) if match else None
 
 
-def _failure_evidence(check_dir: Path) -> list[str]:
-    evidence: list[str] = []
+def _failure_evidence(check_dir: Path) -> list[dict[str, Any]]:
+    evidence: list[dict[str, Any]] = []
+    decoder = json.JSONDecoder()
     for path in sorted(check_dir.rglob("failed.log")):
-        for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
-            stripped = line.strip()
-            if stripped:
-                evidence.append(stripped[:1000])
-            if len(evidence) == 5:
-                return evidence
+        content = path.read_text(encoding="utf-8", errors="replace")
+        position = 0
+        while position < len(content):
+            while position < len(content) and content[position].isspace():
+                position += 1
+            if position == len(content):
+                break
+            record, position = decoder.raw_decode(content, position)
+            invariant = record.get("invariant", {})
+            trace = record.get("trace", [])
+            event = trace[-1] if trace else {}
+            evidence.append(
+                {
+                    "description": invariant.get("text_description"),
+                    "relation": invariant.get("relation"),
+                    "step": event.get("meta_vars.step"),
+                    "stage": event.get("meta_vars.stage"),
+                    "function": event.get("function"),
+                }
+            )
     return evidence
+
+
+def _signature(evidence: dict[str, Any]) -> tuple[Any, ...]:
+    return tuple(evidence.get(key) for key in ("description", "relation", "step", "stage", "function"))
+
+
+def _fault_specific(
+    control: list[dict[str, Any]], fault: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    remaining = Counter(_signature(item) for item in fault)
+    remaining.subtract(_signature(item) for item in control)
+    selected: list[dict[str, Any]] = []
+    for item in fault:
+        signature = _signature(item)
+        if remaining[signature] > 0:
+            selected.append(item)
+            remaining[signature] -= 1
+    return selected
 
 
 def _safe_reset(runtime_root: Path, project_root: Path) -> None:
@@ -132,9 +166,11 @@ def main() -> None:
         case_root = runtime_root / case
         log_dir = case_root / "logs"
         reference_trace = case_root / "reference_trace"
-        target_trace = case_root / "target_trace"
+        control_trace = case_root / "control_trace"
+        fault_trace = case_root / "fault_trace"
         invariants = case_root / "invariants.json"
-        check_dir = case_root / "check"
+        control_check = case_root / "control_check"
+        fault_check = case_root / "fault_check"
         phases: dict[str, dict[str, Any]] = {}
         phases["collect_reference"] = _run(
             "collect_reference",
@@ -152,32 +188,56 @@ def main() -> None:
                 env,
             )
         if phases.get("infer", {}).get("returncode") == 0:
-            phases["collect_target"] = _run(
-                "collect_target",
-                [collect, "--pyscript", str(entries / f"{case}_fault.py"), "--invariants", str(invariants), "--output-dir", str(target_trace), "--models-to-track", "model"],
+            phases["collect_control"] = _run(
+                "collect_control",
+                [collect, "--pyscript", str(entries / f"{case}_clean.py"), "--invariants", str(invariants), "--output-dir", str(control_trace), "--models-to-track", "model"],
                 repository,
                 log_dir,
                 env,
             )
-        if phases.get("collect_target", {}).get("returncode") == 0:
-            phases["check"] = _run(
-                "check",
-                [check, "--trace-folders", str(target_trace), "--invariants", str(invariants), "--backend", "pandas", "--output-dir", str(check_dir), "--no-html-report"],
+        if phases.get("collect_control", {}).get("returncode") == 0:
+            phases["check_control"] = _run(
+                "check_control",
+                [check, "--trace-folders", str(control_trace), "--invariants", str(invariants), "--backend", "pandas", "--output-dir", str(control_check), "--no-html-report"],
                 repository,
                 log_dir,
                 env,
             )
-        complete = set(phases) == {"collect_reference", "infer", "collect_target", "check"} and all(
+        if phases.get("check_control", {}).get("returncode") == 0:
+            phases["collect_fault"] = _run(
+                "collect_fault",
+                [collect, "--pyscript", str(entries / f"{case}_fault.py"), "--invariants", str(invariants), "--output-dir", str(fault_trace), "--models-to-track", "model"],
+                repository,
+                log_dir,
+                env,
+            )
+        if phases.get("collect_fault", {}).get("returncode") == 0:
+            phases["check_fault"] = _run(
+                "check_fault",
+                [check, "--trace-folders", str(fault_trace), "--invariants", str(invariants), "--backend", "pandas", "--output-dir", str(fault_check), "--no-html-report"],
+                repository,
+                log_dir,
+                env,
+            )
+        complete = set(phases) == {"collect_reference", "infer", "collect_control", "check_control", "collect_fault", "check_fault"} and all(
             phase["returncode"] == 0 for phase in phases.values()
         )
-        failures = _failed_count(phases["check"]) if complete else None
+        control_failures = _failed_count(phases["check_control"]) if complete else None
+        fault_failures = _failed_count(phases["check_fault"]) if complete else None
+        control_evidence = _failure_evidence(control_check) if complete else []
+        fault_evidence = _failure_evidence(fault_check) if complete else []
+        fault_specific = _fault_specific(control_evidence, fault_evidence)
         results.append(
             {
                 "case": case,
                 "status": "EXECUTED" if complete else "BLOCKED",
-                "detected": failures is not None and failures > 0,
-                "failed_invariants": failures,
-                "failure_evidence": _failure_evidence(check_dir) if complete else [],
+                "detected": bool(fault_specific),
+                "control_failed_invariants": control_failures,
+                "fault_failed_invariants": fault_failures,
+                "fault_specific_violation_count": len(fault_specific),
+                "control_evidence": control_evidence,
+                "fault_evidence": fault_evidence,
+                "fault_specific_evidence": fault_specific,
                 "phases": phases,
             }
         )
@@ -205,7 +265,9 @@ def main() -> None:
         print(
             f"{result['case']}: status={result['status']} "
             f"detected={result['detected']} "
-            f"failed_invariants={result['failed_invariants']} "
+            f"control_failed={result['control_failed_invariants']} "
+            f"fault_failed={result['fault_failed_invariants']} "
+            f"fault_specific={result['fault_specific_violation_count']} "
             f"duration_seconds={duration}"
         )
     print(f"summary={args.output}")
