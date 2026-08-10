@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import argparse
-from collections import Counter
 import importlib.metadata
 import json
 import os
-from pathlib import Path
 import platform
 import re
 import shlex
@@ -15,6 +13,8 @@ import shutil
 import subprocess
 import sys
 import time
+from collections import Counter
+from pathlib import Path
 from typing import Any
 
 import torch

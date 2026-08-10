@@ -228,6 +228,8 @@ def verify_gate_0(root: Path) -> dict[str, Any]:
         "commands": [
             "python -m experiments.gate0.run_fault_matrix --output $PROJECT_ROOT/outputs/gate0/recorded/fault_matrix.json",
             "python -m experiments.gate0.run_traincheck_matrix --runtime-root $PROJECT_ROOT/outputs/gate0/traincheck --output $PROJECT_ROOT/outputs/gate0/recorded/traincheck_summary.json",
+            "python -m ruff check experiments/gate0 scripts/verify_gate.py",
+            "python -m mypy --ignore-missing-imports --check-untyped-defs experiments/gate0 scripts/verify_gate.py",
             "python -m compileall -q experiments scripts",
             "python scripts/verify_gate.py 0",
         ],

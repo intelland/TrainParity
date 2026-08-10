@@ -22,6 +22,8 @@ conda create --solver libmamba \
   --index-url https://download.pytorch.org/whl/cpu \
   torch==2.13.0+cpu
 "$PROJECT_ROOT/envs/gate0/bin/python" -m pip install traincheck==0.1.2
+"$PROJECT_ROOT/envs/gate0/bin/python" -m pip install \
+  -r experiments/gate0/requirements-dev.txt
 ```
 
 The recorded run used Python 3.11.15, PyTorch 2.13.0+cpu, and TrainCheck 0.1.2.
@@ -44,6 +46,9 @@ PY="$PROJECT_ROOT/envs/gate0/bin/python"
   --output "$PROJECT_ROOT/outputs/gate0/recorded/traincheck_summary.json"
 
 "$PY" scripts/verify_gate.py 0
+"$PY" -m ruff check experiments/gate0 scripts/verify_gate.py
+"$PY" -m mypy --ignore-missing-imports --check-untyped-defs \
+  experiments/gate0 scripts/verify_gate.py
 ```
 
 Raw TrainCheck traces and phase logs remain under

@@ -35,6 +35,7 @@
 - **Date:** 2026-08-10
 - **Decision:** Gate 0 evidence uses Python 3.11.15, PyTorch 2.13.0+cpu, and
   TrainCheck 0.1.2 in `/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0`.
+  Ruff 0.16.2 and Mypy 2.3.0 are verification-only dependencies.
 - **Reason:** Gate 0 requires reproducible competitor execution but does not
   justify CUDA downloads or a production dependency decision.
 
