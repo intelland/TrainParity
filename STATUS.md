@@ -2,29 +2,35 @@
 
 ## Active gate
 
-Gate 1 — product contract, API prototypes, and engineering skeleton.
+Gate 2 — deterministic snapshot, canonicalization, and comparison core.
 
 ## Objective
 
-Create an installable Python package skeleton and compare two explicit adapter
-APIs using one correct and one faulty resume example. Select the lower-friction,
-process-safe design without implementing the Gate 2 snapshot/comparator or the
-Gate 3 resume-equivalence runner.
+Implement a deterministic full-value reference snapshot backend, stable state
+paths, name-based optimizer canonicalization, and separate exact/tolerance
+comparators that report first observed differences without claiming root cause.
 
 ## Constraints
 
-- Implement Gate 1 only and stop for human acceptance.
+- Implement Gate 2 only and stop for human acceptance.
 - Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
 - Keep every environment, cache, checkout, log, and output under
   `/scratch/mp25/jwuu0254/zxh/TrainParity`.
 - Preserve all accepted Gate 0 evidence unchanged.
-- Compare class/protocol and factory-plus-callback adapter forms.
-- Keep the selected simple adapter at or below 30 logical lines and importable
-  in a fresh Python process without `cloudpickle`.
-- Keep production dependencies minimal and document each one.
+- Preserve all accepted Gate 0 and Gate 1 evidence unchanged.
+- Define deterministic, unambiguous state paths and freeze captured tensor
+  values without retaining aliases to mutable training state.
+- Distinguish missing, `None`, empty, zero, NaN, and Inf states.
+- Keep `ExactComparison` and explicit `ToleranceComparison` separate.
+- Canonicalize optimizer state by stable parameter names and return `ABSTAIN`
+  when mapping is missing, duplicated, aliased, or otherwise ambiguous.
+- Implement a full-value reference backend without making materialized
+  snapshots the only possible future backend.
 - Do not add runtime LLM/agent dependencies, distributed support, a web UI,
   service, registry, or platform functionality.
-- Do not implement later-gate snapshot/comparison or orchestration features.
+- Do not implement production resume orchestration, phase tracing, accumulation,
+  sample coverage, or any other later-gate feature.
+- Continue to describe outputs as first observed divergence, never root cause.
 
 ## Planned verification commands
 
@@ -35,13 +41,13 @@ make lint
 make typecheck
 make test
 make build
-python scripts/verify_gate.py 1
+python scripts/verify_gate.py 2
 git diff --check
 ```
 
-The final Gate 1 report will record exact environment and command outcomes,
-the measured adapter line count, fresh-process import evidence, API selection,
-and all known limitations.
+The final Gate 2 report will record the fault/clean suites, stable expected
+paths, coverage, optimizer ambiguity behavior, exact/tolerance behavior,
+environment, exact command outcomes, and all known limitations.
 
 ## Current state
 
@@ -49,20 +55,15 @@ Gate 0 was accepted by the human reviewer on 2026-08-10. Its machine report is
 `PASS` with recommendation `GO`; the report and all supporting evidence remain
 preserved in their existing paths.
 
-Gate 1 implementation and M3 verification are complete and awaiting human
-acceptance. The selected class/protocol adapter is 28 logical lines, imports
-from a fresh process and an installed wheel, and requires no `cloudpickle`.
-The correct resume example returns `PASS`; the deliberately missing scheduler
-state returns `FAIL` with first observed divergence at
-`optimizer.param_groups.0.lr`. This observation is not presented as root cause.
+Gate 1 was accepted by the human reviewer on 2026-08-10. Its 28-line selected
+adapter, wheel-installed fresh-process import, clean `PASS`, and faulty `FAIL`
+evidence remain preserved.
 
-On the isolated M3 CPU environment, Ruff passed, Mypy passed for all eight
-package modules, pytest passed 10 tests, the wheel and source distribution
-built successfully, and `python scripts/verify_gate.py 1` returned `PASS` with
-recommendation `HUMAN_REVIEW`. The accepted Gate 0 evidence hashes remain
-unchanged. See `artifacts/gate_reports/gate_1.json` and `gate_1.md`.
+Gate 2 is authorized and in progress. The hosted GitHub Actions result for
+commit `ae75212` was not independently verified because the private repository
+is inaccessible through the connected GitHub App and no authenticated GitHub
+CLI is available. The equivalent full M3 sequence passed and was accepted for
+Gate 1. Confirming the remote Actions result is a carry-forward requirement
+that must be resolved or precisely reported no later than Gate 2 review.
 
-The GitHub Actions workflow runs the same lint, type-check, test, build, and
-verifier sequence. An intermediate run exposed the Ruff configuration scope;
-that issue was corrected and the identical M3 command now passes. Gate 2 has
-not started and remains unauthorized pending explicit human approval.
+No Gate 3 work is authorized.

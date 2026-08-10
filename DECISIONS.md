@@ -114,3 +114,24 @@
 - **Reason:** A fresh isolated CPU environment validates install metadata,
   examples, and wheel behavior without relying on Gate 0's editable state or
   paths outside the MP25 project boundary.
+
+## D-0012: Accept Gate 1 and authorize Gate 2 only
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** The human reviewer accepted Gate 1 and authorized only the
+  deterministic snapshot, canonicalization, comparison, and first-observed-
+  difference work defined by Gate 2.
+- **Reason:** The class/protocol adapter met the 30-line and process import
+  criteria and distinguished the clean and faulty probes. Production resume
+  orchestration and later equivalence checks remain unauthorized.
+
+## D-0013: Carry forward hosted CI confirmation
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Preserve the fact that the hosted GitHub Actions conclusion for
+  commit `ae75212` could not be read through the connected GitHub App. Confirm
+  it, or report a precise access blocker, no later than Gate 2 review.
+- **Reason:** The equivalent complete M3 command chain was accepted as Gate 1
+  evidence, but it does not independently establish GitHub-hosted execution.
