@@ -28,7 +28,8 @@ building the installable library.
 Run from the M3 repository checkout unless noted otherwise:
 
 ```bash
-python experiments/gate0/run_fault_matrix.py
+python -m experiments.gate0.run_fault_matrix \
+  --output "$PROJECT_ROOT/outputs/gate0/recorded/fault_matrix.json"
 python scripts/verify_gate.py 0
 git diff --check
 ```

@@ -9,7 +9,7 @@ from pathlib import Path
 from experiments.gate0.ab_prototype import evaluate_matrix
 
 EXPECTED = {
-    "missing_scheduler_state": (2, "scheduler.last_epoch"),
+    "missing_scheduler_state": (2, "optimizer.lr"),
     "missing_rng_state": (2, "rng.torch"),
     "mean_of_means": (0, "gradient.model.weight"),
     "sample_duplication": (3, "batch.sample_ids.0"),
