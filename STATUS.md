@@ -39,5 +39,10 @@ and any blocked competitor experiments.
 
 ## Current state
 
-Gate 0 started. Handoff specifications have been imported; implementation and
-competitor experiments are pending.
+Gate 0 implementation and M3 experiments are complete; final machine
+verification and report generation are in progress. The throwaway A/B prototype
+located all four required faults identically across three repeats. TrainCheck
+0.1.2 completed all 24 reference/control/fault phases: it produced
+fault-specific evidence for missing scheduler state, but none for missing RNG
+state, mean-of-means, or sample duplication after clean-control correction.
+Gate 1 has not started.

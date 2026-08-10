@@ -1,0 +1,909 @@
+{
+  "environment": {
+    "platform": "Linux-5.14.0-687.17.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.11.15",
+    "pytorch": "2.13.0+cpu",
+    "traincheck": "0.1.2"
+  },
+  "experiment_boundary": {
+    "competitor": "traincheck==0.1.2 from PyPI",
+    "method": "black-box CLI only; no TrainCheck source copied",
+    "runtime_root": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck"
+  },
+  "results": [
+    {
+      "case": "missing_scheduler_state",
+      "control_evidence": [
+        {
+          "description": "FunctionCoverRelation between torch.nn.modules.linear.Linear.forward and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.nn.modules.linear.Linear.forward and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.optimizer.Optimizer.zero_grad and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.optimizer.Optimizer.zero_grad and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.SGD.step and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.SGD.step and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.sgd and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.sgd and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.zero_grad contains torch._ops.TorchBindOpOverload.__call__ with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.zero_grad",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 1
+        }
+      ],
+      "control_failed_invariants": 14,
+      "detected": true,
+      "fault_evidence": [
+        {
+          "description": "FunctionCoverRelation between torch.compiler.is_exporting and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "training",
+          "step": 3
+        },
+        {
+          "description": "FunctionCoverRelation between torch.compiler.is_exporting and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "training",
+          "step": 3
+        },
+        {
+          "description": "FunctionCoverRelation between torch.nn.modules.linear.Linear.forward and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.nn.modules.linear.Linear.forward and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.optimizer.Optimizer.zero_grad and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.optimizer.Optimizer.zero_grad and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.SGD.step and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.SGD.step and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.sgd and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionCoverRelation between torch.optim.sgd.sgd and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.compiler.is_exporting",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.nn.modules.linear.Linear.forward",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.optim.optimizer.Optimizer.zero_grad",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.optim.sgd.SGD.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.optim.sgd.sgd",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.compiler.is_exporting",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.nn.modules.linear.Linear.forward",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.optim.optimizer.Optimizer.zero_grad",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.optim.sgd.SGD.step",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.optim.sgd.sgd",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.lr_scheduler.StepLR.get_lr contains torch.optim.lr_scheduler._param_groups_val_list with exception: NOT SET",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 5
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.zero_grad contains torch._ops.TorchBindOpOverload.__call__ with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.zero_grad",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 1
+        }
+      ],
+      "fault_failed_invariants": 27,
+      "fault_specific_evidence": [
+        {
+          "description": "FunctionCoverRelation between torch.compiler.is_exporting and torch.optim.lr_scheduler.LRScheduler.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionCoverRelation",
+          "stage": "training",
+          "step": 3
+        },
+        {
+          "description": "FunctionCoverRelation between torch.compiler.is_exporting and torch.optim.lr_scheduler.StepLR.get_lr",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionCoverRelation",
+          "stage": "training",
+          "step": 3
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.compiler.is_exporting",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.nn.modules.linear.Linear.forward",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.optim.optimizer.Optimizer.zero_grad",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.optim.sgd.SGD.step",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.LRScheduler.step and torch.optim.sgd.sgd",
+          "function": "torch.optim.lr_scheduler.LRScheduler.step",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.compiler.is_exporting",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.nn.modules.linear.Linear.forward",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.optim.optimizer.Optimizer.zero_grad",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.optim.sgd.SGD.step",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "FunctionLeadRelation between torch.optim.lr_scheduler.StepLR.get_lr and torch.optim.sgd.sgd",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "FunctionLeadRelation",
+          "stage": "training",
+          "step": 2
+        },
+        {
+          "description": "torch.optim.lr_scheduler.StepLR.get_lr contains torch.optim.lr_scheduler._param_groups_val_list with exception: NOT SET",
+          "function": "torch.optim.lr_scheduler.StepLR.get_lr",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 5
+        }
+      ],
+      "fault_specific_violation_count": 13,
+      "phases": {
+        "check_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/control_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/control_check --no-html-report",
+          "duration_seconds": 9.785,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/logs/check_control.log",
+          "returncode": 0,
+          "stderr_tail": "._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f4c41fbdc10>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 93.57it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f4c41fbdc10>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 312 invariants checked\nTotal failed invariants: 14/312\nTotal passed invariants: 298/312\nTotal invariants that are not triggered: 37/312\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "check_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/fault_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/fault_check --no-html-report",
+          "duration_seconds": 10.067,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/logs/check_fault.log",
+          "returncode": 0,
+          "stderr_tail": "._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f07c696e5d0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 89.43it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f07c696e5d0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 312 invariants checked\nTotal failed invariants: 27/312\nTotal passed invariants: 285/312\nTotal invariants that are not triggered: 35/312\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "collect_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/missing_scheduler_state_clean.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/control_trace --models-to-track model",
+          "duration_seconds": 11.618,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/logs/collect_control.log",
+          "returncode": 0,
+          "stderr_tail": "urrently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter args, kind VAR_POSITIONAL, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 16: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 17: scheduler.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "rder_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 1\u001b[0m\n\u001b[94mFailed to get attribute imag of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 2\u001b[0m\n\u001b[94mWarmup step 3\u001b[0m\n\u001b[94mWarmup step 4\u001b[0m\n\u001b[94mWarmup step 5\u001b[0m\n\u001b[94m{\"losses\": [2.256863832473755, 1.9702554941177368, 0.00622563948854804, 0.0620858408510685, 0.21325448155403137], \"weight\": [0.2461794763803482]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/missing_scheduler_state_fault.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/fault_trace --models-to-track model",
+          "duration_seconds": 11.201,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/logs/collect_fault.log",
+          "returncode": 0,
+          "stderr_tail": "urrently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter args, kind VAR_POSITIONAL, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 18: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 19: scheduler.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "rder_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 1\u001b[0m\n\u001b[94mFailed to get attribute imag of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 2\u001b[0m\n\u001b[94mWarmup step 3\u001b[0m\n\u001b[94mWarmup step 4\u001b[0m\n\u001b[94mWarmup step 5\u001b[0m\n\u001b[94m{\"losses\": [2.256863832473755, 1.9702554941177368, 0.00622563948854804, 0.0620858408510685, 0.18941499292850494], \"weight\": [0.5481746792793274]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_reference": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/missing_scheduler_state_clean.py --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/reference_trace --models-to-track model",
+          "duration_seconds": 12.23,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/logs/collect_reference.log",
+          "returncode": 0,
+          "stderr_tail": "/bin/sh: line 1: conda: command not found\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 16: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 17: scheduler.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_postrelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_prerelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute local of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute major of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute micro of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute minor of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute post of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute pre of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute public of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute release of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mInterval step 1\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mInterval step 2\u001b[0m\n\u001b[94mInterval step 3\u001b[0m\n\u001b[94mInterval step 4\u001b[0m\n\u001b[94mInterval step 5\u001b[0m\n\u001b[94m{\"losses\": [2.256863832473755, 1.9702554941177368, 0.00622563948854804, 0.0620858408510685, 0.21325448155403137], \"weight\": [0.2461794763803482]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "infer": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-infer --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/reference_trace --output /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/invariants.json --backend pandas",
+          "duration_seconds": 8.923,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_scheduler_state/logs/infer.log",
+          "returncode": 0,
+          "stderr_tail": " 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 5374.61it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5282.50it/s]\n\nScanning Positive Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 4821.04it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 6589.34it/s]\n\nScanning Positive Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 5575.20it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5785.25it/s]\n\nScanning Positive Examples:   0%|          | 0/16 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 16/16 [00:00<00:00, 5456.89it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/126 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 126/126 [00:00<00:00, 6618.69it/s]\n\nScanning Positive Examples:   0%|          | 0/126 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 126/126 [00:00<00:00, 5585.84it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/16 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 16/16 [00:00<00:00, 6364.65it/s]\n\nScanning Positive Examples:   0%|          | 0/34 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 34/34 [00:00<00:00, 5500.51it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/108 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 108/108 [00:00<00:00, 6518.42it/s]\n\nScanning Positive Examples:   0%|          | 0/108 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 108/108 [00:00<00:00, 5571.29it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/34 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 34/34 [00:00<00:00, 6556.61it/s]\n\nScanning Positive Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 5365.67it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/129 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 129/129 [00:00<00:00, 6667.22it/s]\n\nScanning Positive Examples:   0%|          | 0/129 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 129/129 [00:00<00:00, 5606.14it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 6498.92it/s]\n",
+          "stdout_tail": "Start preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\n",
+          "timed_out": false
+        }
+      },
+      "status": "EXECUTED"
+    },
+    {
+      "case": "missing_rng_state",
+      "control_evidence": [
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.zero_grad contains torch._ops.TorchBindOpOverload.__call__ with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.zero_grad",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 1
+        }
+      ],
+      "control_failed_invariants": 6,
+      "detected": false,
+      "fault_evidence": [
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.zero_grad contains torch._ops.TorchBindOpOverload.__call__ with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.zero_grad",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 1
+        }
+      ],
+      "fault_failed_invariants": 6,
+      "fault_specific_evidence": [],
+      "fault_specific_violation_count": 0,
+      "phases": {
+        "check_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/control_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/control_check --no-html-report",
+          "duration_seconds": 9.009,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/logs/check_control.log",
+          "returncode": 0,
+          "stderr_tail": "h._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f49f11aad50>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 94.68it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f49f11aad50>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 264 invariants checked\nTotal failed invariants: 6/264\nTotal passed invariants: 258/264\nTotal invariants that are not triggered: 27/264\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "check_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/fault_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/fault_check --no-html-report",
+          "duration_seconds": 9.338,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/logs/check_fault.log",
+          "returncode": 0,
+          "stderr_tail": "incheck.trace.trace_pandas.TracePandas object at 0x7f5ce100a850>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n\nChecking invariants: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 263/264 [00:05<00:00, 51.66invariant/s]=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 91.34it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f5ce100a850>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 264 invariants checked\nTotal failed invariants: 6/264\nTotal passed invariants: 258/264\nTotal invariants that are not triggered: 27/264\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "collect_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/missing_rng_state_clean.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/control_trace --models-to-track model",
+          "duration_seconds": 11.533,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/logs/collect_control.log",
+          "returncode": 0,
+          "stderr_tail": "upporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter args, kind VAR_POSITIONAL, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 15: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "ass 'torch._dynamo._trace_wrapped_higher_order_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 1\u001b[0m\n\u001b[94mFailed to get attribute imag of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 2\u001b[0m\n\u001b[94mWarmup step 3\u001b[0m\n\u001b[94mWarmup step 4\u001b[0m\n\u001b[94m{\"losses\": [0.5062597990036011, 0.2300475537776947, 0.7590498328208923, 0.47733601927757263], \"weight\": [0.04837019741535187]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/missing_rng_state_fault.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/fault_trace --models-to-track model",
+          "duration_seconds": 11.738,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/logs/collect_fault.log",
+          "returncode": 0,
+          "stderr_tail": "upporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter args, kind VAR_POSITIONAL, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 17: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "s 'torch._dynamo._trace_wrapped_higher_order_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 1\u001b[0m\n\u001b[94mFailed to get attribute imag of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 2\u001b[0m\n\u001b[94mWarmup step 3\u001b[0m\n\u001b[94mWarmup step 4\u001b[0m\n\u001b[94m{\"losses\": [0.5062597990036011, 0.2300475537776947, 0.26307937502861023, 0.13742321729660034], \"weight\": [-0.08733195066452026]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_reference": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/missing_rng_state_clean.py --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/reference_trace --models-to-track model",
+          "duration_seconds": 12.967,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/logs/collect_reference.log",
+          "returncode": 0,
+          "stderr_tail": "/bin/sh: line 1: conda: command not found\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 15: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "ackaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_postrelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_prerelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute local of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute major of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute micro of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute minor of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute post of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute pre of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute public of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute release of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mInterval step 1\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mInterval step 2\u001b[0m\n\u001b[94mInterval step 3\u001b[0m\n\u001b[94mInterval step 4\u001b[0m\n\u001b[94m{\"losses\": [0.5062597990036011, 0.2300475537776947, 0.7590498328208923, 0.47733601927757263], \"weight\": [0.04837019741535187]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "infer": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-infer --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/reference_trace --output /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/invariants.json --backend pandas",
+          "duration_seconds": 8.484,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/missing_rng_state/logs/infer.log",
+          "returncode": 0,
+          "stderr_tail": "0%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 126/126 [00:00<00:00, 5668.89it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/16 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 16/16 [00:00<00:00, 6706.86it/s]\n\nScanning Positive Examples:   0%|          | 0/16 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 16/16 [00:00<00:00, 5556.29it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/126 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 126/126 [00:00<00:00, 6751.70it/s]\n\nScanning Positive Examples:   0%|          | 0/126 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 126/126 [00:00<00:00, 5687.01it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/16 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 16/16 [00:00<00:00, 6628.69it/s]\n\nScanning Positive Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 5505.45it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/129 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 129/129 [00:00<00:00, 6713.47it/s]\n\nScanning Positive Examples:   0%|          | 0/129 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 129/129 [00:00<00:00, 5653.59it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 6622.05it/s]\n\nScanning Positive Examples:   0%|          | 0/34 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 34/34 [00:00<00:00, 5585.40it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/108 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 108/108 [00:00<00:00, 6519.27it/s]\n\nScanning Positive Examples:   0%|          | 0/108 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 108/108 [00:00<00:00, 5661.18it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/34 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 34/34 [00:00<00:00, 6650.79it/s]\n\nScanning Positive Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 4957.81it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 6796.80it/s]\n\nScanning Positive Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 5603.29it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5507.95it/s]\n",
+          "stdout_tail": "Start preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\n",
+          "timed_out": false
+        }
+      },
+      "status": "EXECUTED"
+    },
+    {
+      "case": "mean_of_means",
+      "control_evidence": [
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        }
+      ],
+      "control_failed_invariants": 5,
+      "detected": false,
+      "fault_evidence": [
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        }
+      ],
+      "fault_failed_invariants": 5,
+      "fault_specific_evidence": [],
+      "fault_specific_violation_count": 0,
+      "phases": {
+        "check_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/control_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/control_check --no-html-report",
+          "duration_seconds": 8.366,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/logs/check_control.log",
+          "returncode": 0,
+          "stderr_tail": "._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f7d07b2bdd0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 98.72it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f7d07b2bdd0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                              \nChecking finished. 167 invariants checked\nTotal failed invariants: 5/167\nTotal passed invariants: 162/167\nTotal invariants that are not triggered: 14/167\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "check_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/fault_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/fault_check --no-html-report",
+          "duration_seconds": 8.448,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/logs/check_fault.log",
+          "returncode": 0,
+          "stderr_tail": "h._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7fc50a831ed0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 99.95it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7fc50a831ed0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 167 invariants checked\nTotal failed invariants: 5/167\nTotal passed invariants: 162/167\nTotal invariants that are not triggered: 14/167\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "collect_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/mean_of_means_clean.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/control_trace --models-to-track model",
+          "duration_seconds": 11.652,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/logs/collect_control.log",
+          "returncode": 0,
+          "stderr_tail": "/bin/sh: line 1: conda: command not found\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 13: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "pec.child(index)` to access a single child, or `treespec.children()` to get all children.\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute children_specs of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute context of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute num_children of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute num_leaves of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute num_nodes of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute type of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute namespace of object type <class 'torch._dynamo._trace_wrapped_higher_order_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m{\"loss\": 28.185623168945312, \"weight\": [2.1511430740356445]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/mean_of_means_fault.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/fault_trace --models-to-track model",
+          "duration_seconds": 11.277,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/logs/collect_fault.log",
+          "returncode": 0,
+          "stderr_tail": "/bin/sh: line 1: conda: command not found\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 13: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "spec.child(index)` to access a single child, or `treespec.children()` to get all children.\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute children_specs of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute context of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute num_children of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute num_leaves of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute num_nodes of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute type of object type <class 'torch.utils._pytree.TreeSpec'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute namespace of object type <class 'torch._dynamo._trace_wrapped_higher_order_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m{\"loss\": 19.542701721191406, \"weight\": [1.366819143295288]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_reference": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/mean_of_means_clean.py --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/reference_trace --models-to-track model",
+          "duration_seconds": 12.161,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/logs/collect_reference.log",
+          "returncode": 0,
+          "stderr_tail": "/bin/sh: line 1: conda: command not found\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 13: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "aging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_devrelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_postrelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_prerelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute local of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute major of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute micro of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute minor of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute post of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute pre of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute public of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute release of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m{\"loss\": 28.185623168945312, \"weight\": [2.1511430740356445]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "infer": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-infer --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/reference_trace --output /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/invariants.json --backend pandas",
+          "duration_seconds": 8.731,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/mean_of_means/logs/infer.log",
+          "returncode": 0,
+          "stderr_tail": "es: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 126/126 [00:00<00:00, 5690.74it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/16 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 16/16 [00:00<00:00, 6647.07it/s]\n\nScanning Positive Examples:   0%|          | 0/34 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 34/34 [00:00<00:00, 5672.71it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/108 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 108/108 [00:00<00:00, 6813.75it/s]\n\nScanning Positive Examples:   0%|          | 0/108 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 108/108 [00:00<00:00, 5693.34it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/34 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 34/34 [00:00<00:00, 6685.09it/s]\n\nScanning Positive Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 4657.75it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 6804.44it/s]\n\nScanning Positive Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 5688.62it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5581.24it/s]\n\nScanning Positive Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 5601.02it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/129 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 129/129 [00:00<00:00, 6845.89it/s]\n\nScanning Positive Examples:   0%|          | 0/129 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 129/129 [00:00<00:00, 5741.48it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 6529.27it/s]\n\nScanning Positive Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 4960.74it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 6798.69it/s]\n\nScanning Positive Examples:   0%|          | 0/140 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 140/140 [00:00<00:00, 5589.96it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5562.74it/s]\n",
+          "stdout_tail": "Start preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\n",
+          "timed_out": false
+        }
+      },
+      "status": "EXECUTED"
+    },
+    {
+      "case": "sample_duplication",
+      "control_evidence": [
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.zero_grad contains torch._ops.TorchBindOpOverload.__call__ with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.zero_grad",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 1
+        }
+      ],
+      "control_failed_invariants": 6,
+      "detected": false,
+      "fault_evidence": [
+        {
+          "description": "torch.library.Library.impl has distinct input arguments on difference PT for each step",
+          "function": "torch.library.Library.impl",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.custom_op has distinct input arguments on difference PT for each step",
+          "function": "torch.library.custom_op",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.library.infer_schema has distinct input arguments on difference PT for each step",
+          "function": "torch.library.infer_schema",
+          "relation": "DistinctArgumentRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_fake with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.add_param_group contains torch._library.custom_ops.CustomOpDef.register_kernel with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.add_param_group",
+          "relation": "APIContainRelation",
+          "stage": "init",
+          "step": 0
+        },
+        {
+          "description": "torch.optim.optimizer.Optimizer.zero_grad contains torch._ops.TorchBindOpOverload.__call__ with exception: NOT SET",
+          "function": "torch.optim.optimizer.Optimizer.zero_grad",
+          "relation": "APIContainRelation",
+          "stage": "training",
+          "step": 1
+        }
+      ],
+      "fault_failed_invariants": 6,
+      "fault_specific_evidence": [],
+      "fault_specific_violation_count": 0,
+      "phases": {
+        "check_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/control_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/control_check --no-html-report",
+          "duration_seconds": 9.481,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/logs/check_control.log",
+          "returncode": 0,
+          "stderr_tail": "h._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f17a54285d0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 90.90it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7f17a54285d0>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 264 invariants checked\nTotal failed invariants: 6/264\nTotal passed invariants: 258/264\nTotal invariants that are not triggered: 27/264\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "check_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-check --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/fault_trace --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/invariants.json --backend pandas --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/fault_check --no-html-report",
+          "duration_seconds": 9.302,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/logs/check_fault.log",
+          "returncode": 0,
+          "stderr_tail": "h._utils._LazySeedTracker.queue_seed_all with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7faa6d9e9650>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.random.manual_seed with exception: NOT SET, torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.random.manual_seed contains torch._utils._LazySeedTracker.queue_seed_all with exception: NOT SET\nResult: True\n=====================================\n\n\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET:   0%|          | 0/2 [00:00<?, ?it/s]\u001b[A\nChecking invariants for torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 97.06it/s]\nInvariant Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET on trace <traincheck.trace.trace_pandas.TracePandas object at 0x7faa6d9e9650>: Trace: None\nInvariant: Relation: <class 'traincheck.invariant.contain_relation.APIContainRelation'>\nParam Selectors: [torch.serialization.add_safe_globals with exception: NOT SET, torch._weights_only_unpickler._add_safe_globals with exception: NOT SET]\nPrecondition: ====================== Start of Grouped Precondition ======================\nGroup: parent_func_call_pre\n** Start of Precondition **\nProp: meta_vars.stage, Type: PreconditionClauseType.CONSTANT, Values: {'init'}\n** End of Preconditions **\n\n====================== End of Grouped Precondition ======================\nText Description: torch.serialization.add_safe_globals contains torch._weights_only_unpickler._add_safe_globals with exception: NOT SET\nResult: True\n\n                                                                             \nChecking finished. 264 invariants checked\nTotal failed invariants: 6/264\nTotal passed invariants: 258/264\nTotal invariants that are not triggered: 27/264\n",
+          "stdout_tail": "End preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStarting checking iteration...\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\nStart preprocessing....\nEnd preprocessing\n",
+          "timed_out": false
+        },
+        "collect_control": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/sample_duplication_clean.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/control_trace --models-to-track model",
+          "duration_seconds": 11.732,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/logs/collect_control.log",
+          "returncode": 0,
+          "stderr_tail": "upporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter args, kind VAR_POSITIONAL, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 17: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "ace_wrapped_higher_order_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 1\u001b[0m\n\u001b[94mFailed to get attribute imag of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 2\u001b[0m\n\u001b[94mWarmup step 3\u001b[0m\n\u001b[94mWarmup step 4\u001b[0m\n\u001b[94m{\"losses\": [1.00457763671875, 2.57171893119812, 0.231454536318779, 0.2633436918258667], \"sample_ids\": [0, 1, 2, 3], \"weight\": [0.21775636076927185]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_fault": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/sample_duplication_fault.py --invariants /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/invariants.json --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/fault_trace --models-to-track model",
+          "duration_seconds": 11.428,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/logs/collect_fault.log",
+          "returncode": 0,
+          "stderr_tail": "upporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:traincheck.collect_trace:Currently not supporting fine-grained dumping of arguments and return values for InputOutputParam\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_fake have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._library.custom_ops.CustomOpDef.register_kernel have a non-positional_or_keyword parameter device_types, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter self, kind POSITIONAL_ONLY, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:root:Function torch._ops.TorchBindOpOverload.__call__ have a non-positional_or_keyword parameter args, kind VAR_POSITIONAL, this is not supported for selective dumping, and will be skipped entirely.\nWARNING:traincheck.collect_trace:Model tracker is needed as per the invariants, \nbut which to track is not specified in the arguments/md-config file, \ndisabling model tracking.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 17: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "ace_wrapped_higher_order_op.TraceWrapped'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute code_list of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute create_fn of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guard_types of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute guarded_class_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute name of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute obj_weakref of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute originating_source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute source of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute user_stack of object type <class 'torch._guards.Guard'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 1\u001b[0m\n\u001b[94mFailed to get attribute imag of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mWarmup step 2\u001b[0m\n\u001b[94mWarmup step 3\u001b[0m\n\u001b[94mWarmup step 4\u001b[0m\n\u001b[94m{\"losses\": [1.00457763671875, 2.57171893119812, 0.231454536318779, 0.14813083410263062], \"sample_ids\": [0, 1, 2, 2], \"weight\": [0.3973659574985504]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "collect_reference": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-collect --pyscript /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/repo/experiments/gate0/competitor_entries/sample_duplication_clean.py --output-dir /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/reference_trace --models-to-track model",
+          "duration_seconds": 12.585,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/logs/collect_reference.log",
+          "returncode": 0,
+          "stderr_tail": "/bin/sh: line 1: conda: command not found\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'training' before line 17: optimizer.step()\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted import 'from traincheck import annotate_stage' at line 1.\nINFO:traincheck.instrumentor.source_file:[annotate_stage] Inserted stage 'init' right after annotate_stage import at line 2.\nINFO:root:Running the program... below is the output:\nINFO:traincheck.collect_trace:Trace collection done.\n",
+          "stdout_tail": "on'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_postrelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute is_prerelease of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute local of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute major of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute micro of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute minor of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute post of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute pre of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute public of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mFailed to get attribute release of object type <class 'torch._vendor.packaging.version.Version'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mInterval step 1\u001b[0m\n\u001b[94m/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/lib/python3.11/site-packages/traincheck/instrumentor/dumper.py:320: UserWarning: The .grad attribute of a Tensor that is not a leaf Tensor is being accessed. Its .grad attribute won't be populated during autograd.backward(). If you indeed want the .grad field to be populated for a non-leaf Tensor, use .retain_grad() on the non-leaf Tensor. If you access the non-leaf Tensor by mistake, make sure you access the leaf Tensor instead. See github.com/pytorch/pytorch/pull/30531 for more information. (Triggered internally at /__w/pytorch/pytorch/build/aten/src/ATen/core/TensorBody.h:493.)\u001b[0m\n\u001b[94m  attr = getattr(obj, attr_name, NOT_FOUND)\u001b[0m\n\u001b[94mFailed to get attribute grad_dtype of object type <class 'torch.Tensor'>, skipping it for all following dumps for this attribute.\u001b[0m\n\u001b[94mInterval step 2\u001b[0m\n\u001b[94mInterval step 3\u001b[0m\n\u001b[94mInterval step 4\u001b[0m\n\u001b[94m{\"losses\": [1.00457763671875, 2.57171893119812, 0.231454536318779, 0.2633436918258667], \"sample_ids\": [0, 1, 2, 3], \"weight\": [0.21775636076927185]}\u001b[0m\n\u001b[94mMain thread has finished or encountered an exception\u001b[0m\n\u001b[94mFlushing all buffers to the trace log file\u001b[0m\n\u001b[94mTrace dumper thread has stopped.\u001b[0m\n\u001b[94mTrace dumper thread has finished normally...\u001b[0m\n",
+          "timed_out": false
+        },
+        "infer": {
+          "command": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate0/bin/traincheck-infer --trace-folders /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/reference_trace --output /fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/invariants.json --backend pandas",
+          "duration_seconds": 10.562,
+          "log_path": "/fs04/scratch2/mp25/jwuu0254/zxh/TrainParity/outputs/gate0/traincheck/sample_duplication/logs/infer.log",
+          "returncode": 0,
+          "stderr_tail": "|          | 0/13 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 5620.65it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 6009.03it/s]\n\nScanning Positive Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 5600.45it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5781.26it/s]\n\nScanning Positive Examples:   0%|          | 0/2 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2/2 [00:00<00:00, 5111.89it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/13 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 13/13 [00:00<00:00, 6554.39it/s]\n\nScanning Positive Examples:   0%|          | 0/3 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [00:00<00:00, 5212.47it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/1 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00, 5555.37it/s]\n\nScanning Positive Examples:   0%|          | 0/1 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00, 5035.18it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/3 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [00:00<00:00, 6090.47it/s]\n\nScanning Positive Examples:   0%|          | 0/3 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [00:00<00:00, 5234.16it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/1 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00, 5461.33it/s]\n\nScanning Positive Examples:   0%|          | 0/1 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00, 5084.00it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/3 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [00:00<00:00, 6075.77it/s]\n\nScanning Positive Examples:   0%|          | 0/3 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [00:00<00:00, 5381.91it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/1 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00, 5216.80it/s]\n\nScanning Positive Examples:   0%|          | 0/1 [00:00<?, ?it/s]\nScanning Positive Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00, 5035.18it/s]\n\nScanning Base Precondition on All Negative Examples:   0%|          | 0/3 [00:00<?, ?it/s]\nScanning Base Precondition on All Negative Examples: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [00:00<00:00, 4209.74it/s]\n",
+          "stdout_tail": "Start preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart same level checking...\nEnd same level checking\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\nStart preprocessing....\nEnd preprocessing\nStart generating hypo...\nEnd generating hypo\nStart adding examples...\nEnd adding examples\n",
+          "timed_out": false
+        }
+      },
+      "status": "EXECUTED"
+    }
+  ],
+  "schema_version": 1
+}

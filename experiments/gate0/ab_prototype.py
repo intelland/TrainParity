@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from typing import Any
 
 import torch
@@ -14,6 +15,7 @@ def _summary(value: Any) -> Any:
         flat = value.detach().cpu().flatten()
         return {
             "dtype": str(value.dtype),
+            "sha256": hashlib.sha256(value.detach().cpu().contiguous().numpy().tobytes()).hexdigest(),
             "shape": list(value.shape),
             "values": flat[:4].tolist(),
         }

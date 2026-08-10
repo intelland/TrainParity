@@ -1,0 +1,88 @@
+{
+  "repeat_count": 3,
+  "results": [
+    {
+      "case": "missing_scheduler_state",
+      "first_divergence": {
+        "baseline": 0.010000000000000002,
+        "candidate": 0.1,
+        "path": "optimizer.lr",
+        "step": 2
+      },
+      "outcome": "FAIL"
+    },
+    {
+      "case": "missing_rng_state",
+      "first_divergence": {
+        "baseline": {
+          "dtype": "torch.uint8",
+          "shape": [
+            5056
+          ],
+          "values": [
+            202,
+            39,
+            53,
+            1
+          ]
+        },
+        "candidate": {
+          "dtype": "torch.uint8",
+          "shape": [
+            5056
+          ],
+          "values": [
+            202,
+            39,
+            53,
+            1
+          ]
+        },
+        "path": "rng.torch",
+        "step": 2
+      },
+      "outcome": "FAIL"
+    },
+    {
+      "case": "mean_of_means",
+      "first_divergence": {
+        "baseline": {
+          "dtype": "torch.float32",
+          "shape": [
+            1,
+            1
+          ],
+          "values": [
+            -26.534292221069336
+          ]
+        },
+        "candidate": {
+          "dtype": "torch.float32",
+          "shape": [
+            1,
+            1
+          ],
+          "values": [
+            -18.69105339050293
+          ]
+        },
+        "max_abs_error": 7.843238830566406,
+        "path": "gradient.model.weight",
+        "step": 0
+      },
+      "outcome": "FAIL"
+    },
+    {
+      "case": "sample_duplication",
+      "first_divergence": {
+        "baseline": 3,
+        "candidate": 2,
+        "path": "batch.sample_ids.0",
+        "step": 3
+      },
+      "outcome": "FAIL"
+    }
+  ],
+  "schema_version": 1,
+  "stable": true
+}

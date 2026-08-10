@@ -5,6 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import platform
+import time
+
+import torch
 
 from experiments.gate0.ab_prototype import evaluate_matrix
 
@@ -21,7 +25,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    runs = [evaluate_matrix() for _ in range(3)]
+    runs = []
+    durations = []
+    for _repeat in range(3):
+        started = time.perf_counter()
+        runs.append(evaluate_matrix())
+        durations.append(round(time.perf_counter() - started, 6))
     if runs[1:] != runs[:-1]:
         raise SystemExit("fault matrix is not repeatable")
     for result in runs[0]:
@@ -31,7 +40,18 @@ def main() -> None:
             raise SystemExit(f"{result['case']} was not detected")
         if (observed["step"], observed["path"]) != (expected_step, expected_path):
             raise SystemExit(f"unexpected divergence for {result['case']}: {observed}")
-    payload = {"schema_version": 1, "repeat_count": 3, "stable": True, "results": runs[0]}
+    payload = {
+        "schema_version": 1,
+        "environment": {
+            "platform": platform.platform(),
+            "python": platform.python_version(),
+            "pytorch": torch.__version__,
+        },
+        "repeat_count": 3,
+        "run_duration_seconds": durations,
+        "stable": True,
+        "results": runs[0],
+    }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(payload, indent=2, sort_keys=True))
