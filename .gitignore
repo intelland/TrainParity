@@ -1,0 +1,30 @@
+# Local environment and credentials
+.env
+*.key
+*.pem
+.venv/
+
+# Python caches and tool state
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Cluster logs and model artifacts
+*.out
+*.err
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# Project-local generated data
+data/
+datasets/
+models/
+checkpoints/
+cache/
+tmp/
+logs/
+outputs/
+results/
