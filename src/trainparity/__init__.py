@@ -8,8 +8,11 @@ from trainparity.comparison import (
 )
 from trainparity.importing import CaseImportError, load_case
 from trainparity.outcomes import Outcome
-from trainparity.protocols import ResumeCase, TrainingState
+from trainparity.protocols import ResumeCase, ResumeExecutionCase, StepObservation, TrainingState
+from trainparity.results import ProcessEvidence, ResumeResult
+from trainparity.runner import ResumeRunner
 from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot
+from trainparity.assertions import assert_resume_equivalent
 
 __all__ = [
     "CaptureResult",
@@ -18,11 +21,17 @@ __all__ = [
     "Difference",
     "ExactComparison",
     "Outcome",
+    "ProcessEvidence",
     "ResumeCase",
+    "ResumeExecutionCase",
+    "ResumeResult",
+    "ResumeRunner",
     "Snapshot",
+    "StepObservation",
     "ToleranceComparison",
     "TrainingState",
+    "assert_resume_equivalent",
     "capture_snapshot",
     "load_case",
 ]
-__version__ = "0.1.0.dev2"
+__version__ = "0.1.0.dev3"

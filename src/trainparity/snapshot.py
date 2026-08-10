@@ -118,6 +118,7 @@ def capture_snapshot(
     scheduler: Stateful | _Missing | None = MISSING,
     scaler: Stateful | _Missing | None = MISSING,
     extras: Mapping[str, object] | None = None,
+    batch: object | _Missing = MISSING,
     capture_rng: bool = True,
     backend: SnapshotBackend | None = None,
 ) -> CaptureResult:
@@ -146,6 +147,8 @@ def capture_snapshot(
                 state_dict = getattr(value, "state_dict", None)
                 extra_values[name] = dict(state_dict()) if callable(state_dict) else value
             raw["extra"] = extra_values
+        if not isinstance(batch, _Missing):
+            raw["batch"] = batch
         if capture_rng:
             raw["rng"] = _rng_state()
         frozen = selected_backend.freeze(raw)

@@ -49,6 +49,10 @@ class ExactComparison:
         difference = _snapshot_difference(baseline, candidate, tolerance=None)
         return _result(difference)
 
+    def compare_all(self, baseline: Snapshot, candidate: Snapshot) -> tuple[Difference, ...]:
+        """Return every deterministically ordered difference in this snapshot pair."""
+        return _snapshot_differences(baseline, candidate, tolerance=None)
+
 
 class ToleranceComparison:
     """Explicit numerical policy; structure and tensor metadata stay exact."""
@@ -68,6 +72,14 @@ class ToleranceComparison:
             tolerance=(self.rtol, self.atol, self.equal_nan),
         )
         return _result(difference)
+
+    def compare_all(self, baseline: Snapshot, candidate: Snapshot) -> tuple[Difference, ...]:
+        """Return every difference outside the explicit tolerance."""
+        return _snapshot_differences(
+            baseline,
+            candidate,
+            tolerance=(self.rtol, self.atol, self.equal_nan),
+        )
 
 
 def _result(difference: Difference | None) -> ComparisonResult:
@@ -97,6 +109,29 @@ def _snapshot_difference(
     if baseline.step != candidate.step:
         return _difference(("step",), "step", baseline.step, candidate.step)
     return _value_difference(baseline.state, candidate.state, (), tolerance)
+
+
+def _snapshot_differences(
+    baseline: Snapshot,
+    candidate: Snapshot,
+    tolerance: tuple[float, float, bool] | None,
+) -> tuple[Difference, ...]:
+    differences: list[Difference] = []
+    if baseline.schema_version != candidate.schema_version:
+        differences.append(
+            _difference(
+                ("schema_version",),
+                "schema_version",
+                baseline.schema_version,
+                candidate.schema_version,
+            )
+        )
+    if baseline.backend != candidate.backend:
+        differences.append(_difference(("backend",), "backend", baseline.backend, candidate.backend))
+    if baseline.step != candidate.step:
+        differences.append(_difference(("step",), "step", baseline.step, candidate.step))
+    differences.extend(_all_value_differences(baseline.state, candidate.state, (), tolerance))
+    return tuple(differences)
 
 
 class _Missing:
@@ -156,6 +191,44 @@ def _mapping_difference(
         if difference is not None:
             return difference
     return None
+
+
+def _all_value_differences(
+    baseline: FrozenValue | _Missing,
+    candidate: FrozenValue | _Missing,
+    path: StatePath,
+    tolerance: tuple[float, float, bool] | None,
+) -> list[Difference]:
+    if isinstance(baseline, _Missing) or isinstance(candidate, _Missing):
+        reason = "missing_candidate" if isinstance(candidate, _Missing) else "missing_baseline"
+        return [_difference(path, reason, baseline, candidate)]
+    if type(baseline) is not type(candidate):
+        return [_difference(path, "type", baseline, candidate)]
+    if isinstance(baseline, FrozenMapping) and isinstance(candidate, FrozenMapping):
+        left = dict(baseline.entries)
+        right = dict(candidate.entries)
+        differences: list[Difference] = []
+        for key in sorted(left.keys() | right.keys()):
+            differences.extend(
+                _all_value_differences(
+                    left.get(key, _MISSING),
+                    right.get(key, _MISSING),
+                    (*path, key),
+                    tolerance,
+                )
+            )
+        return differences
+    if isinstance(baseline, FrozenSequence) and isinstance(candidate, FrozenSequence):
+        if baseline.kind != candidate.kind:
+            return [_difference(path, "sequence_kind", baseline.kind, candidate.kind)]
+        if len(baseline.items) != len(candidate.items):
+            return [_difference(path, "sequence_length", len(baseline.items), len(candidate.items))]
+        differences = []
+        for index, (left, right) in enumerate(zip(baseline.items, candidate.items, strict=True)):
+            differences.extend(_all_value_differences(left, right, (*path, index), tolerance))
+        return differences
+    difference = _value_difference(baseline, candidate, path, tolerance)
+    return [] if difference is None else [difference]
 
 
 def _tensor_difference(
@@ -253,4 +326,3 @@ def _summary(value: object) -> str:
     if isinstance(value, FrozenSequence):
         return f"{value.kind}(length={len(value.items)})"
     return repr(value)
-
