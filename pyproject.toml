@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trainparity"
-version = "0.1.0.dev1"
+version = "0.1.0.dev2"
 description = "Explicit differential tests for PyTorch training semantics"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -24,6 +24,7 @@ dependencies = ["torch>=2.5"]
 dev = [
   "build>=1.2",
   "mypy>=1.14",
+  "numpy>=2.0",
   "pytest>=8.3",
   "pytest-cov>=6.0",
   "ruff>=0.9",
@@ -42,7 +43,7 @@ where = ["src"]
 trainparity = ["py.typed"]
 
 [tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers"
+addopts = "--strict-config --strict-markers --cov=trainparity.state --cov=trainparity.snapshot --cov=trainparity.optimizer_state --cov=trainparity.comparison --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=90"
 testpaths = ["tests"]
 
 [tool.ruff]

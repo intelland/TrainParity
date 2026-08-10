@@ -5,9 +5,9 @@ user-declared training equivalence. It is designed to report the first
 **observed** divergence between two controlled executions; it does not infer a
 root cause or diagnose arbitrary training scripts.
 
-Gate 1 provides only the installable package skeleton and selected adapter
-contract. Snapshot comparison and a fresh-process resume runner are not yet
-implemented.
+Gate 2 adds the deterministic full-value snapshot reference backend and
+separate exact/explicit-tolerance comparison policies. A fresh-process resume
+runner is not yet implemented.
 
 ## Adapter contract
 
@@ -53,14 +53,29 @@ contract contains PyTorch modules, optimizers, and schedulers, so hiding this
 dependency behind an optional extra would make installation and typing
 misleading. Build, Ruff, Mypy, pytest, and coverage are development-only.
 
+## Snapshot comparison
+
+```python
+from trainparity import ExactComparison, capture_snapshot
+
+left = capture_snapshot(model, optimizer=optimizer)
+right = capture_snapshot(model, optimizer=optimizer)
+assert left.snapshot is not None and right.snapshot is not None
+result = ExactComparison().compare(left.snapshot, right.snapshot)
+```
+
+Capture can return `PASS`, `ABSTAIN`, or `ERROR`; comparison returns `PASS` or a
+`FAIL` containing an actionable first-observed-difference report. Optimizer
+capture uses model parameter names and abstains when the mapping is ambiguous.
+See [docs/SNAPSHOT_CONTRACT.md](docs/SNAPSHOT_CONTRACT.md).
+
 ## Current limitations
 
-- Gate 1 supports only the adapter contract and import inspection.
-- There is no production snapshot, comparator, or resume runner yet.
+- Gate 2 provides a one-snapshot comparison core, not trajectory execution.
+- There is no production resume runner yet.
 - There is no support for distributed training, Lightning, Transformers,
   services, dashboards, registries, or runtime LLM/agent integration.
 - The examples are tiny CPU fixtures, not evidence of broad compatibility.
 
 See [docs/PRODUCT_CONTRACT.md](docs/PRODUCT_CONTRACT.md) and
 [docs/API_PROTOTYPES.md](docs/API_PROTOTYPES.md) for the precise boundaries.
-
