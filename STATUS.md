@@ -2,15 +2,16 @@
 
 ## Active gate
 
-Gate 4 — complete with machine recommendation `GO`; awaiting human review.
+Gate 4 rework — friction audit complete with evidence `PASS` and recommendation
+`REWORK`; awaiting human review. Gate 5 has not been started.
 
 ## Objective
 
-Measure TrainParity integration effort and diagnostic value against three real,
-commit-pinned external PyTorch recipes: image classification, language modeling,
-and an Engine-based loop with extra resumable state. Exercise each upstream
-project's own checkpoint save/load path with clean and realistic faulty resume
-runs, without optimizing the snapshot backend.
+Audit the complete user-visible integration and end-to-end cost against fresh
+clones of the three accepted, commit-pinned Gate 4 repositories. Separate user
+adapter/glue, reusable library, and benchmark-only LOC; retain the weak control;
+and add a closer fresh-process hand-written comparison without changing the
+production API or optimizing the snapshot backend.
 
 ## Constraints
 
@@ -50,6 +51,7 @@ python -m experiments.gate4.run_matrix \
   --external-root "$PROJECT_ROOT/external/gate4" \
   --output "$PROJECT_ROOT/outputs/gate4/matrix.json"
 python scripts/verify_gate.py 4
+python scripts/verify_gate4_friction_audit.py
 git diff --check
 ```
 
@@ -107,3 +109,27 @@ commit `59876afdd744ca40e2add625113320fc75168385` completed successfully, includ
 lint, strict typing, 76 tests, build, Gate 3 verification, the pinned nanoGPT
 integration, and Gate 4 verification. The hosted result is recorded in
 `experiments/gate4/recorded/ci.json`.
+
+The Gate 4 friction rework completed on M3 L40S Slurm job `58962334`. All three
+fresh exact-commit clones imported TrainParity from an isolated wheel target,
+used only three added user source files, retained zero tracked upstream changes,
+and passed baseline self-consistency plus clean save/exit/new-process/load/resume.
+The first audit attempt, job `58962047`, is preserved as `ERROR`: its stronger
+Ignite control did not inherit `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1`; this was an
+infrastructure compatibility error, not a parity result.
+
+The honest user-required LOC totals are 266 for pytorch/examples ImageNet, 275
+for nanoGPT, and 271 for Ignite. Adapter LOC remains small (13, 13, and 15), but
+the shared user-visible command/process/snapshot orchestration makes supporting
+glue 253, 262, and 256 LOC. End-to-end multipliers are 15.91x, 4.03x, and 3.85x;
+the prior comparator-only timing remains recorded but is no longer presented as
+total overhead. The 116-line closer hand-written Ignite check covers model,
+optimizer, scheduler, and torch CPU RNG and reports the first observed fault
+divergence at `$.scheduler.last_epoch`.
+
+The dedicated audit report recommends `REWORK`: technical GO evidence remains
+positive, but current external command-oriented integration friction is not yet
+acceptable without a human decision. No production API, framework adapter,
+backend optimization, new project, or Gate 5 code was added. Final verification
+passed Ruff, Mypy, 79 tests at 94.86% coverage, build, the accepted Gate 4
+verifier, the dedicated friction verifier, and `git diff --check`.

@@ -292,3 +292,28 @@
 - **Reason:** The product-friction threshold is met, while the documented glue
   cost, tiny-data scope, one-GPU scope, and correctness-first backend remain
   explicit limitations for the human reviewer.
+
+## D-0028: Reopen Gate 4 for a friction audit only
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Rework only the Gate 4 product-friction evidence. Demonstrate
+  each integration from a fresh pinned clone, count all user-visible glue,
+  measure the complete workflow, and compare with a closer hand-written
+  fresh-process resume test. Do not start Gate 5 or change production behavior.
+- **Reason:** The original technical results were positive, but the reported
+  adapter and comparator-only measurements did not establish the full cost a
+  user would actually bear.
+
+## D-0029: Recommend REWORK after the Gate 4 friction audit
+
+- **Status:** Proposed for human review
+- **Date:** 2026-08-11
+- **Decision:** Keep TrainParity as a technical GO candidate, but recommend
+  `REWORK` rather than Gate 5 progression. The three adapters are 13, 13, and 15
+  logical lines, while complete user-required integration totals are 266, 275,
+  and 271 lines and end-to-end multipliers are 15.91x, 4.03x, and 3.85x.
+- **Reason:** The correctness signal and diagnostics survive fresh-clone
+  reproduction, but command-oriented external use currently requires substantial
+  orchestration outside the production API. Expanding that API is not authorized
+  by this audit and must be a separate human product decision.
