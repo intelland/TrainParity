@@ -52,6 +52,10 @@ are compact experiment records with environment metadata, exact commands,
 durations, return codes, log tails, clean-control results, and structured
 failure evidence.
 
+The runner copies each competitor entry into its case runtime directory before
+instrumentation and runs every TrainCheck phase from there. TrainCheck-generated
+Python files and tool logs therefore remain outside the Git checkout.
+
 ## Interpretation rule
 
 Each TrainCheck case has a reference run, a second clean control run, and a

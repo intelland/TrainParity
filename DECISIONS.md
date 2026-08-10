@@ -57,3 +57,14 @@
   no fault-specific evidence after clean-control correction.
 - **Reason:** The difference follows from the execution model and output
   contract, not UI or naming. Gate 1 remains unauthorized until approval.
+
+## D-0007: Run instrumented competitor copies outside the repository
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** The TrainCheck runner copies each tiny entry script into its
+  case runtime directory and executes every CLI phase with that runtime as the
+  working directory.
+- **Reason:** TrainCheck generates instrumented Python files and tool logs beside
+  inputs/current working directories. Runtime copies keep those artifacts under
+  `$PROJECT_ROOT/outputs/gate0` and preserve a clean Git checkout.

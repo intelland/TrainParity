@@ -164,6 +164,12 @@ def main() -> None:
     results: list[dict[str, Any]] = []
     for case in CASES:
         case_root = runtime_root / case
+        input_dir = case_root / "inputs"
+        input_dir.mkdir(parents=True)
+        clean_entry = input_dir / f"{case}_clean.py"
+        fault_entry = input_dir / f"{case}_fault.py"
+        shutil.copy2(entries / clean_entry.name, clean_entry)
+        shutil.copy2(entries / fault_entry.name, fault_entry)
         log_dir = case_root / "logs"
         reference_trace = case_root / "reference_trace"
         control_trace = case_root / "control_trace"
@@ -174,8 +180,8 @@ def main() -> None:
         phases: dict[str, dict[str, Any]] = {}
         phases["collect_reference"] = _run(
             "collect_reference",
-            [collect, "--pyscript", str(entries / f"{case}_clean.py"), "--output-dir", str(reference_trace), "--models-to-track", "model"],
-            repository,
+            [collect, "--pyscript", str(clean_entry), "--output-dir", str(reference_trace), "--models-to-track", "model"],
+            case_root,
             log_dir,
             env,
         )
@@ -183,15 +189,15 @@ def main() -> None:
             phases["infer"] = _run(
                 "infer",
                 [infer, "--trace-folders", str(reference_trace), "--output", str(invariants), "--backend", "pandas"],
-                repository,
+                case_root,
                 log_dir,
                 env,
             )
         if phases.get("infer", {}).get("returncode") == 0:
             phases["collect_control"] = _run(
                 "collect_control",
-                [collect, "--pyscript", str(entries / f"{case}_clean.py"), "--invariants", str(invariants), "--output-dir", str(control_trace), "--models-to-track", "model"],
-                repository,
+                [collect, "--pyscript", str(clean_entry), "--invariants", str(invariants), "--output-dir", str(control_trace), "--models-to-track", "model"],
+                case_root,
                 log_dir,
                 env,
             )
@@ -199,15 +205,15 @@ def main() -> None:
             phases["check_control"] = _run(
                 "check_control",
                 [check, "--trace-folders", str(control_trace), "--invariants", str(invariants), "--backend", "pandas", "--output-dir", str(control_check), "--no-html-report"],
-                repository,
+                case_root,
                 log_dir,
                 env,
             )
         if phases.get("check_control", {}).get("returncode") == 0:
             phases["collect_fault"] = _run(
                 "collect_fault",
-                [collect, "--pyscript", str(entries / f"{case}_fault.py"), "--invariants", str(invariants), "--output-dir", str(fault_trace), "--models-to-track", "model"],
-                repository,
+                [collect, "--pyscript", str(fault_entry), "--invariants", str(invariants), "--output-dir", str(fault_trace), "--models-to-track", "model"],
+                case_root,
                 log_dir,
                 env,
             )
@@ -215,7 +221,7 @@ def main() -> None:
             phases["check_fault"] = _run(
                 "check_fault",
                 [check, "--trace-folders", str(fault_trace), "--invariants", str(invariants), "--backend", "pandas", "--output-dir", str(fault_check), "--no-html-report"],
-                repository,
+                case_root,
                 log_dir,
                 env,
             )
