@@ -34,6 +34,14 @@
       "outcome": "PASS"
     },
     {
+      "case": "none_vs_zero",
+      "outcome": "PASS"
+    },
+    {
+      "case": "missing_vs_none",
+      "outcome": "PASS"
+    },
+    {
       "case": "device_metadata",
       "outcome": "PASS"
     },
@@ -72,7 +80,7 @@
     "python": "3.11.15",
     "pytorch": "2.13.0+cpu"
   },
-  "fault_count": 15,
+  "fault_count": 17,
   "faults": [
     {
       "case": "nested_value",
@@ -170,6 +178,34 @@
       },
       "expected_path": "extra",
       "observed_path": "extra",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "none_vs_zero",
+      "difference": {
+        "baseline": "None",
+        "candidate": "0",
+        "max_abs_error": null,
+        "max_rel_error": null,
+        "path": "extra",
+        "reason": "type"
+      },
+      "expected_path": "extra",
+      "observed_path": "extra",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "missing_vs_none",
+      "difference": {
+        "baseline": "<missing>",
+        "candidate": "None",
+        "max_abs_error": null,
+        "max_rel_error": null,
+        "path": "extra.value",
+        "reason": "missing_baseline"
+      },
+      "expected_path": "extra.value",
+      "observed_path": "extra.value",
       "outcome": "FAIL"
     },
     {
@@ -285,7 +321,7 @@
       "outcome": "FAIL"
     }
   ],
-  "faults_with_expected_path": 15,
+  "faults_with_expected_path": 17,
   "policy_separation": {
     "exact": "FAIL",
     "tolerance": "PASS"
