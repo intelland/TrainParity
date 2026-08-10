@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import random
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol, cast
@@ -27,6 +28,10 @@ class _Scaler(Protocol):
     def state_dict(self) -> dict[str, Any]: ...
 
     def load_state_dict(self, state_dict: dict[str, Any]) -> None: ...
+
+
+class _Stateful(Protocol):
+    def state_dict(self) -> dict[str, Any]: ...
 
 
 @dataclass
@@ -63,11 +68,9 @@ class DeterministicCase:
             ]
         )
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.7)
-        scaler = cast(
-            _Scaler,
-            torch.amp.GradScaler(  # type: ignore[attr-defined]
-                device.type, enabled=device.type == "cuda", growth_interval=1
-            ),
+        scaler_factory = cast(Callable[..., _Scaler], torch.GradScaler)
+        scaler = scaler_factory(
+            device.type, enabled=device.type == "cuda", growth_interval=1
         )
         return Gate3State(model, optimizer, scheduler, scaler=scaler)
 
@@ -120,7 +123,11 @@ class DeterministicCase:
                 for name, parameter in state.model.named_parameters()
             },
             "optimizer": state.optimizer.state_dict(),
-            "scheduler": None if state.scheduler is None else state.scheduler.state_dict(),  # type: ignore[no-untyped-call]
+            "scheduler": (
+                None
+                if state.scheduler is None
+                else cast(_Stateful, state.scheduler).state_dict()
+            ),
             "scaler": None if scaler is None else scaler.state_dict(),
             "step": state.step,
             "cursor": state.cursor,

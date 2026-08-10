@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, cast
 
 import torch
 from torch import nn
 
 from trainparity.protocols import TrainingState
 from trainparity.prototypes import ResumeCallbacks
+
+
+class _Stateful(Protocol):
+    def state_dict(self) -> dict[str, Any]: ...
 
 
 class CorrectResumeCase:
@@ -33,7 +37,8 @@ class CorrectResumeCase:
 
     def save(self, state: TrainingState, path: Path) -> None:
         assert state.scheduler is not None
-        torch.save({"model": state.model.state_dict(), "optimizer": state.optimizer.state_dict(), "scheduler": state.scheduler.state_dict(), "step": state.step}, path)  # type: ignore[no-untyped-call]
+        scheduler = cast(_Stateful, state.scheduler)
+        torch.save({"model": state.model.state_dict(), "optimizer": state.optimizer.state_dict(), "scheduler": scheduler.state_dict(), "step": state.step}, path)
 
     def load(self, path: Path, seed: int) -> TrainingState:
         checkpoint: dict[str, Any] = torch.load(path, weights_only=True)
