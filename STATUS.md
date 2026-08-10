@@ -59,11 +59,15 @@ Gate 1 was accepted by the human reviewer on 2026-08-10. Its 28-line selected
 adapter, wheel-installed fresh-process import, clean `PASS`, and faulty `FAIL`
 evidence remain preserved.
 
-Gate 2 is authorized and in progress. The hosted GitHub Actions result for
-commit `ae75212` was not independently verified because the private repository
-is inaccessible through the connected GitHub App and no authenticated GitHub
-CLI is available. The equivalent full M3 sequence passed and was accepted for
-Gate 1. Confirming the remote Actions result is a carry-forward requirement
-that must be resolved or precisely reported no later than Gate 2 review.
+Gate 2 is authorized and in progress. The hosted GitHub Actions carry-forward
+is resolved: an authenticated read-only REST query confirmed that commit
+`ae75212` completed `CI` run `31394676144` with conclusion `success`. The query
+used the local Git credential helper without printing or persisting credentials;
+the durable record is `experiments/gate2/recorded/ci_ae75212.json`.
+
+The current Gate 2 M3 evidence has 17/17 expected fault paths, 0/17 clean false
+positives, an optimizer-alias `ABSTAIN`, and 96.25% core coverage across 51
+passing tests. Final clean-environment verification and reports remain in
+progress.
 
 No Gate 3 work is authorized.

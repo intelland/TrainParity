@@ -1,0 +1,19 @@
+{
+  "commit": "ae75212787f9cde54aae1391adced88650dc7ab3",
+  "workflow": "CI",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "run_id": 31394676144,
+  "url": "https://github.com/intelland/TrainParity/actions/runs/31394676144",
+  "source": "authenticated read-only GitHub REST query through the local Git credential helper",
+  "confirmed_at": "2026-08-10",
+  "attempts": [
+    "connected GitHub App returned 404 for the private repository",
+    "GitHub CLI was unavailable on local Windows and M3",
+    "no connected browser session was available"
+  ],
+  "accepted_substitute": "equivalent complete M3 verification for Gate 1",
+  "required_by": "Gate 2 human review",
+  "resolution": "confirmed independently before Gate 2 review without printing or persisting credentials"
+}

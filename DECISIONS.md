@@ -130,8 +130,53 @@
 
 - **Status:** Accepted
 - **Date:** 2026-08-10
-- **Decision:** Preserve the fact that the hosted GitHub Actions conclusion for
-  commit `ae75212` could not be read through the connected GitHub App. Confirm
-  it, or report a precise access blocker, no later than Gate 2 review.
+- **Decision:** Preserve the initial App/CLI access failure and the eventual
+  independent confirmation that commit `ae75212` completed GitHub Actions run
+  `31394676144` with conclusion `success` before Gate 2 review.
 - **Reason:** The equivalent complete M3 command chain was accepted as Gate 1
-  evidence, but it does not independently establish GitHub-hosted execution.
+  evidence, but it did not independently establish GitHub-hosted execution. A
+  read-only REST request using the local Git credential helper resolved the
+  carry-forward without exposing or persisting credentials.
+
+## D-0014: Use an immutable full-value reference backend
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** `FullValueBackend` freezes tensor values into immutable CPU
+  bytes while retaining original shape, dtype, device, and gradient metadata.
+  `capture_snapshot` accepts a backend protocol rather than requiring this
+  storage representation for every future implementation.
+- **Reason:** Immutable bytes break mutable aliases and provide a simple Gate 2
+  correctness oracle without hard-coding materialized snapshots as the only
+  possible backend architecture.
+
+## D-0015: Canonicalize optimizer state only through unique parameter names
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Optimizer groups preserve declared ordering, while all state is
+  nested under names from `model.named_parameters(remove_duplicate=False)`.
+  Missing names, aliases, duplicate occurrences, and unmapped state keys return
+  `ABSTAIN`; memory and serialized parameter IDs are never public paths.
+- **Reason:** Parameter names are the only stable and human-readable mapping
+  available at this boundary. Ambiguity must not become a false `PASS`.
+
+## D-0016: Keep exact and tolerance semantics as separate policies
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** `ExactComparison` checks structure, metadata, scalar float bits,
+  and tensor bytes. `ToleranceComparison` requires explicit finite non-negative
+  `rtol`/`atol` and `equal_nan`, applying tolerance only to numeric values after
+  structural and metadata equality.
+- **Reason:** Separate classes prevent hidden tolerance widening and make signed
+  zero, NaN, Inf, empty values, and tensor metadata behavior explicit.
+
+## D-0017: Test optional NumPy RNG capture without adding a runtime dependency
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** NumPy is a development extra for Gate 2 tests, not a production
+  dependency. Capture includes NumPy RNG only when NumPy is installed.
+- **Reason:** The product contract requires optional NumPy RNG support, while
+  PyTorch remains the sole mandatory production dependency.
