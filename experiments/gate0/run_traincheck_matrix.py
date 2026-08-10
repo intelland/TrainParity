@@ -138,7 +138,7 @@ def main() -> None:
         phases: dict[str, dict[str, Any]] = {}
         phases["collect_reference"] = _run(
             "collect_reference",
-            [collect, "--pyscript", str(entries / f"{case}_clean.py"), "--copy-all-files", "--output-dir", str(reference_trace), "--models-to-track", "model"],
+            [collect, "--pyscript", str(entries / f"{case}_clean.py"), "--output-dir", str(reference_trace), "--models-to-track", "model"],
             repository,
             log_dir,
             env,
@@ -146,7 +146,7 @@ def main() -> None:
         if phases["collect_reference"]["returncode"] == 0:
             phases["infer"] = _run(
                 "infer",
-                [infer, "--trace-folders", str(reference_trace), "--output", str(invariants), "--backend", "dict"],
+                [infer, "--trace-folders", str(reference_trace), "--output", str(invariants), "--backend", "pandas"],
                 repository,
                 log_dir,
                 env,
@@ -154,7 +154,7 @@ def main() -> None:
         if phases.get("infer", {}).get("returncode") == 0:
             phases["collect_target"] = _run(
                 "collect_target",
-                [collect, "--pyscript", str(entries / f"{case}_fault.py"), "--copy-all-files", "--invariants", str(invariants), "--output-dir", str(target_trace), "--models-to-track", "model"],
+                [collect, "--pyscript", str(entries / f"{case}_fault.py"), "--invariants", str(invariants), "--output-dir", str(target_trace), "--models-to-track", "model"],
                 repository,
                 log_dir,
                 env,
@@ -162,7 +162,7 @@ def main() -> None:
         if phases.get("collect_target", {}).get("returncode") == 0:
             phases["check"] = _run(
                 "check",
-                [check, "--trace-folders", str(target_trace), "--invariants", str(invariants), "--backend", "dict", "--output-dir", str(check_dir), "--no-html-report"],
+                [check, "--trace-folders", str(target_trace), "--invariants", str(invariants), "--backend", "pandas", "--output-dir", str(check_dir), "--no-html-report"],
                 repository,
                 log_dir,
                 env,

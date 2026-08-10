@@ -1,5 +1,19 @@
-from competitor_runtime import CompetitorFixture
+import json
 
-case = CompetitorFixture("missing_scheduler_state", fault=True)
-model = case.model
-case.run()
+import torch
+
+torch.manual_seed(20260810)
+model = torch.nn.Linear(1, 1, bias=False)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
+losses = []
+for step in range(5):
+    if step == 2:
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
+    optimizer.zero_grad()
+    loss = (model(torch.tensor([[float(step + 1)]])) - 1.0).square().mean()
+    loss.backward()
+    optimizer.step()
+    scheduler.step()
+    losses.append(float(loss.detach()))
+print(json.dumps({"losses": losses, "weight": model.weight.detach().flatten().tolist()}))
