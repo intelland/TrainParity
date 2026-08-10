@@ -19,12 +19,15 @@ __pycache__/
 *.safetensors
 
 # Project-local generated data
-data/
-datasets/
-models/
-checkpoints/
-cache/
-tmp/
-logs/
-outputs/
-results/
+/data/
+/datasets/
+/models/
+/checkpoints/
+/cache/
+/tmp/
+/logs/
+/outputs/
+/results/
+
+# Local handoff archives
+TrainParity_Codex_Handoff.zip
