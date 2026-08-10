@@ -43,7 +43,7 @@ make lint
 make typecheck
 make test
 make build
-python scripts/verify_gate.py 1
+python scripts/verify_gate.py 2
 ```
 
 ## Runtime dependency

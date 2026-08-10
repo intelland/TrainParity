@@ -59,15 +59,18 @@ Gate 1 was accepted by the human reviewer on 2026-08-10. Its 28-line selected
 adapter, wheel-installed fresh-process import, clean `PASS`, and faulty `FAIL`
 evidence remain preserved.
 
-Gate 2 is authorized and in progress. The hosted GitHub Actions carry-forward
+Gate 2 is complete and awaiting human acceptance. The hosted GitHub Actions carry-forward
 is resolved: an authenticated read-only REST query confirmed that commit
 `ae75212` completed `CI` run `31394676144` with conclusion `success`. The query
 used the local Git credential helper without printing or persisting credentials;
 the durable record is `experiments/gate2/recorded/ci_ae75212.json`.
 
-The current Gate 2 M3 evidence has 17/17 expected fault paths, 0/17 clean false
+The final Gate 2 M3 evidence has 17/17 expected fault paths, 0/17 clean false
 positives, an optimizer-alias `ABSTAIN`, and 96.25% core coverage across 51
-passing tests. Final clean-environment verification and reports remain in
-progress.
+passing tests. Ruff, strict Mypy across 13 package modules, wheel/sdist build,
+fault evidence replay, `git diff --check`, and `python scripts/verify_gate.py 2`
+all pass in the isolated CPU environment at `envs/gate2`. The verifier reports
+`PASS` with recommendation `HUMAN_REVIEW`; see
+`artifacts/gate_reports/gate_2.json` and `gate_2.md`.
 
 No Gate 3 work is authorized.

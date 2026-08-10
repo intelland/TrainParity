@@ -180,3 +180,14 @@
   dependency. Capture includes NumPy RNG only when NumPy is installed.
 - **Reason:** The product contract requires optional NumPy RNG support, while
   PyTorch remains the sole mandatory production dependency.
+
+## D-0018: Pin a clean Gate 2 verification environment
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Final Gate 2 evidence runs in
+  `/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate2` with Python 3.11.15,
+  PyTorch 2.13.0+cpu, NumPy 2.4.6, Ruff 0.16.2, Mypy 2.3.0, pytest 9.1.1,
+  and coverage 7.15.4.
+- **Reason:** A dedicated environment demonstrates the package, optional NumPy
+  RNG capture, coverage, and build independently of prior Gate environments.
