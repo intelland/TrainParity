@@ -1,0 +1,99 @@
+{
+  "environment": {
+    "platform": "Linux-5.14.0-687.17.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.11.15",
+    "pytorch": "2.13.0+cpu"
+  },
+  "prototypes": {
+    "class_protocol": {
+      "adapter_logical_lines": 28,
+      "cloudpickle_required": false,
+      "fresh_process_import": {
+        "returncode": 0,
+        "stderr": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate1/lib/python3.11/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)\n  cpu = _conversion_method_template(device=torch.device(\"cpu\"))",
+        "stdout": "{\"case\": \"trainparity.examples.resume_cases:CorrectResumeCase\", \"class\": \"CorrectResumeCase\", \"protocol\": \"ResumeCase\"}"
+      },
+      "process_safe": true,
+      "type_surface": "ResumeCase protocol",
+      "user_wiring": "one zero-argument class"
+    },
+    "factory_callbacks": {
+      "cloudpickle_required": false,
+      "factory_logical_lines": 9,
+      "probe_outcome": "PASS",
+      "process_safe": true,
+      "type_surface": "ResumeCallbacks dataclass",
+      "user_wiring": "factory plus four callback fields"
+    }
+  },
+  "resume_cases": {
+    "correct": {
+      "baseline": {
+        "model.bias": [
+          -0.21389947831630707
+        ],
+        "model.weight": [
+          [
+            0.45833924412727356
+          ]
+        ],
+        "optimizer.param_groups.0.lr": 0.025,
+        "scheduler.last_epoch": 4,
+        "step": 4
+      },
+      "first_observed_divergence": null,
+      "outcome": "PASS",
+      "resumed": {
+        "model.bias": [
+          -0.21389947831630707
+        ],
+        "model.weight": [
+          [
+            0.45833924412727356
+          ]
+        ],
+        "optimizer.param_groups.0.lr": 0.025,
+        "scheduler.last_epoch": 4,
+        "step": 4
+      }
+    },
+    "missing_scheduler_state": {
+      "baseline": {
+        "model.bias": [
+          -0.21389947831630707
+        ],
+        "model.weight": [
+          [
+            0.45833924412727356
+          ]
+        ],
+        "optimizer.param_groups.0.lr": 0.025,
+        "scheduler.last_epoch": 4,
+        "step": 4
+      },
+      "first_observed_divergence": "optimizer.param_groups.0.lr",
+      "outcome": "FAIL",
+      "resumed": {
+        "model.bias": [
+          -0.21389947831630707
+        ],
+        "model.weight": [
+          [
+            0.45833924412727356
+          ]
+        ],
+        "optimizer.param_groups.0.lr": 0.05,
+        "scheduler.last_epoch": 1,
+        "step": 4
+      }
+    }
+  },
+  "schema_version": 1,
+  "scope": "Gate 1 example probe only; no production comparator or resume runner",
+  "selected_api": "class_protocol",
+  "selection_reasons": [
+    "one import specification identifies both construction and behavior",
+    "ResumeCase gives structural type checking without inheritance",
+    "a class avoids callback-field wiring while leaving the training step user-owned"
+  ]
+}
