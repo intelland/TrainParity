@@ -43,8 +43,19 @@ where = ["src"]
 trainparity = ["py.typed"]
 
 [tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers --cov=trainparity.state --cov=trainparity.snapshot --cov=trainparity.optimizer_state --cov=trainparity.comparison --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=90"
+addopts = "--strict-config --strict-markers --cov=src/trainparity --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=90"
 testpaths = ["tests"]
+
+[tool.coverage.run]
+omit = [
+  "src/trainparity/__init__.py",
+  "src/trainparity/__main__.py",
+  "src/trainparity/cli.py",
+  "src/trainparity/examples/*",
+  "src/trainparity/importing.py",
+  "src/trainparity/protocols.py",
+  "src/trainparity/prototypes.py",
+]
 
 [tool.ruff]
 line-length = 100

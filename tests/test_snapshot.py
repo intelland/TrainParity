@@ -18,6 +18,9 @@ class ModelWithBuffer(nn.Module):
         self.layer = nn.Linear(2, 1)
         self.register_buffer("count", torch.tensor(2))
 
+    def forward(self, value: torch.Tensor) -> torch.Tensor:
+        return self.layer(value)
+
 
 class ExtraState:
     def __init__(self, value: int) -> None:
