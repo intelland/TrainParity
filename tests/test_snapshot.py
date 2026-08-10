@@ -106,7 +106,9 @@ def test_unsupported_state_abstains_and_state_dict_crash_errors() -> None:
 
 def test_sparse_state_abstains() -> None:
     model = ModelWithBuffer()
-    sparse = torch.sparse_coo_tensor(torch.tensor([[0]]), torch.tensor([1.0]), (2,))
+    sparse = torch.sparse_coo_tensor(
+        torch.tensor([[0]]), torch.tensor([1.0]), (2,), check_invariants=True
+    )
     result = capture_snapshot(model, extras={"sparse": sparse}, capture_rng=False)
     assert result.outcome is Outcome.ABSTAIN
 

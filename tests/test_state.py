@@ -63,7 +63,9 @@ def test_unknown_dtype_and_unsupported_values_are_explicit() -> None:
 
 
 def test_sparse_tensor_is_not_silently_materialized() -> None:
-    sparse = torch.sparse_coo_tensor(torch.tensor([[0]]), torch.tensor([1.0]), (2,))
+    sparse = torch.sparse_coo_tensor(
+        torch.tensor([[0]]), torch.tensor([1.0]), (2,), check_invariants=True
+    )
     with pytest.raises(UnsupportedStateError):
         FullValueBackend().freeze(sparse)
 
@@ -72,4 +74,3 @@ def test_dotted_name_expansion_rejects_collisions() -> None:
     assert nested_named_values({"layer.weight": 1}) == {"layer": {"weight": 1}}
     with pytest.raises(AmbiguousStateNameError):
         nested_named_values({"layer": 1, "layer.weight": 2})
-
