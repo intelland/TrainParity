@@ -198,7 +198,17 @@ def main() -> None:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(payload, indent=2, sort_keys=True))
+    for result in results:
+        duration = round(
+            sum(phase["duration_seconds"] for phase in result["phases"].values()), 3
+        )
+        print(
+            f"{result['case']}: status={result['status']} "
+            f"detected={result['detected']} "
+            f"failed_invariants={result['failed_invariants']} "
+            f"duration_seconds={duration}"
+        )
+    print(f"summary={args.output}")
 
 
 if __name__ == "__main__":
