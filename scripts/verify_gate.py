@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +23,12 @@ EXPECTED_PHASES = {
     "collect_fault",
     "check_fault",
 }
+GATE_0_EVIDENCE_HASHES = {
+    "artifacts/gate_reports/gate_0.json": "3f72383d025304a8559773ac961b8fae0e1e7f0c21adaa6eb3bae07f2684dcc2",
+    "artifacts/gate_reports/gate_0.md": "29f5fd42ee9a7f51126546e3dc02a558c1925bd7e1f84702fd12b84663eb53ad",
+    "experiments/gate0/recorded/fault_matrix.json": "3006acba2857040d2e5b1851886b3abd052e3601fcd26812fd6c6b8e5d980a81",
+    "experiments/gate0/recorded/traincheck_summary.json": "cd6d57bab81b4a3b31c64ee1942e61d673c868155883fc3ec85e174f9acc4df7",
+}
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -33,7 +41,7 @@ def _prototype_lines(path: Path) -> tuple[int, int]:
     return len(lines), logical
 
 
-def _write_reports(root: Path, report: dict[str, Any]) -> None:
+def _write_gate_0_reports(root: Path, report: dict[str, Any]) -> None:
     report_dir = root / "artifacts" / "gate_reports"
     report_dir.mkdir(parents=True, exist_ok=True)
     json_path = report_dir / "gate_0.json"
@@ -116,7 +124,7 @@ def verify_gate_0(root: Path) -> dict[str, Any]:
             "commands": ["python scripts/verify_gate.py 0"],
             "limitations": ["Verification stopped before experiment records could be loaded."],
         }
-        _write_reports(root, report)
+        _write_gate_0_reports(root, report)
         return report
 
     faults = _load_json(faults_path)
@@ -240,7 +248,215 @@ def verify_gate_0(root: Path) -> dict[str, Any]:
             "Gate 0 provides no production TrainParity API or arbitrary-script support.",
         ],
     }
-    _write_reports(root, report)
+    _write_gate_0_reports(root, report)
+    return report
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _write_gate_1_reports(root: Path, report: dict[str, Any]) -> None:
+    report_dir = root / "artifacts" / "gate_reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "gate_1.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    criteria = "\n".join(
+        f"- [{'x' if item['passed'] else ' '}] {item['name']}: {item['evidence']}"
+        for item in report["criteria"]
+    )
+    commands = "\n".join(f"- `{command}`" for command in report["commands"])
+    limitations = "\n".join(f"- {item}" for item in report["limitations"])
+    markdown = f"""# Gate 1 report
+
+## Outcome
+
+**{report['status']} — recommendation: {report['recommendation']}**
+
+{report['summary']}
+
+## Acceptance criteria
+
+{criteria}
+
+## API selection
+
+Selected: `{report['metrics']['selected_api']}`.
+
+Selected simple adapter: {report['metrics']['adapter_logical_lines']} logical lines.
+Correct resume example: `{report['metrics']['correct_resume_outcome']}`.
+Faulty resume example: `{report['metrics']['faulty_resume_outcome']}` at
+`{report['metrics']['faulty_first_observed_divergence']}`.
+
+## Exact commands
+
+{commands}
+
+## Remaining limitations
+
+{limitations}
+"""
+    (report_dir / "gate_1.md").write_text(markdown, encoding="utf-8")
+
+
+def verify_gate_1(root: Path) -> dict[str, Any]:
+    """Verify the Gate 1 skeleton and API evaluation evidence."""
+    evaluation_path = root / "experiments" / "gate1" / "recorded" / "adapter_evaluation.json"
+    required = [
+        root / "pyproject.toml",
+        root / "Makefile",
+        root / ".github" / "workflows" / "ci.yml",
+        root / "src" / "trainparity" / "protocols.py",
+        root / "src" / "trainparity" / "importing.py",
+        root / "src" / "trainparity" / "examples" / "resume_cases.py",
+        root / "docs" / "API_PROTOTYPES.md",
+        root / "tests" / "test_importing.py",
+        root / "tests" / "test_resume_examples.py",
+        evaluation_path,
+    ]
+    criteria: list[dict[str, Any]] = []
+
+    def criterion(name: str, passed: bool, evidence: str) -> None:
+        criteria.append({"name": name, "passed": bool(passed), "evidence": evidence})
+
+    missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
+    criterion("installable skeleton and engineering files", not missing, "present" if not missing else f"missing: {missing}")
+    if missing:
+        report = {
+            "schema_version": 1,
+            "gate": 1,
+            "status": "BLOCKED",
+            "recommendation": "REWORK",
+            "summary": "Gate 1 required artifacts are missing; do not begin Gate 2.",
+            "criteria": criteria,
+            "metrics": {
+                "selected_api": None,
+                "adapter_logical_lines": None,
+                "correct_resume_outcome": None,
+                "faulty_resume_outcome": None,
+                "faulty_first_observed_divergence": None,
+            },
+            "commands": ["python scripts/verify_gate.py 1"],
+            "limitations": ["Verification stopped before API evidence could be loaded."],
+        }
+        _write_gate_1_reports(root, report)
+        return report
+
+    evaluation = _load_json(evaluation_path)
+    class_prototype = evaluation.get("prototypes", {}).get("class_protocol", {})
+    callback_prototype = evaluation.get("prototypes", {}).get("factory_callbacks", {})
+    cases = evaluation.get("resume_cases", {})
+    correct = cases.get("correct", {})
+    faulty = cases.get("missing_scheduler_state", {})
+    adapter_lines = class_prototype.get("adapter_logical_lines")
+    criterion(
+        "two API prototypes evaluated",
+        evaluation.get("selected_api") == "class_protocol"
+        and class_prototype.get("type_surface") == "ResumeCase protocol"
+        and callback_prototype.get("type_surface") == "ResumeCallbacks dataclass",
+        "class/protocol selected after factory-plus-callback comparison",
+    )
+    criterion(
+        "selected adapter size",
+        isinstance(adapter_lines, int) and adapter_lines <= 30,
+        f"logical_lines={adapter_lines}",
+    )
+    imported = class_prototype.get("fresh_process_import", {})
+    criterion(
+        "fresh-process import",
+        class_prototype.get("process_safe") is True and imported.get("returncode") == 0,
+        f"returncode={imported.get('returncode')}",
+    )
+    criterion(
+        "no cloudpickle requirement",
+        class_prototype.get("cloudpickle_required") is False
+        and callback_prototype.get("cloudpickle_required") is False,
+        "both prototypes use ordinary module imports",
+    )
+    criterion(
+        "correct resume case",
+        correct.get("outcome") == "PASS" and correct.get("first_observed_divergence") is None,
+        f"outcome={correct.get('outcome')}",
+    )
+    criterion(
+        "faulty resume case",
+        faulty.get("outcome") == "FAIL"
+        and isinstance(faulty.get("first_observed_divergence"), str),
+        f"outcome={faulty.get('outcome')}, first observed={faulty.get('first_observed_divergence')}",
+    )
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    dependencies = project.get("dependencies", [])
+    forbidden = ("openai", "langchain", "cloudpickle", "ray", "fastapi", "flask")
+    criterion(
+        "minimal documented production dependencies",
+        dependencies == ["torch>=2.5"]
+        and all(name not in dependency.lower() for dependency in dependencies for name in forbidden)
+        and "sole production dependency is `torch>=2.5`"
+        in (root / "README.md").read_text(encoding="utf-8"),
+        f"dependencies={dependencies}",
+    )
+    wheels = sorted((root / "dist").glob("trainparity-*.whl"))
+    criterion("wheel build", bool(wheels), f"wheels={[path.name for path in wheels]}")
+    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    criterion(
+        "CI covers Gate 1 checks",
+        all(command in workflow for command in ("make lint", "make typecheck", "make test", "make build", "verify_gate.py 1")),
+        "lint, type-check, pytest, wheel, and verifier steps present",
+    )
+    changed_evidence = [
+        relative
+        for relative, digest in GATE_0_EVIDENCE_HASHES.items()
+        if not (root / relative).is_file() or _sha256(root / relative) != digest
+    ]
+    criterion(
+        "accepted Gate 0 evidence preserved",
+        not changed_evidence,
+        "hashes unchanged" if not changed_evidence else f"changed={changed_evidence}",
+    )
+    passed = all(item["passed"] for item in criteria)
+    report = {
+        "schema_version": 1,
+        "gate": 1,
+        "status": "PASS" if passed else "BLOCKED",
+        "recommendation": "HUMAN_REVIEW" if passed else "REWORK",
+        "summary": (
+            "The installable Gate 1 skeleton and class/protocol adapter satisfy machine acceptance. "
+            "Human approval is required before Gate 2."
+            if passed
+            else "One or more Gate 1 criteria failed; do not begin Gate 2."
+        ),
+        "criteria": criteria,
+        "metrics": {
+            "selected_api": evaluation.get("selected_api"),
+            "selection_reasons": evaluation.get("selection_reasons"),
+            "adapter_logical_lines": adapter_lines,
+            "callback_factory_logical_lines": callback_prototype.get("factory_logical_lines"),
+            "correct_resume_outcome": correct.get("outcome"),
+            "faulty_resume_outcome": faulty.get("outcome"),
+            "faulty_first_observed_divergence": faulty.get("first_observed_divergence"),
+            "environment": evaluation.get("environment"),
+            "wheels": [path.name for path in wheels],
+            "production_dependencies": dependencies,
+        },
+        "commands": [
+            "python -m experiments.gate1.run_adapter_evaluation --output $PROJECT_ROOT/outputs/gate1/adapter_evaluation.json",
+            "make lint",
+            "make typecheck",
+            "make test",
+            "make build",
+            "python scripts/verify_gate.py 1",
+            "git diff --check",
+        ],
+        "limitations": [
+            "The direct resume probe is Gate 1 evidence, not a production runner or comparator.",
+            "The tiny CPU cases do not establish compatibility with real training repositories.",
+            "Only ordinary importable zero-argument classes are accepted; arbitrary scripts and local closures are unsupported.",
+            "Distributed training, framework adapters, services, and runtime LLM/agent integration are out of scope.",
+            "First observed divergence is not presented as root cause.",
+        ],
+    }
+    _write_gate_1_reports(root, report)
     return report
 
 
@@ -249,11 +465,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("gate", type=int)
     args = parser.parse_args()
-    if args.gate != 0:
-        raise SystemExit(f"gate {args.gate} is not implemented")
     root = Path(__file__).resolve().parents[1]
-    report = verify_gate_0(root)
-    print(json.dumps({"gate": 0, "status": report["status"], "recommendation": report["recommendation"]}, sort_keys=True))
+    if args.gate == 0:
+        report = verify_gate_0(root)
+    elif args.gate == 1:
+        report = verify_gate_1(root)
+    else:
+        raise SystemExit(f"gate {args.gate} is not implemented")
+    print(
+        json.dumps(
+            {"gate": args.gate, "status": report["status"], "recommendation": report["recommendation"]},
+            sort_keys=True,
+        )
+    )
     if report["status"] != "PASS":
         raise SystemExit(1)
 
