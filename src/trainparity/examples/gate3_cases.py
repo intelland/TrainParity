@@ -184,7 +184,9 @@ class DeterministicCase:
         if "torch_cpu_rng" in checkpoint:
             torch.set_rng_state(checkpoint["torch_cpu_rng"].cpu())
         if "torch_cuda_rng" in checkpoint and torch.cuda.is_available():
-            torch.cuda.set_rng_state_all(checkpoint["torch_cuda_rng"])
+            torch.cuda.set_rng_state_all(
+                [rng_state.cpu() for rng_state in checkpoint["torch_cuda_rng"]]
+            )
         self.after_load(state)
         return state
 
