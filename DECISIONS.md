@@ -49,15 +49,17 @@
 - **Reason:** Three fixtures initially appeared detected, but every violation
   was reproduced by the clean control. Counting them would fabricate evidence.
 
-## D-0006: Recommend Gate 0 GO, conditional on human review
+## D-0006: Accept Gate 0 and authorize Gate 1
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-08-10
-- **Decision:** Recommend that a human approve Gate 0 because the explicit A/B
-  prototype precisely located three core faults for which TrainCheck produced
-  no fault-specific evidence after clean-control correction.
+- **Decision:** The human reviewer accepted Gate 0 and authorized Gate 1 only,
+  based on the structural distinction between inferred-invariant checking and
+  explicit A/B differential testing, the clean-control-corrected competitor
+  results, and stable four-fault prototype evidence.
 - **Reason:** The difference follows from the execution model and output
-  contract, not UI or naming. Gate 1 remains unauthorized until approval.
+  contract, not UI or naming. Gate 0 evidence must remain unchanged, and first
+  observed divergence must not be reinterpreted as root cause.
 
 ## D-0007: Run instrumented competitor copies outside the repository
 
@@ -69,3 +71,13 @@
 - **Reason:** TrainCheck generates instrumented Python files and tool logs beside
   inputs/current working directories. Runtime copies keep those artifacts under
   `$PROJECT_ROOT/outputs/gate0` and preserve a clean Git checkout.
+
+## D-0008: Limit the active scope to Gate 1
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Build only the installable skeleton, API prototypes, examples,
+  engineering checks, and Gate 1 evidence. Stop before Gate 2 for human review.
+- **Reason:** The human authorization explicitly permits only Gate 1. Snapshot
+  normalization, comparison, and full resume orchestration belong to later
+  gates and would invalidate the staged acceptance process if implemented now.

@@ -2,51 +2,51 @@
 
 ## Active gate
 
-Gate 0 — ecosystem and differentiation validation.
+Gate 1 — product contract, API prototypes, and engineering skeleton.
 
 ## Objective
 
-Produce a reproducible competitor study against OrderLab/TrainCheck and a
-precise product contract for TrainParity. Validate the structural value of an
-explicit A/B execution model with first-observed-divergence reporting before
-building the installable library.
+Create an installable Python package skeleton and compare two explicit adapter
+APIs using one correct and one faulty resume example. Select the lower-friction,
+process-safe design without implementing the Gate 2 snapshot/comparator or the
+Gate 3 resume-equivalence runner.
 
 ## Constraints
 
-- Implement Gate 0 only and stop for human acceptance.
+- Implement Gate 1 only and stop for human acceptance.
 - Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
 - Keep every environment, cache, checkout, log, and output under
   `/scratch/mp25/jwuu0254/zxh/TrainParity`.
-- Do not copy OrderLab/TrainCheck code.
-- Keep the throwaway TrainParity prototype below 100 logical lines.
-- Preserve four stable faults: missing scheduler state, missing RNG state,
-  gradient-accumulation mean-of-means, and sample duplication.
-- Conclude `STOP` if the differentiation is not structural.
+- Preserve all accepted Gate 0 evidence unchanged.
+- Compare class/protocol and factory-plus-callback adapter forms.
+- Keep the selected simple adapter at or below 30 logical lines and importable
+  in a fresh Python process without `cloudpickle`.
+- Keep production dependencies minimal and document each one.
+- Do not add runtime LLM/agent dependencies, distributed support, a web UI,
+  service, registry, or platform functionality.
+- Do not implement later-gate snapshot/comparison or orchestration features.
 
 ## Planned verification commands
 
 Run from the M3 repository checkout unless noted otherwise:
 
 ```bash
-python -m experiments.gate0.run_fault_matrix \
-  --output "$PROJECT_ROOT/outputs/gate0/recorded/fault_matrix.json"
-python scripts/verify_gate.py 0
+make lint
+make typecheck
+make test
+make build
+python scripts/verify_gate.py 1
 git diff --check
 ```
 
-The final Gate 0 report will record the exact environment, commands, outcomes,
-and any blocked competitor experiments.
+The final Gate 1 report will record exact environment and command outcomes,
+the measured adapter line count, fresh-process import evidence, API selection,
+and all known limitations.
 
 ## Current state
 
-Gate 0 is complete and awaiting human acceptance. The machine verifier reports
-`PASS` with recommendation `GO`; see `artifacts/gate_reports/gate_0.json` and
-`gate_0.md`. The 79-line throwaway A/B prototype located all four required
-faults identically across three repeats. TrainCheck 0.1.2 completed all 24
-reference/control/fault phases: it produced fault-specific evidence for missing
-scheduler state, but none for missing RNG state, mean-of-means, or sample
-duplication after clean-control correction.
+Gate 0 was accepted by the human reviewer on 2026-08-10. Its machine report is
+`PASS` with recommendation `GO`; the report and all supporting evidence remain
+preserved in their existing paths.
 
-Ruff 0.16.2, Mypy 2.3.0, Python compilation, the focused fixture matrix, the
-full competitor matrix, and `python scripts/verify_gate.py 0` all pass on M3.
-Gate 1 has not started and remains unauthorized pending explicit human approval.
+Gate 1 is now authorized and in progress. No Gate 2 work is authorized.
