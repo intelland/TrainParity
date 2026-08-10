@@ -7,13 +7,14 @@ from typing import Any
 
 import torch
 
+
 # ADAPTER LOGIC START
 class IgniteMnistAdapter:
     name = "ignite_mnist_engine"
     repository = "https://github.com/pytorch/ignite.git"
     commit = "e08ff9257ed18d8d805304e32ba85a44553195fc"
     license_id = "BSD-3-Clause"
-    structure = "trainer engine with scheduler and metric state"
+    structure = "trainer engine with scheduler state"
     fault_name = "scheduler_last_epoch_off_by_one"
     split_step, total_step = 2, 4
 
@@ -29,7 +30,7 @@ class IgniteMnistAdapter:
 
     def normalize_checkpoint(self, path: Path) -> object:
         value: dict[str, Any] = torch.load(path, map_location="cpu", weights_only=False)
-        return {key: value[key] for key in ("trainer", "model", "optimizer", "lr_scheduler", "train_running_loss")}
+        return {key: value[key] for key in ("trainer", "model", "optimizer", "lr_scheduler")}
 
     def inject_fault(self, path: Path) -> None:
         value: dict[str, Any] = torch.load(path, map_location="cpu", weights_only=False)

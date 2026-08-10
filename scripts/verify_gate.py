@@ -41,6 +41,13 @@ GATE_2_EVIDENCE_HASHES = {
     "experiments/gate2/recorded/coverage.json": "27e0e06409360d5d8e0f9cf43765daba9069bcbddde75e450d48e7f851129abd",
     "experiments/gate2/recorded/ci_ae75212.json": "ac3d0f9268057d4d3a5bdf7133954b628eb6c09a378b30a1a0491cdba32c9bda",
 }
+GATE_3_EVIDENCE_HASHES = {
+    "artifacts/gate_reports/gate_3.json": "4474c932f8670c8f4c41eedceae9f9b39be4fd010d0bcf7b5a91c58a69e8e4db",
+    "artifacts/gate_reports/gate_3.md": "e4ca46cf773380527700d28f7f0c13da3a837d28d2367b37db196fbaafcea5bc",
+    "experiments/gate3/recorded/cpu_matrix.json": "ae1a87ec8f14d45cf5e0a24baa814e7dfcbc8ee182921a43a089abe0bae7c40f",
+    "experiments/gate3/recorded/gpu_matrix.json": "f2c5a98628f480c82d6372470c4aa194af8cccace1dc4ad5a0e8147f64fbc971",
+    "experiments/gate3/recorded/test_summary.json": "1c3dd7d4f6ded2559c35c2390307fb59cfe34fec4018cdf0cf39f1d3ec20472a",
+}
 EXPECTED_GATE_2_FAULTS = {
     "nested_value": "extra.nested.items[0].value",
     "tensor_shape": "extra.tensor",
@@ -1011,6 +1018,310 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
     return report
 
 
+def _write_gate_4_reports(root: Path, report: dict[str, Any]) -> None:
+    report_dir = root / "artifacts" / "gate_reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "gate_4.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    criteria = "\n".join(
+        f"- [{'x' if item['passed'] else ' '}] {item['name']}: {item['evidence']}"
+        for item in report["criteria"]
+    )
+    project_rows = "\n".join(
+        "| {name} | {commit} | {license} | {adapter} | {glue} | {upstream} | {total} | "
+        "{clean} | {fault} | `{path}` |".format(**item)
+        for item in report["metrics"]["projects"]
+    )
+    resource_rows = "\n".join(
+        "| {name} | {runtime:.3f} | {peak} | {checkpoint} | {snapshot} | {overhead:.6f}% |".format(
+            **item
+        )
+        for item in report["metrics"]["resources"]
+    )
+    commands = "\n".join(f"- `{command}`" for command in report["commands"])
+    limitations = "\n".join(f"- {item}" for item in report["limitations"])
+    markdown = f"""# Gate 4 report
+
+## Outcome
+
+**{report['status']} — recommendation: {report['recommendation']}**
+
+{report['summary']}
+
+## Acceptance criteria
+
+{criteria}
+
+## External integrations
+
+| Project | Commit | License | Adapter LOC | Glue LOC | Upstream modified LOC | Total integration LOC | Clean | Fault | First observed divergence |
+|---|---|---:|---:|---:|---:|---:|---|---|---|
+{project_rows}
+
+Median adapter logical LOC: {report['metrics']['adapter_median_logical_loc']}.
+Shared integration logical LOC: {report['metrics']['shared_integration_logical_loc']}.
+Minimal hand-written comparator logical LOC: {report['metrics']['handwritten_comparator_logical_loc']}.
+
+## Resource measurements
+
+| Project | Upstream runtime (s) | Peak RSS (KiB) | Max checkpoint (bytes) | Max snapshot (bytes) | Comparison overhead |
+|---|---:|---:|---:|---:|---:|
+{resource_rows}
+
+## Hand-written comparison
+
+The minimal control compares only final model state. Its output is either
+`final model states are equal` or `final model states differ`; it does not
+identify a step or state path. TrainParity reports the first observed divergence
+and preserves all differences at that step. These are observations, not
+root-cause claims.
+
+## Exact commands
+
+{commands}
+
+## Remaining limitations
+
+{limitations}
+"""
+    (report_dir / "gate_4.md").write_text(markdown, encoding="utf-8")
+
+
+def verify_gate_4(root: Path) -> dict[str, Any]:
+    """Verify the Gate 4 real-project integration evidence."""
+    matrix_path = root / "experiments" / "gate4" / "recorded" / "matrix.json"
+    integration_doc = root / "docs" / "GATE4_INTEGRATIONS.md"
+    required = [
+        matrix_path,
+        integration_doc,
+        root / "experiments" / "gate4" / "run_matrix.py",
+        root / "tests" / "test_gate4_contract.py",
+        root / "scripts" / "slurm_gate4_matrix.sbatch",
+        root / ".github" / "workflows" / "ci.yml",
+    ]
+    criteria: list[dict[str, Any]] = []
+
+    def criterion(name: str, passed: bool, evidence: str) -> None:
+        criteria.append({"name": name, "passed": bool(passed), "evidence": evidence})
+
+    missing = [str(path.relative_to(root)) for path in required if not path.is_file()]
+    criterion("Gate 4 implementation and evidence files", not missing, "present" if not missing else f"missing={missing}")
+    if missing:
+        report = {
+            "schema_version": 1,
+            "gate": 4,
+            "status": "BLOCKED",
+            "recommendation": "REWORK",
+            "summary": "Gate 4 evidence is incomplete; do not begin Gate 5.",
+            "criteria": criteria,
+            "metrics": {
+                "projects": [],
+                "resources": [],
+                "adapter_median_logical_loc": None,
+                "shared_integration_logical_loc": None,
+                "handwritten_comparator_logical_loc": None,
+            },
+            "commands": ["python scripts/verify_gate.py 4"],
+            "limitations": ["Verification stopped before the integration matrix could be read."],
+        }
+        _write_gate_4_reports(root, report)
+        return report
+
+    matrix = _load_json(matrix_path)
+    projects = matrix.get("projects", [])
+    by_name = {item.get("name"): item for item in projects}
+    expected = {
+        "pytorch_examples_imagenet": ("acc295dc7b90714f1bf47f06004fc19a7fe235c4", "BSD-3-Clause"),
+        "nanogpt": ("3adf61e154c3fe3fca428ad6bc3818b27a3b8291", "MIT"),
+        "ignite_mnist_engine": ("e08ff9257ed18d8d805304e32ba85a44553195fc", "BSD-3-Clause"),
+    }
+    criterion(
+        "three distinct real external structures",
+        set(by_name) == set(expected)
+        and {item.get("structure") for item in projects}
+        == {"conventional image classifier", "small language model", "trainer engine with scheduler state"},
+        f"projects={sorted(name for name in by_name if isinstance(name, str))}",
+    )
+    clean_passed = sum(item.get("clean", {}).get("outcome") == "PASS" for item in projects)
+    criterion(
+        "all clean resume cases pass",
+        clean_passed == 3
+        and all(not item.get("clean", {}).get("all_differences") for item in projects),
+        f"clean={clean_passed}/3",
+    )
+    faults_detected = sum(
+        item.get("fault_result", {}).get("outcome") == "FAIL"
+        and isinstance(item.get("fault_result", {}).get("first_divergent_step"), int)
+        and isinstance(item.get("fault_result", {}).get("primary_difference", {}).get("path"), str)
+        for item in projects
+    )
+    criterion("one realistic fault detected per project", faults_detected == 3, f"detected={faults_detected}/3")
+    repository_ok = all(
+        item.get("repository", {}).get("commit") == expected.get(item.get("name"), (None, None))[0]
+        and item.get("repository", {}).get("license") == expected.get(item.get("name"), (None, None))[1]
+        and item.get("repository", {}).get("repository", "").startswith("https://github.com/")
+        and len(item.get("repository", {}).get("license_sha256", "")) == 64
+        for item in projects
+    )
+    criterion("exact commits and licenses recorded", repository_ok, "three commit, SPDX license, and license hashes recorded")
+    upstream_modified = sum(item.get("repository", {}).get("upstream_modified_loc", -1) for item in projects)
+    criterion("external upstream training code remains unmodified", upstream_modified == 0, f"modified_loc={upstream_modified}")
+    checkpoint_ok = all(
+        set(item.get("checkpoint_implementation", {})) == {"save", "load"}
+        and all(item["checkpoint_implementation"].values())
+        for item in projects
+    )
+    criterion("original upstream checkpoint save/load exercised", checkpoint_ok, "original save and load paths recorded for all three")
+    locs = [item.get("loc", {}).get("adapter_logical") for item in projects]
+    median_loc = matrix.get("metrics", {}).get("adapter_median_logical_loc")
+    loc_ok = (
+        len(locs) == 3
+        and all(isinstance(value, int) for value in locs)
+        and median_loc <= 30
+        and all(
+            item.get("loc", {}).get("total_new_project_integration")
+            == item.get("loc", {}).get("adapter_logical") + item.get("loc", {}).get("supporting_glue_logical")
+            for item in projects
+        )
+    )
+    criterion("adapter and integration LOC recorded", loc_ok, f"adapter_locs={locs}, median={median_loc}")
+    integration_text = integration_doc.read_text(encoding="utf-8")
+    large_integrations = [
+        item["name"] for item in projects if item.get("loc", {}).get("total_new_project_integration", 0) > 50
+    ]
+    criterion(
+        "integrations over 50 LOC explained",
+        all(name in integration_text for name in large_integrations),
+        f"explained={large_integrations}",
+    )
+    handwritten_ok = all(
+        item.get("handwritten", {}).get("clean_outcome") == "PASS"
+        and item.get("handwritten", {}).get("fault_outcome") in {"PASS", "FAIL"}
+        and item.get("handwritten", {}).get("diagnostic")
+        in {"final model states are equal", "final model states differ"}
+        for item in projects
+    )
+    criterion("minimal hand-written comparison recorded", handwritten_ok, "effort and generic final-state diagnostics recorded")
+    resources_ok = all(
+        item.get("resources", {}).get("upstream_runtime_seconds", 0) > 0
+        and item.get("resources", {}).get("upstream_peak_rss_kib", 0) > 0
+        and item.get("resources", {}).get("checkpoint_max_bytes", 0) > 0
+        and item.get("resources", {}).get("snapshot_max_bytes", 0) > 0
+        and item.get("resources", {}).get("runtime_overhead_percent", -1) >= 0
+        for item in projects
+    )
+    criterion("runtime, memory, artifact, and overhead measured", resources_ok, "positive measurements for all three projects")
+    environment = matrix.get("environment", {})
+    criterion(
+        "single real M3 GPU execution recorded",
+        environment.get("device") == "cuda"
+        and environment.get("cuda_available") is True
+        and environment.get("gpu_name")
+        and environment.get("slurm_job_id"),
+        f"gpu={environment.get('gpu_name')}, job={environment.get('slurm_job_id')}",
+    )
+    preserved = {
+        **GATE_0_EVIDENCE_HASHES,
+        **GATE_1_EVIDENCE_HASHES,
+        **GATE_2_EVIDENCE_HASHES,
+        **GATE_3_EVIDENCE_HASHES,
+    }
+    changed = [
+        relative
+        for relative, digest in preserved.items()
+        if not (root / relative).is_file() or _sha256(root / relative) != digest
+    ]
+    criterion("accepted Gate 0-3 evidence preserved", not changed, "hashes unchanged" if not changed else f"changed={changed}")
+    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    criterion(
+        "CI runs one real external case and Gate 4 verifier",
+        expected["nanogpt"][0] in workflow
+        and "--project nanogpt" in workflow
+        and "verify_gate.py 4" in workflow
+        and all(command in workflow for command in ("make lint", "make typecheck", "make test", "make build")),
+        "nanoGPT real case plus lint, types, tests, build, and Gate 4 verifier configured",
+    )
+    passed = all(item["passed"] for item in criteria)
+    stop = isinstance(median_loc, (int, float)) and median_loc > 30
+    project_metrics = []
+    resource_metrics = []
+    for item in projects:
+        repository = item["repository"]
+        loc = item["loc"]
+        fault = item["fault_result"]
+        project_metrics.append(
+            {
+                "name": item["name"],
+                "commit": repository["commit"],
+                "license": repository["license"],
+                "adapter": loc["adapter_logical"],
+                "glue": loc["supporting_glue_logical"],
+                "upstream": repository["upstream_modified_loc"],
+                "total": loc["total_new_project_integration"],
+                "clean": item["clean"]["outcome"],
+                "fault": fault["outcome"],
+                "path": fault.get("primary_difference", {}).get("path"),
+                "first_divergent_step": fault.get("first_divergent_step"),
+                "handwritten_fault": item["handwritten"]["fault_outcome"],
+            }
+        )
+        resources = item["resources"]
+        resource_metrics.append(
+            {
+                "name": item["name"],
+                "runtime": resources["upstream_runtime_seconds"],
+                "peak": resources["upstream_peak_rss_kib"],
+                "checkpoint": resources["checkpoint_max_bytes"],
+                "snapshot": resources["snapshot_max_bytes"],
+                "overhead": resources["runtime_overhead_percent"],
+            }
+        )
+    report = {
+        "schema_version": 1,
+        "gate": 4,
+        "status": "PASS" if passed else "BLOCKED",
+        "recommendation": "GO" if passed else ("STOP" if stop else "REWORK"),
+        "summary": (
+            "Three pinned external projects satisfy the Gate 4 product-friction criteria. Human review is required before any later gate."
+            if passed
+            else "One or more Gate 4 product-friction criteria failed; do not begin Gate 5."
+        ),
+        "criteria": criteria,
+        "metrics": {
+            "projects": project_metrics,
+            "resources": resource_metrics,
+            "clean_passed": clean_passed,
+            "faults_detected": faults_detected,
+            "adapter_median_logical_loc": median_loc,
+            "upstream_modified_loc": upstream_modified,
+            "shared_integration_logical_loc": matrix.get("shared_integration_logical_loc"),
+            "handwritten_comparator_logical_loc": matrix.get("handwritten_comparator_logical_loc"),
+            "environment": environment,
+        },
+        "commands": [
+            "make lint",
+            "make typecheck",
+            "make test",
+            "make build",
+            "sbatch scripts/slurm_gate4_matrix.sbatch --gate 4",
+            "python scripts/verify_gate.py 4",
+            "git diff --check",
+        ],
+        "limitations": [
+            "The cases use tiny generated data and one A100; they measure integration friction, not training quality or scale.",
+            "The experiment uses a correctness-first full-value snapshot backend and does not optimize snapshot size or speed.",
+            "Gate 4 command drivers and state normalizers are experiment-only, not framework-specific production adapters.",
+            "Ignite RunningAverage is excluded because the upstream Engine resets that reporting-only derived metric after loading; trainer, model, optimizer, and scheduler remain compared.",
+            "PyTorch 2.6+ requires TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for the pinned Ignite example's original trusted checkpoint load call.",
+            "Only completed-training-step resume is evaluated; distributed and accumulation behavior remain outside Gate 4.",
+            "Every reported path is a first observed divergence, not a root-cause claim.",
+        ],
+    }
+    _write_gate_4_reports(root, report)
+    return report
+
+
 def main() -> None:
     """Parse the Gate number, verify it, and return a process status."""
     parser = argparse.ArgumentParser()
@@ -1025,6 +1336,8 @@ def main() -> None:
         report = verify_gate_2(root)
     elif args.gate == 3:
         report = verify_gate_3(root)
+    elif args.gate == 4:
+        report = verify_gate_4(root)
     else:
         raise SystemExit(f"gate {args.gate} is not implemented")
     print(

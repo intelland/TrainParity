@@ -12,24 +12,41 @@ import statistics
 import subprocess
 import sys
 import time
+from collections.abc import Mapping
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from trainparity.comparison import Difference, ExactComparison
-from trainparity.serialization import encode_snapshot
-from trainparity.snapshot import Snapshot
-from trainparity.state import FrozenMapping, FullValueBackend
+import numpy as np
+import torch
 
 from experiments.gate4.adapters import IgniteMnistAdapter, ImageNetAdapter, NanoGptAdapter
 from experiments.gate4.handwritten import final_state_equal
 from experiments.gate4.models import ExternalProjectAdapter
+from trainparity.comparison import Difference, ExactComparison
+from trainparity.serialization import encode_snapshot
+from trainparity.snapshot import Snapshot
+from trainparity.state import FrozenMapping, FullValueBackend
 
 ADAPTERS: tuple[ExternalProjectAdapter, ...] = (ImageNetAdapter(), NanoGptAdapter(), IgniteMnistAdapter())
 DRIVER_FILES = {
     "pytorch_examples_imagenet": Path("experiments/gate4/drivers/imagenet.py"),
     "nanogpt": Path("experiments/gate4/drivers/nanogpt.py"),
     "ignite_mnist_engine": Path("experiments/gate4/drivers/ignite_mnist.py"),
+}
+CHECKPOINT_IMPLEMENTATIONS = {
+    "pytorch_examples_imagenet": {
+        "save": "imagenet/main.py save_checkpoint",
+        "load": "imagenet/main.py --resume torch.load and load_state_dict",
+    },
+    "nanogpt": {
+        "save": "train.py torch.save checkpoint",
+        "load": "train.py init_from=resume torch.load",
+    },
+    "ignite_mnist_engine": {
+        "save": "examples/mnist/mnist_save_resume_engine.py Checkpoint and DiskSaver",
+        "load": "examples/mnist/mnist_save_resume_engine.py torch.load and Checkpoint.load_objects",
+    },
 }
 
 
@@ -81,12 +98,32 @@ def _run(
 
 
 def _snapshot(adapter: ExternalProjectAdapter, path: Path, step: int) -> tuple[Snapshot, int]:
-    frozen = FullValueBackend().freeze(adapter.normalize_checkpoint(path))
+    frozen = FullValueBackend().freeze(_stable_keys(adapter.normalize_checkpoint(path)))
     if not isinstance(frozen, FrozenMapping):
         raise TypeError("normalized checkpoint root must be a mapping")
     snapshot = Snapshot(step, frozen)
     size = len(json.dumps(encode_snapshot(snapshot), sort_keys=True).encode("utf-8"))
     return snapshot, size
+
+
+def _stable_keys(value: object) -> object:
+    if isinstance(value, np.ndarray):
+        return {"dtype": str(value.dtype), "shape": list(value.shape), "values": value.tolist()}
+    if isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, Mapping):
+        converted: dict[str, object] = {}
+        for key, child in value.items():
+            stable_key = str(key)
+            if stable_key in converted:
+                raise ValueError(f"checkpoint key collision after string conversion: {stable_key!r}")
+            converted[stable_key] = _stable_keys(child)
+        return converted
+    if isinstance(value, list):
+        return [_stable_keys(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_stable_keys(item) for item in value)
+    return value
 
 
 def _differences(left: Snapshot, right: Snapshot) -> tuple[Difference, ...]:
@@ -179,13 +216,19 @@ def _project(
     adapter_loc = _logical_lines(adapter_path, marked=True)
     glue_loc = _logical_lines(driver_path)
     upstream_seconds = sum(item["elapsed_seconds"] for item in executions)
+    repository = _repo_metadata(adapter, checkout)
     return {
         "name": adapter.name,
         "structure": adapter.structure,
         "fault": adapter.fault_name,
-        "repository": _repo_metadata(adapter, checkout),
-        "checkpoint_implementation": "original upstream save and load path",
-        "clean": {"outcome": "PASS" if clean_step is None else "FAIL", "first_divergent_step": clean_step},
+        "repository": repository,
+        "checkpoint_implementation": CHECKPOINT_IMPLEMENTATIONS[adapter.name],
+        "clean": {
+            "outcome": "PASS" if clean_step is None else "FAIL",
+            "first_divergent_step": clean_step,
+            "primary_difference": None if not clean_differences else asdict(clean_differences[0]),
+            "all_differences": [asdict(item) for item in clean_differences],
+        },
         "fault_result": {
             "outcome": "FAIL" if fault_step is not None else "PASS",
             "first_divergent_step": fault_step,
@@ -200,7 +243,7 @@ def _project(
         "loc": {
             "adapter_logical": adapter_loc,
             "supporting_glue_logical": glue_loc,
-            "upstream_modified": 0,
+            "upstream_modified": repository["upstream_modified_loc"],
             "total_new_project_integration": adapter_loc + glue_loc,
         },
         "resources": {
@@ -223,13 +266,14 @@ def run_matrix(external_root: Path, output: Path, *, projects: set[str] | None =
         raise FileExistsError(f"refusing to overwrite existing run evidence: {run_root}")
     environment = dict(os.environ)
     path_parts = [str(repo_root)]
-    site = Path(os.environ.get("TRAINPARITY_GATE4_SITE", ""))
-    if str(site):
-        path_parts.append(str(site))
+    site = os.environ.get("TRAINPARITY_GATE4_SITE")
+    if site:
+        path_parts.append(site)
     path_parts.append(str(external_root / "ignite"))
     if environment.get("PYTHONPATH"):
         path_parts.append(environment["PYTHONPATH"])
     environment["PYTHONPATH"] = os.pathsep.join(path_parts)
+    environment.setdefault("TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD", "1")
     selected = [adapter for adapter in ADAPTERS if projects is None or adapter.name in projects]
     records = [
         _project(adapter, root=run_root / adapter.name, checkout=external_root / _checkout_name(adapter), environment=environment, timeout=timeout)
@@ -249,6 +293,14 @@ def run_matrix(external_root: Path, output: Path, *, projects: set[str] | None =
         },
         "shared_integration_logical_loc": _logical_lines(Path(__file__)) + _logical_lines(Path(__file__).with_name("models.py")),
         "handwritten_comparator_logical_loc": _logical_lines(Path(__file__).with_name("handwritten.py")),
+        "environment": {
+            "python": sys.version.split()[0],
+            "torch": torch.__version__,
+            "device": os.environ.get("TRAINPARITY_GATE4_DEVICE", "cpu"),
+            "cuda_available": torch.cuda.is_available(),
+            "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+            "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
+        },
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

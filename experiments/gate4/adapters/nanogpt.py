@@ -7,6 +7,7 @@ from typing import Any
 
 import torch
 
+
 # ADAPTER LOGIC START
 class NanoGptAdapter:
     name = "nanogpt"
@@ -39,4 +40,3 @@ class NanoGptAdapter:
     def handwritten_state(self, path: Path) -> object:
         return self.normalize_checkpoint(path)["model"]  # type: ignore[index]
 # ADAPTER LOGIC END
-

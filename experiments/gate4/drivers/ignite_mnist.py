@@ -37,7 +37,7 @@ def run(checkout: Path, run_dir: Path, end_step: int, resume: Path | None) -> No
     module.run(4, 4, end_step, 0.01, 0.5, 1000, str(run_dir), 1, resume, deterministic=True)
     candidates = sorted(
         (path for path in run_dir.glob("checkpoint_*.pt") if path.name != "checkpoint.pt"),
-        key=lambda path: path.stat().st_mtime_ns,
+        key=lambda path: int(path.stem.rsplit("_", 1)[1]),
     )
     if not candidates:
         raise RuntimeError("Ignite example did not create an upstream checkpoint")

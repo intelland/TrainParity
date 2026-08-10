@@ -23,3 +23,15 @@ jobs:
       - run: make test
       - run: make build
       - run: python scripts/verify_gate.py 3
+      - name: Run pinned nanoGPT Gate 4 integration
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate4/nanogpt"
+          git -C "$RUNNER_TEMP/gate4/nanogpt" init
+          git -C "$RUNNER_TEMP/gate4/nanogpt" remote add origin https://github.com/karpathy/nanoGPT.git
+          git -C "$RUNNER_TEMP/gate4/nanogpt" fetch --depth 1 origin 3adf61e154c3fe3fca428ad6bc3818b27a3b8291
+          git -C "$RUNNER_TEMP/gate4/nanogpt" checkout --detach FETCH_HEAD
+          python -m experiments.gate4.run_matrix \
+            --external-root "$RUNNER_TEMP/gate4" \
+            --output "$RUNNER_TEMP/gate4-output/matrix.json" \
+            --project nanogpt
+      - run: python scripts/verify_gate.py 4

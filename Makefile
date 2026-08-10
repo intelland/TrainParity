@@ -1,6 +1,6 @@
 PYTHON ?= python
 
-.PHONY: lint typecheck test build verify-gate-1 verify-gate-2 verify-gate-3
+.PHONY: lint typecheck test build verify-gate-1 verify-gate-2 verify-gate-3 verify-gate-4
 
 lint:
 	$(PYTHON) -m ruff check .
@@ -22,3 +22,6 @@ verify-gate-2:
 
 verify-gate-3:
 	$(PYTHON) scripts/verify_gate.py 3
+
+verify-gate-4:
+	$(PYTHON) scripts/verify_gate.py 4

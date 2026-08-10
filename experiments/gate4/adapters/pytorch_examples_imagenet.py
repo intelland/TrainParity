@@ -7,6 +7,7 @@ from typing import Any
 
 import torch
 
+
 # ADAPTER LOGIC START
 class ImageNetAdapter:
     name = "pytorch_examples_imagenet"
@@ -39,4 +40,3 @@ class ImageNetAdapter:
     def handwritten_state(self, path: Path) -> object:
         return self.normalize_checkpoint(path)["state_dict"]  # type: ignore[index]
 # ADAPTER LOGIC END
-
