@@ -191,3 +191,25 @@
   and coverage 7.15.4.
 - **Reason:** A dedicated environment demonstrates the package, optional NumPy
   RNG capture, coverage, and build independently of prior Gate environments.
+
+## D-0019: Accept Gate 2 and authorize Gate 3 only
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** The human reviewer accepted Gate 2 and authorized only the
+  Resume Equivalence MVP, real fresh-process boundary, trajectory alignment,
+  formal CPU fault matrix, and same-device GPU validation defined by Gate 3.
+- **Reason:** Snapshot and comparison semantics met all machine criteria. Resume
+  execution correctness is the next explicit go/no-go boundary; later checks
+  and performance work remain unauthorized.
+
+## D-0020: Isolate intermediate Gate work from main-branch CI email
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Develop and synchronize Gate 3 on the `gate-3` branch. Run the
+  full M3 CPU/GPU verifier there, then fast-forward `main` exactly once after a
+  passing final checkpoint.
+- **Reason:** The CI workflow intentionally triggers only on `main` pushes.
+  Keeping intermediate checkpoints off `main` avoids failure-notification email
+  while preserving Git synchronization and checkpoint history.

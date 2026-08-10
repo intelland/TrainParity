@@ -2,35 +2,48 @@
 
 ## Active gate
 
-Gate 2 — deterministic snapshot, canonicalization, and comparison core.
+Gate 3 — single-process/single-GPU Resume Equivalence MVP.
 
 ## Objective
 
-Implement a deterministic full-value reference snapshot backend, stable state
-paths, name-based optimizer canonicalization, and separate exact/tolerance
-comparators that report first observed differences without claiming root cause.
+Prove equivalence between continuous training and an interrupted checkpoint /
+real-process-exit / fresh-process-load / resumed execution. Establish precise
+step-boundary alignment, initial-equivalence and baseline-self-consistency
+prechecks, strict four-state outcomes, data-trajectory priority, and actionable
+first-observed-divergence reports.
 
 ## Constraints
 
-- Implement Gate 2 only and stop for human acceptance.
+- Implement Gate 3 only and stop for human acceptance.
 - Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
 - Keep every environment, cache, checkout, log, and output under
   `/scratch/mp25/jwuu0254/zxh/TrainParity`.
 - Preserve all accepted Gate 0 evidence unchanged.
 - Preserve all accepted Gate 0 and Gate 1 evidence unchanged.
-- Define deterministic, unambiguous state paths and freeze captured tensor
-  values without retaining aliases to mutable training state.
-- Distinguish missing, `None`, empty, zero, NaN, and Inf states.
-- Keep `ExactComparison` and explicit `ToleranceComparison` separate.
-- Canonicalize optimizer state by stable parameter names and return `ABSTAIN`
-  when mapping is missing, duplicated, aliased, or otherwise ambiguous.
-- Implement a full-value reference backend without making materialized
-  snapshots the only possible future backend.
+- Define snapshot `step=N` as state after exactly N completed optimizer updates;
+  use only the `completed_training_step` phase in this Gate.
+- Compare two initial snapshots before resume attribution and run an independent
+  baseline self-consistency precheck; nondeterminism returns `ABSTAIN`.
+- Cross a real checkpoint file boundary and a genuinely new Python process;
+  record distinct pre-save and post-load PIDs and rebuild model, optimizer,
+  scheduler, and scaler objects in the child process.
+- Keep `PASS`, `FAIL`, `ABSTAIN`, and `ERROR` distinct. Import, launch, timeout,
+  checkpoint, load, and corrupt-result failures are `ERROR`, not parity failures.
+- Capture sample IDs when supplied, otherwise a deterministic batch fingerprint;
+  unavailable stable data identity causes `ABSTAIN` rather than a false pass.
+- Preserve every difference at the first divergent step, with deterministic
+  primary ordering and no inferred root-cause claim.
+- Include at least ten formal fault fixtures, including hidden module-global
+  state and off-by-one resume/data-cursor cases, and repeat each stable result
+  three times.
+- Validate clean, CUDA RNG omission, and GradScaler omission on at least one real
+  GPU inside one Slurm allocation; never compare different GPU models.
 - Do not add runtime LLM/agent dependencies, distributed support, a web UI,
   service, registry, or platform functionality.
-- Do not implement production resume orchestration, phase tracing, accumulation,
-  sample coverage, or any other later-gate feature.
+- Do not implement phase tracing, snapshot performance optimization,
+  accumulation, full sample-coverage policy, or any other later-gate feature.
 - Continue to describe outputs as first observed divergence, never root cause.
+- Preserve the user's uncommitted `CODEX_REMOTE_DEVELOPMENT.md` changes exactly.
 
 ## Planned verification commands
 
@@ -41,13 +54,17 @@ make lint
 make typecheck
 make test
 make build
-python scripts/verify_gate.py 2
+python -m experiments.gate3.run_cpu_matrix \
+  --output "$PROJECT_ROOT/outputs/gate3/cpu_matrix.json"
+sbatch scripts/slurm_gpu_matrix.sbatch --gate 3
+python scripts/verify_gate.py 3
 git diff --check
 ```
 
-The final Gate 2 report will record the fault/clean suites, stable expected
-paths, coverage, optimizer ambiguity behavior, exact/tolerance behavior,
-environment, exact command outcomes, and all known limitations.
+The final Gate 3 report will record initial/self-consistency evidence, process
+PIDs and object identities, first divergent steps and all same-step differences,
+CPU/GPU fault matrices, three-run repeatability, coverage, exact commands, and
+all known limitations.
 
 ## Current state
 
@@ -59,18 +76,14 @@ Gate 1 was accepted by the human reviewer on 2026-08-10. Its 28-line selected
 adapter, wheel-installed fresh-process import, clean `PASS`, and faulty `FAIL`
 evidence remain preserved.
 
-Gate 2 is complete and awaiting human acceptance. The hosted GitHub Actions carry-forward
-is resolved: an authenticated read-only REST query confirmed that commit
-`ae75212` completed `CI` run `31394676144` with conclusion `success`. The query
-used the local Git credential helper without printing or persisting credentials;
-the durable record is `experiments/gate2/recorded/ci_ae75212.json`.
+Gate 2 was accepted by the human reviewer on 2026-08-10 based on its stable
+fault paths, clean controls, immutable capture, parameter-name optimizer state,
+separate comparison policies, `ABSTAIN` behavior, coverage, evidence
+preservation, and hosted CI confirmation.
 
-The final Gate 2 M3 evidence has 17/17 expected fault paths, 0/17 clean false
-positives, an optimizer-alias `ABSTAIN`, and 96.25% core coverage across 51
-passing tests. Ruff, strict Mypy across 13 package modules, wheel/sdist build,
-fault evidence replay, `git diff --check`, and `python scripts/verify_gate.py 2`
-all pass in the isolated CPU environment at `envs/gate2`. The verifier reports
-`PASS` with recommendation `HUMAN_REVIEW`; see
-`artifacts/gate_reports/gate_2.json` and `gate_2.md`.
+Gate 3 is authorized and in progress on the dedicated `gate-3` branch. This
+branch is intentionally outside the workflow's `push: main` trigger so
+intermediate development failures do not send GitHub Actions email. Only a
+fully verified final Gate 3 checkpoint may be fast-forwarded to `main`.
 
-No Gate 3 work is authorized.
+No Gate 4 work is authorized.
