@@ -39,10 +39,14 @@ and any blocked competitor experiments.
 
 ## Current state
 
-Gate 0 implementation and M3 experiments are complete; final machine
-verification and report generation are in progress. The throwaway A/B prototype
-located all four required faults identically across three repeats. TrainCheck
-0.1.2 completed all 24 reference/control/fault phases: it produced
-fault-specific evidence for missing scheduler state, but none for missing RNG
-state, mean-of-means, or sample duplication after clean-control correction.
-Gate 1 has not started.
+Gate 0 is complete and awaiting human acceptance. The machine verifier reports
+`PASS` with recommendation `GO`; see `artifacts/gate_reports/gate_0.json` and
+`gate_0.md`. The 79-line throwaway A/B prototype located all four required
+faults identically across three repeats. TrainCheck 0.1.2 completed all 24
+reference/control/fault phases: it produced fault-specific evidence for missing
+scheduler state, but none for missing RNG state, mean-of-means, or sample
+duplication after clean-control correction.
+
+Ruff 0.16.2, Mypy 2.3.0, Python compilation, the focused fixture matrix, the
+full competitor matrix, and `python scripts/verify_gate.py 0` all pass on M3.
+Gate 1 has not started and remains unauthorized pending explicit human approval.

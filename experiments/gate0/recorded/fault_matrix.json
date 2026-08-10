@@ -1,4 +1,9 @@
 {
+  "environment": {
+    "platform": "Linux-5.14.0-687.17.1.el9_8.x86_64-x86_64-with-glibc2.34",
+    "python": "3.11.15",
+    "pytorch": "2.13.0+cpu"
+  },
   "repeat_count": 3,
   "results": [
     {
@@ -16,6 +21,7 @@
       "first_divergence": {
         "baseline": {
           "dtype": "torch.uint8",
+          "sha256": "2dcae91f7baf1a005a3a2ddec921b927608d0a24257811410c83fe1837542ff3",
           "shape": [
             5056
           ],
@@ -28,6 +34,7 @@
         },
         "candidate": {
           "dtype": "torch.uint8",
+          "sha256": "5a8e6bb0ed3c3513ddc73fe51f7ce6de84afad728e7fd5f0a621d9ca97eb547e",
           "shape": [
             5056
           ],
@@ -48,6 +55,7 @@
       "first_divergence": {
         "baseline": {
           "dtype": "torch.float32",
+          "sha256": "7a39fae68aa787b26c81803fce421f268e8535fc3ebef0213424380feb43c50c",
           "shape": [
             1,
             1
@@ -58,6 +66,7 @@
         },
         "candidate": {
           "dtype": "torch.float32",
+          "sha256": "20e466e70ade24268c85ff4adb37456cc35bee2510fdead1146f656df457810d",
           "shape": [
             1,
             1
@@ -82,6 +91,11 @@
       },
       "outcome": "FAIL"
     }
+  ],
+  "run_duration_seconds": [
+    2.23643,
+    0.012745,
+    0.014281
   ],
   "schema_version": 1,
   "stable": true

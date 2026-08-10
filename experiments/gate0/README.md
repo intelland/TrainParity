@@ -23,7 +23,7 @@ conda create --solver libmamba \
   torch==2.13.0+cpu
 "$PROJECT_ROOT/envs/gate0/bin/python" -m pip install traincheck==0.1.2
 "$PROJECT_ROOT/envs/gate0/bin/python" -m pip install \
-  -r experiments/gate0/requirements-dev.txt
+  -r "$PROJECT_ROOT/repo/experiments/gate0/requirements-dev.txt"
 ```
 
 The recorded run used Python 3.11.15, PyTorch 2.13.0+cpu, and TrainCheck 0.1.2.
