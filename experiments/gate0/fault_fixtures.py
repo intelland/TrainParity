@@ -75,6 +75,8 @@ def _accumulation_trajectory(fault: bool) -> Trajectory:
     else:
         aggregate = (model(x) - y).square().mean()
     aggregate.backward()
+    if model.weight.grad is None:
+        raise RuntimeError("expected model.weight gradient")
     gradient = model.weight.grad.detach().clone()
     optimizer.step()
     return [

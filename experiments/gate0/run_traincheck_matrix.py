@@ -32,6 +32,12 @@ def _tail(text: str, limit: int = 3_000) -> str:
     return text[-limit:]
 
 
+def _as_text(value: str | bytes | None) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
 def _run(
     phase: str,
     command: list[str],
@@ -56,8 +62,8 @@ def _run(
         timed_out = False
     except subprocess.TimeoutExpired as error:
         returncode = 124
-        stdout = error.stdout or ""
-        stderr = error.stderr or ""
+        stdout = _as_text(error.stdout)
+        stderr = _as_text(error.stderr)
         timed_out = True
     duration = round(time.perf_counter() - started, 3)
     log_dir.mkdir(parents=True, exist_ok=True)
