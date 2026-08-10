@@ -22,10 +22,36 @@ jobs:
       - run: make typecheck
       - run: make test
       - run: make build
-      - run: python scripts/verify_gate.py 0
-      - run: python scripts/verify_gate.py 1
-      - run: python scripts/verify_gate.py 2
-      - run: python scripts/verify_gate.py 3
+      - name: Replay Gate 0 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-0"
+          cd "$RUNNER_TEMP/verify-gate-0"
+          python scripts/verify_gate.py 0
+      - name: Replay Gate 1 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-1"
+          cd "$RUNNER_TEMP/verify-gate-1"
+          python scripts/verify_gate.py 1
+      - name: Replay Gate 2 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-2"
+          cd "$RUNNER_TEMP/verify-gate-2"
+          python scripts/verify_gate.py 2
+      - name: Replay Gate 3 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-3"
+          cd "$RUNNER_TEMP/verify-gate-3"
+          python scripts/verify_gate.py 3
+      - name: Replay Gate 4 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-4"
+          cd "$RUNNER_TEMP/verify-gate-4"
+          python scripts/verify_gate.py 4
+      - name: Replay Gate 4 friction verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-4-friction"
+          cd "$RUNNER_TEMP/verify-gate-4-friction"
+          python scripts/verify_gate4_friction_audit.py
       - name: Run pinned nanoGPT Gate 4 integration
         run: |
           mkdir -p "$RUNNER_TEMP/gate4/nanogpt"
@@ -37,8 +63,6 @@ jobs:
             --external-root "$RUNNER_TEMP/gate4" \
             --output "$RUNNER_TEMP/gate4-output/matrix.json" \
             --project nanogpt
-      - run: python scripts/verify_gate.py 4
-      - run: python scripts/verify_gate4_friction_audit.py
       - name: Run Gate 4B wheel-installed nanoGPT fresh-clone case
         run: |
           export TRAINPARITY_GATE4_DEVICE=cpu
