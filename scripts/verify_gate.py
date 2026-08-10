@@ -1247,7 +1247,7 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
     criterion("accepted Gate 0-3 evidence preserved", not changed, "hashes unchanged" if not changed else f"changed={changed}")
     workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     criterion(
-        "CI runs one real external case and Gate 4 verifier",
+        "CI is configured for one real external case and Gate 4 verifier",
         expected["nanogpt"][0] in workflow
         and "--project nanogpt" in workflow
         and "verify_gate.py 4" in workflow
@@ -1328,6 +1328,7 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
             "Gate 4 command drivers and state normalizers are experiment-only, not framework-specific production adapters.",
             "Ignite RunningAverage is excluded because the upstream Engine resets that reporting-only derived metric after loading; trainer, model, optimizer, and scheduler remain compared.",
             "PyTorch 2.6+ requires TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for the pinned Ignite example's original trusted checkpoint load call.",
+            "The hosted GitHub Actions result for the final Gate 4 commit was not independently verified because the connected App cannot access the private repository and gh is unavailable; the workflow configuration is machine-checked.",
             "Only completed-training-step resume is evaluated; distributed and accumulation behavior remain outside Gate 4.",
             "Every reported path is a first observed divergence, not a root-cause claim.",
         ],

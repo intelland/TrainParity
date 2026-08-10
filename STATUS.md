@@ -100,3 +100,10 @@ recipe, `best_val_loss` for nanoGPT, and `lr_scheduler.last_epoch` for Ignite.
 These are observations, not root-cause claims. The machine verifier returns
 `PASS` with recommendation `GO`. Gate 5 has not been started and remains
 unauthorized pending human review.
+
+The GitHub Actions workflow is configured to clone the pinned nanoGPT commit and
+run a real Gate 4 clean/fault case before `verify_gate.py 4`. Its hosted result
+for the final Gate 4 commit was not independently verified: the connected
+GitHub App cannot access the private repository and the local environment has no
+authenticated `gh` CLI. This is recorded as a review limitation, not presented
+as a successful hosted run.
