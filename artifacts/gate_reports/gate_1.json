@@ -1,0 +1,104 @@
+{
+  "commands": [
+    "python -m experiments.gate1.run_adapter_evaluation --output $PROJECT_ROOT/outputs/gate1/adapter_evaluation.json",
+    "make lint",
+    "make typecheck",
+    "make test",
+    "make build",
+    "python scripts/verify_gate.py 1",
+    "git diff --check"
+  ],
+  "criteria": [
+    {
+      "evidence": "present",
+      "name": "installable skeleton and engineering files",
+      "passed": true
+    },
+    {
+      "evidence": "class/protocol selected after factory-plus-callback comparison",
+      "name": "two API prototypes evaluated",
+      "passed": true
+    },
+    {
+      "evidence": "logical_lines=28",
+      "name": "selected adapter size",
+      "passed": true
+    },
+    {
+      "evidence": "returncode=0",
+      "name": "fresh-process import",
+      "passed": true
+    },
+    {
+      "evidence": "both prototypes use ordinary module imports",
+      "name": "no cloudpickle requirement",
+      "passed": true
+    },
+    {
+      "evidence": "outcome=PASS",
+      "name": "correct resume case",
+      "passed": true
+    },
+    {
+      "evidence": "outcome=FAIL, first observed=optimizer.param_groups.0.lr",
+      "name": "faulty resume case",
+      "passed": true
+    },
+    {
+      "evidence": "dependencies=['torch>=2.5']",
+      "name": "minimal documented production dependencies",
+      "passed": true
+    },
+    {
+      "evidence": "wheels=['trainparity-0.1.0.dev1-py3-none-any.whl']",
+      "name": "wheel build",
+      "passed": true
+    },
+    {
+      "evidence": "lint, type-check, pytest, wheel, and verifier steps present",
+      "name": "CI covers Gate 1 checks",
+      "passed": true
+    },
+    {
+      "evidence": "hashes unchanged",
+      "name": "accepted Gate 0 evidence preserved",
+      "passed": true
+    }
+  ],
+  "gate": 1,
+  "limitations": [
+    "The direct resume probe is Gate 1 evidence, not a production runner or comparator.",
+    "The tiny CPU cases do not establish compatibility with real training repositories.",
+    "Only ordinary importable zero-argument classes are accepted; arbitrary scripts and local closures are unsupported.",
+    "Distributed training, framework adapters, services, and runtime LLM/agent integration are out of scope.",
+    "First observed divergence is not presented as root cause."
+  ],
+  "metrics": {
+    "adapter_logical_lines": 28,
+    "callback_factory_logical_lines": 9,
+    "correct_resume_outcome": "PASS",
+    "environment": {
+      "platform": "Linux-5.14.0-687.17.1.el9_8.x86_64-x86_64-with-glibc2.34",
+      "python": "3.11.15",
+      "pytorch": "2.13.0+cpu"
+    },
+    "faulty_first_observed_divergence": "optimizer.param_groups.0.lr",
+    "faulty_resume_outcome": "FAIL",
+    "production_dependencies": [
+      "torch>=2.5"
+    ],
+    "selected_api": "class_protocol",
+    "selection_reasons": [
+      "one import specification identifies both construction and behavior",
+      "ResumeCase gives structural type checking without inheritance",
+      "a class avoids callback-field wiring while leaving the training step user-owned"
+    ],
+    "wheels": [
+      "trainparity-0.1.0.dev1-py3-none-any.whl"
+    ]
+  },
+  "recommendation": "HUMAN_REVIEW",
+  "schema_version": 1,
+  "status": "PASS",
+  "summary": "The installable Gate 1 skeleton and class/protocol adapter satisfy machine acceptance. Human approval is required before Gate 2."
+}

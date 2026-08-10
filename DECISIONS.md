@@ -81,3 +81,36 @@
 - **Reason:** The human authorization explicitly permits only Gate 1. Snapshot
   normalization, comparison, and full resume orchestration belong to later
   gates and would invalidate the staged acceptance process if implemented now.
+
+## D-0009: Select the class/protocol adapter API
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** The public Gate 1 adapter is an importable zero-argument class
+  structurally checked against `ResumeCase`. The evaluated
+  factory-plus-callback dataclass remains a prototype and is not public API.
+- **Reason:** One `module:ClassName` identifies construction and all four
+  required behaviors, works in a fresh process without `cloudpickle`, and
+  avoids four callback wiring points. The selected example is 28 logical lines.
+
+## D-0010: Use PyTorch as the sole production dependency
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Declare only `torch>=2.5` at runtime. Build, Ruff, Mypy, pytest,
+  and coverage remain development extras. Do not add NumPy merely to suppress
+  PyTorch's optional-integration warning in a minimal environment.
+- **Reason:** Public state types directly contain PyTorch modules, optimizers,
+  and schedulers. PyTorch is therefore an honest required dependency; the
+  Gate 1 implementation needs no other runtime package.
+
+## D-0011: Pin the Gate 1 evidence environment
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+- **Decision:** Gate 1 evidence uses Python 3.11.15 and PyTorch 2.13.0+cpu in
+  `/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate1`. All subsequent build
+  temporary files explicitly use the project-owned `tmp` directory.
+- **Reason:** A fresh isolated CPU environment validates install metadata,
+  examples, and wheel behavior without relying on Gate 0's editable state or
+  paths outside the MP25 project boundary.

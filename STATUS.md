@@ -49,4 +49,20 @@ Gate 0 was accepted by the human reviewer on 2026-08-10. Its machine report is
 `PASS` with recommendation `GO`; the report and all supporting evidence remain
 preserved in their existing paths.
 
-Gate 1 is now authorized and in progress. No Gate 2 work is authorized.
+Gate 1 implementation and M3 verification are complete and awaiting human
+acceptance. The selected class/protocol adapter is 28 logical lines, imports
+from a fresh process and an installed wheel, and requires no `cloudpickle`.
+The correct resume example returns `PASS`; the deliberately missing scheduler
+state returns `FAIL` with first observed divergence at
+`optimizer.param_groups.0.lr`. This observation is not presented as root cause.
+
+On the isolated M3 CPU environment, Ruff passed, Mypy passed for all eight
+package modules, pytest passed 10 tests, the wheel and source distribution
+built successfully, and `python scripts/verify_gate.py 1` returned `PASS` with
+recommendation `HUMAN_REVIEW`. The accepted Gate 0 evidence hashes remain
+unchanged. See `artifacts/gate_reports/gate_1.json` and `gate_1.md`.
+
+The GitHub Actions workflow runs the same lint, type-check, test, build, and
+verifier sequence. An intermediate run exposed the Ruff configuration scope;
+that issue was corrected and the identical M3 command now passes. Gate 2 has
+not started and remains unauthorized pending explicit human approval.
