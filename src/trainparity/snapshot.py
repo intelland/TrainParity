@@ -79,7 +79,8 @@ def _numpy_rng_state() -> object:
         import numpy as np
     except ImportError:
         return MISSING
-    name, keys, position, has_gauss, cached = np.random.get_state()
+    name, raw_keys, position, has_gauss, cached = np.random.get_state()
+    keys = np.asarray(raw_keys, dtype=np.uint32)
     return {
         "algorithm": name,
         "keys": {"dtype": str(keys.dtype), "shape": list(keys.shape), "values": keys.tolist()},
@@ -131,13 +132,13 @@ def capture_snapshot(
             ),
             "model": nested_named_values(parameters),
         }
-        if optimizer is not MISSING:
+        if not isinstance(optimizer, _Missing):
             raw["optimizer"] = (
                 None if optimizer is None else canonicalize_optimizer(model, optimizer)
             )
-        if scheduler is not MISSING:
+        if not isinstance(scheduler, _Missing):
             raw["scheduler"] = _stateful_value(scheduler)
-        if scaler is not MISSING:
+        if not isinstance(scaler, _Missing):
             raw["scaler"] = _stateful_value(scaler)
         if extras is not None:
             extra_values: dict[str, object] = {}

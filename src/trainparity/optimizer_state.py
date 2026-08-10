@@ -62,12 +62,12 @@ def canonicalize_optimizer(model: nn.Module, optimizer: Optimizer) -> dict[str, 
 
     state_by_name: dict[str, object] = {}
     for parameter, state in optimizer.state.items():
-        path = ("optimizer", "state")
+        state_path: StatePath = ("optimizer", "state")
         if not isinstance(parameter, nn.Parameter):
-            raise OptimizerMappingError(path, "optimizer state key is not a Parameter")
+            raise OptimizerMappingError(state_path, "optimizer state key is not a Parameter")
         names = names_by_id.get(id(parameter), ())
         if len(names) != 1 or id(parameter) not in seen:
-            raise OptimizerMappingError(path, "optimizer state key is not uniquely mapped")
+            raise OptimizerMappingError(state_path, "optimizer state key is not uniquely mapped")
         state_by_name[names[0]] = dict(state)
     for parameter in ordered_parameters:
         name = names_by_id[id(parameter)][0]
@@ -78,4 +78,3 @@ def canonicalize_optimizer(model: nn.Module, optimizer: Optimizer) -> dict[str, 
     except ValueError as error:
         raise OptimizerMappingError(("optimizer", "state"), str(error)) from error
     return {"param_groups": canonical_groups, "state": canonical_state}
-
