@@ -224,8 +224,12 @@ def _all_value_differences(
         if len(baseline.items) != len(candidate.items):
             return [_difference(path, "sequence_length", len(baseline.items), len(candidate.items))]
         differences = []
-        for index, (left, right) in enumerate(zip(baseline.items, candidate.items, strict=True)):
-            differences.extend(_all_value_differences(left, right, (*path, index), tolerance))
+        for index, (sequence_left, sequence_right) in enumerate(
+            zip(baseline.items, candidate.items, strict=True)
+        ):
+            differences.extend(
+                _all_value_differences(sequence_left, sequence_right, (*path, index), tolerance)
+            )
         return differences
     difference = _value_difference(baseline, candidate, path, tolerance)
     return [] if difference is None else [difference]

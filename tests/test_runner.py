@@ -31,7 +31,7 @@ def test_clean_case_crosses_real_process_and_checkpoint(tmp_path: Path) -> None:
     [
         ("MissingModelCase", 2, "model"),
         ("MissingOptimizerCase", 2, "optimizer"),
-        ("MissingSchedulerCase", 2, "optimizer"),
+        ("MissingSchedulerCase", 2, "scheduler"),
         ("MissingPythonRngCase", 2, "rng.python"),
         ("CursorOffsetCase", 3, "batch.sample_ids"),
         ("StepOffByOneCase", 2, "step"),

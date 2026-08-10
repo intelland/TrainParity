@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import base64
 import struct
-from typing import Any
+from typing import Any, cast
 
 from trainparity.snapshot import Snapshot
 from trainparity.state import FrozenMapping, FrozenSequence, FrozenTensor, FrozenValue
@@ -79,7 +79,7 @@ def _decode_value(payload: dict[str, Any]) -> FrozenValue:
     if kind == "int":
         return int(payload["value"])
     if kind == "float":
-        return struct.unpack(">d", base64.b64decode(payload["bits"], validate=True))[0]
+        return cast(float, struct.unpack(">d", base64.b64decode(payload["bits"], validate=True))[0])
     if kind == "str":
         return str(payload["value"])
     if kind == "bytes":

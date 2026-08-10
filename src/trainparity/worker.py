@@ -7,13 +7,13 @@ import json
 import os
 import traceback
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from trainparity.importing import load_case
 from trainparity.outcomes import Outcome
 from trainparity.protocols import ResumeExecutionCase, StepObservation, TrainingState
 from trainparity.serialization import encode_snapshot
-from trainparity.snapshot import CaptureResult, capture_snapshot
+from trainparity.snapshot import CaptureResult, Stateful, capture_snapshot
 
 
 def _evidence(state: TrainingState) -> dict[str, int | None]:
@@ -34,7 +34,7 @@ def _capture(state: TrainingState, observation: StepObservation | None) -> Captu
         step=state.step,
         optimizer=state.optimizer,
         scheduler=state.scheduler,
-        scaler=state.scaler,
+        scaler=None if state.scaler is None else cast(Stateful, state.scaler),
         extras=extras,
         batch=batch,
     )
@@ -124,4 +124,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -7,7 +7,7 @@ import random
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import torch
 from torch import nn
@@ -95,12 +95,17 @@ class DeterministicCase:
         assert isinstance(state, Gate3State)
         import numpy as np
 
-        numpy_state = np.random.get_state()
+        numpy_state = cast(tuple[str, Any, int, int, float], np.random.get_state(legacy=True))
+        scaler = cast(torch.amp.GradScaler | None, state.scaler)
         payload: dict[str, Any] = {
             "model": state.model.state_dict(),
+            "gradients": {
+                name: None if parameter.grad is None else parameter.grad.detach().clone()
+                for name, parameter in state.model.named_parameters()
+            },
             "optimizer": state.optimizer.state_dict(),
             "scheduler": None if state.scheduler is None else state.scheduler.state_dict(),
-            "scaler": None if state.scaler is None else state.scaler.state_dict(),
+            "scaler": None if scaler is None else scaler.state_dict(),
             "step": state.step,
             "cursor": state.cursor,
             "last_sample_ids": state.last_sample_ids,
@@ -130,6 +135,10 @@ class DeterministicCase:
         state = self.build(seed)
         if "model" in checkpoint:
             state.model.load_state_dict(checkpoint["model"])
+        if "gradients" in checkpoint:
+            for name, parameter in state.model.named_parameters():
+                gradient = checkpoint["gradients"][name]
+                parameter.grad = None if gradient is None else gradient.to(device)
         if "optimizer" in checkpoint:
             state.optimizer.load_state_dict(checkpoint["optimizer"])
         if "scheduler" in checkpoint and checkpoint["scheduler"] is not None:

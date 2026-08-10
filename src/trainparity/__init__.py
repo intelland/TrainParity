@@ -1,5 +1,6 @@
 """Public API for TrainParity's accepted gates."""
 
+from trainparity.assertions import assert_resume_equivalent
 from trainparity.comparison import (
     ComparisonResult,
     Difference,
@@ -12,7 +13,6 @@ from trainparity.protocols import ResumeCase, ResumeExecutionCase, StepObservati
 from trainparity.results import ProcessEvidence, ResumeResult
 from trainparity.runner import ResumeRunner
 from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot
-from trainparity.assertions import assert_resume_equivalent
 
 __all__ = [
     "CaptureResult",
