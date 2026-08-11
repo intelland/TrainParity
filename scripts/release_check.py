@@ -13,8 +13,13 @@ from pathlib import Path
 VERSION = "0.1.0rc1"
 
 
-def _run(command: list[str], *, cwd: Path | None = None) -> None:
-    subprocess.run(command, cwd=cwd, check=True, timeout=1200)
+def _run(
+    command: list[str],
+    *,
+    cwd: Path | None = None,
+    environment: dict[str, str] | None = None,
+) -> None:
+    subprocess.run(command, cwd=cwd, env=environment, check=True, timeout=1200)
 
 
 def main() -> None:
@@ -41,6 +46,8 @@ def main() -> None:
         torch_index = os.environ.get(
             "TRAINPARITY_TORCH_INDEX_URL", "https://download.pytorch.org/whl/cpu"
         )
+        smoke_environment = os.environ.copy()
+        smoke_environment.pop("PYTHONPATH", None)
         _run(
             [
                 str(python),
@@ -52,6 +59,7 @@ def main() -> None:
                 torch_index,
             ],
             cwd=work,
+            environment=smoke_environment,
         )
         _run([str(python), "-m", "pip", "install", "--no-deps", str(wheel)], cwd=work)
         _run(
