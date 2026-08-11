@@ -482,3 +482,16 @@
   the README integration, 30-name top-level namespace, narrow dependency cap,
   monolithic CI, release permissions, maintainer metadata, and API reference
   require bounded correction before publication approval.
+
+## D-0044: Bound PyTorch support by installed-wheel evidence
+
+- **Status:** Accepted for Gate 7I verification
+- **Date:** 2026-08-11
+- **Decision:** Declare `torch>=2.7,<2.14` with Python `>=3.11,<3.12`. The
+  compatibility matrix uses exact CPU releases 2.7.0, 2.10.0, and 2.13.0 in
+  separate clean environments and runs all three installed quickstarts from
+  outside the repository. GPU claims remain limited to the accepted PyTorch
+  2.7.0 same-device fixtures.
+- **Reason:** M3 array job `59002218` passed every row. PyTorch 2.14 and other
+  Python versions remain untested, so the range stops before 2.14 rather than
+  extrapolating from the current release.

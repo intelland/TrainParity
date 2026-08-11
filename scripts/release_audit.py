@@ -193,9 +193,9 @@ def run(root: Path) -> dict[str, Any]:
         "distributions": archives,
         "dependency_licenses": [
             {
-                "dependency": "torch>=2.7,<2.8",
+                "dependency": "torch>=2.7,<2.14",
                 "license": "BSD-3-Clause",
-                "source": "https://github.com/pytorch/pytorch/blob/v2.7.0/LICENSE",
+                "source": "https://github.com/pytorch/pytorch/blob/v2.13.0/LICENSE",
             }
         ],
         "historical_metadata_policy": (

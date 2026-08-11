@@ -16,15 +16,15 @@ from trainparity.version import PACKAGE_VERSION
 
 __version__ = PACKAGE_VERSION
 __all__ = [
-    "check_resume",
-    "check_accumulation",
-    "audit_sample_coverage",
-    "ExactlyOnce",
     "AtLeastOnce",
-    "NoCrossRankOverlap",
-    "ExpectedPadding",
     "ExactComparison",
-    "ToleranceComparison",
+    "ExactlyOnce",
+    "ExpectedPadding",
+    "NoCrossRankOverlap",
     "Outcome",
+    "ToleranceComparison",
     "__version__",
+    "audit_sample_coverage",
+    "check_accumulation",
+    "check_resume",
 ]

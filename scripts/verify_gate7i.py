@@ -28,10 +28,14 @@ TOP_LEVEL_API = {
 }
 PUBLIC_FILES = (
     "README.md",
+    "CHANGELOG.md",
+    "MANIFEST.in",
     "pyproject.toml",
+    "examples/test_readme_case.py",
     "src/trainparity/__init__.py",
     "src/trainparity/api.py",
     "docs/api.md",
+    "docs/public-api-inventory.md",
     "docs/validation.md",
     "docs/design.md",
     "docs/comparison-with-traincheck.md",
@@ -45,7 +49,12 @@ PUBLIC_FILES = (
     ".github/workflows/validation.yml",
     ".github/workflows/release.yml",
 )
-EXPECTED_BUNDLE = {*PUBLIC_FILES, "artifacts/gate_reports/gate_7i.json", "artifacts/gate_reports/gate_7i.md"}
+EXPECTED_BUNDLE = {
+    *PUBLIC_FILES,
+    "artifacts/gate_reports/gate_7i.json",
+    "artifacts/gate_reports/gate_7i.md",
+    "artifacts/gate_reports/gate_7i_compatibility.json",
+}
 
 
 def _require(condition: bool, message: str) -> None:
@@ -118,7 +127,8 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
     first = readme.split("## Installed quickstarts", 1)[0]
     _require("img.shields.io/pypi" not in readme, "unpublished PyPI badge")
     _require("Asking Codex" not in readme, "Codex paragraph")
-    _require("class CoverageCase:" in first and "..." not in first, "complete first-screen case")
+    placeholder = re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
+    _require("class CoverageCase:" in first and placeholder is None, "complete first-screen case")
     _require("pytest -q examples/test_readme_case.py" in first, "README pytest command")
     _verify_workflows(root)
     links = _verify_links(root)

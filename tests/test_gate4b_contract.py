@@ -34,7 +34,7 @@ def test_user_files_do_not_import_gate_experiment_helpers() -> None:
     for path in (ROOT / "experiments/gate4b/user_files").rglob("*.py"):
         source = path.read_text(encoding="utf-8")
         assert "experiments.gate" not in source
-        assert "ProcessResumeRunner" in source or "ProcessExecutionPlan" in source
+        assert "check_resume" in source or "ProcessExecutionPlan" in source
 
 
 def test_production_surface_has_no_framework_or_project_branches() -> None:

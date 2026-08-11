@@ -8,7 +8,7 @@ TrainParity checks user-declared equivalence across PyTorch resume, gradient-acc
 
 ## A complete integration
 
-This 27-logical-line pytest case audits stable IDs emitted by a real PyTorch
+This 28-logical-line pytest case audits stable IDs emitted by a real PyTorch
 `DataLoader`. The clean loader passes; the faulty loader repeats ID `1` and
 omits ID `2`. The file is [`examples/test_readme_case.py`](examples/test_readme_case.py),
 and CI executes the command shown below.
@@ -57,7 +57,7 @@ def test_duplicate_loader_reports_first_observed_path() -> None:
 pytest -q examples/test_readme_case.py
 ```
 
-Representative failing result:
+Representative first-observed-divergence output:
 
 ```json
 {
@@ -103,7 +103,8 @@ Exact commits, environments, outcomes, and limitations are in [validation](docs/
 
 ## Install and run
 
-The project is an unpublished release candidate. Build the wheel from this checkout and install that artifact; do not interpret the PyPI badge as a publication claim.
+The project is an unpublished release candidate. Build the wheel from this
+checkout and install that artifact; no PyPI distribution is claimed or linked.
 
 CI executes the pytest integration and all three quickstart commands. The
 quickstarts run against the built wheel from outside the repository directory.
@@ -140,7 +141,10 @@ deterministic runtime behavior are documented in [development provenance](docs/d
 
 ## Compatibility and security
 
-The release candidate is tested on CPython 3.11 and PyTorch 2.7.0, with CPU plus the exact CUDA/GPU fixtures listed in [validation](docs/validation.md). No support is implied for other Python, PyTorch, CUDA, or GPU versions.
+The release candidate's installed CPU wheel passed on CPython 3.11 with
+PyTorch 2.7.0, 2.10.0, and 2.13.0. Same-device GPU evidence uses PyTorch 2.7.0
+on the exact CUDA/GPU fixtures listed in [validation](docs/validation.md). No
+support is implied for other Python, PyTorch, CUDA, or GPU versions.
 
 TrainParity is not a sandbox. User training code runs with the caller's permissions; load only trusted checkpoints and do not execute untrusted repositories. Explicit child environment values are propagated when requested but are not recorded in reports by default. See [SECURITY.md](SECURITY.md).
 

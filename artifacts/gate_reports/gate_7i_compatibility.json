@@ -1,0 +1,36 @@
+{
+  "gate": "7I",
+  "job_id": "59002218",
+  "matrix": [
+    {
+      "clean_examples": 3,
+      "evidence_file": "experiments/gate7i/recorded/compatibility-2.7.0.json",
+      "intentional_failures": 3,
+      "python": "3.11.15",
+      "source_tree_imported": false,
+      "status": "PASS",
+      "torch": "2.7.0+cpu"
+    },
+    {
+      "clean_examples": 3,
+      "evidence_file": "experiments/gate7i/recorded/compatibility-2.10.0.json",
+      "intentional_failures": 3,
+      "python": "3.11.15",
+      "source_tree_imported": false,
+      "status": "PASS",
+      "torch": "2.10.0+cpu"
+    },
+    {
+      "clean_examples": 3,
+      "evidence_file": "experiments/gate7i/recorded/compatibility-2.13.0.json",
+      "intentional_failures": 3,
+      "python": "3.11.15",
+      "source_tree_imported": false,
+      "status": "PASS",
+      "torch": "2.13.0+cpu"
+    }
+  ],
+  "schema_version": 1,
+  "status": "PASS",
+  "trainparity_version": "0.1.0rc1"
+}

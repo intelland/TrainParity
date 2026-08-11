@@ -27,7 +27,8 @@
   infinite-stream behavior or general shuffle quality.
 - Worker provenance is optional and is `None` / JSON `null` when unavailable.
 - The reproducible validation suite uses tiny fixtures, three pinned external
-  projects, Python 3.11, PyTorch 2.7.0, and two GPU models. It does not imply
-  support for other versions, hardware, scale, or projects.
+  projects, Python 3.11, CPU PyTorch 2.7.0/2.10.0/2.13.0, GPU PyTorch 2.7.0,
+  and two GPU models. It does not imply support for other versions, hardware,
+  scale, or projects.
 - TrainParity is not a sandbox. Process isolation used for equivalence testing
   is not a security boundary.

@@ -4,6 +4,9 @@ This page describes the supported Python API for TrainParity `0.1.0rc1`.
 Signatures are verified by the release-surface tests. Names not listed here are
 internal and may change without compatibility notice.
 
+The complete name-to-defining-module table is in the
+[public API inventory](public-api-inventory.md).
+
 ## Recommended top-level imports
 
 `trainparity.__all__` contains exactly:

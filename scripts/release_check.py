@@ -74,8 +74,6 @@ def main() -> None:
                 "-m",
                 "pip",
                 "install",
-                "--force-reinstall",
-                "--no-deps",
                 str(wheel),
             ],
             cwd=work,

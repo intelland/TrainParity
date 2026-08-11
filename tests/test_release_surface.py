@@ -25,6 +25,7 @@ TOP_LEVEL_API = {
 
 def test_top_level_and_advanced_api_boundaries() -> None:
     assert set(trainparity.__all__) == TOP_LEVEL_API
+    assert len(api.__all__) == 26
     for removed in ("PACKAGE_VERSION", "ExternalProcessEvidence", "SampleCoverageAuditor"):
         assert removed not in trainparity.__all__
         assert removed not in api.__all__
@@ -54,13 +55,20 @@ def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:
 
 def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    example = (ROOT / "examples/test_readme_case.py").read_text(encoding="utf-8")
+    logical_lines = sum(
+        bool(line.strip()) and not line.lstrip().startswith("#")
+        for line in example.splitlines()
+    )
     first = readme.split("## Installed quickstarts", 1)[0]
+    assert 20 <= logical_lines <= 30
+    assert f"{logical_lines}-logical-line pytest case" in first
     assert "img.shields.io/pypi" not in readme
     assert "Asking Codex" not in readme
     assert "does not invoke an LLM at runtime" in first
     assert "class CoverageCase:" in first
     assert "coverage.same_rank_duplicate" in first
-    assert "..." not in first
+    assert not re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
     assert "pytest -q examples/test_readme_case.py" in first
     for module in ("resume", "accumulation", "sample_coverage"):
         assert f"python -m trainparity.quickstarts.{module}" in readme
@@ -101,4 +109,4 @@ def test_validation_and_coverage_boundary_are_documented() -> None:
     validation = (ROOT / "docs/validation.md").read_text(encoding="utf-8")
     assert "e08ff9257ed18d8d805304e32ba85a44553195fc" in validation
     assert "subprocess coverage" in validation.lower()
-    assert "not a universal detection rate" in validation
+    assert "not a universal detection rate" in " ".join(validation.split())

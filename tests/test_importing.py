@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import subprocess
 import sys
 from pathlib import Path
@@ -28,17 +27,19 @@ def test_load_case_rejects_invalid_targets(spec: str) -> None:
 
 def test_case_imports_in_fresh_process(tmp_path: Path) -> None:
     completed = subprocess.run(
-        [sys.executable, "-m", "trainparity", "inspect", CASE_SPEC],
+        [
+            sys.executable,
+            "-c",
+            (
+                "from trainparity.importing import load_case; "
+                f"case = load_case({CASE_SPEC!r}); "
+                "print(type(case).__name__)"
+            ),
+        ],
         cwd=tmp_path,
         check=False,
         capture_output=True,
         text=True,
     )
     assert completed.returncode == 0, completed.stderr
-    assert json.loads(completed.stdout) == {
-        "case": CASE_SPEC,
-        "class": "CorrectResumeCase",
-        "protocol": "ResumeCase",
-        "schema_version": 1,
-        "trainparity_version": "0.1.0rc1",
-    }
+    assert completed.stdout.strip() == "CorrectResumeCase"

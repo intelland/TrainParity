@@ -71,13 +71,21 @@ Tested compatibility for this release candidate is deliberately narrow:
 | Component | Tested |
 | --- | --- |
 | Python | CPython 3.11.15 |
-| PyTorch | 2.7.0+cu126 on M3; hosted CPU version recorded by Gate 7 CI |
-| CPU | Linux x86-64 |
+| CPU PyTorch | installed wheels with 2.7.0+cpu, 2.10.0+cpu, and 2.13.0+cpu |
+| GPU PyTorch | 2.7.0+cu126 |
+| CPU | Linux x86-64; each version ran all three clean/fault quickstarts outside the repository |
 | GPU | same-device A100 80GB PCIe and L40S fixtures, CUDA 12.6 |
 | Process model | single training process plus fresh child processes |
 
 Untested Python, PyTorch, CUDA, operating-system, accelerator, distributed, and
 large-model combinations are not covered by this matrix.
+
+Gate 7I compatibility Slurm array job `59002218` built the wheel once per row,
+installed it without source-tree fallback into a new Python 3.11 environment,
+and ran resume, accumulation, and sample-coverage clean/fault quickstarts from
+an outside-repository directory. All three rows passed. The declared runtime
+dependency is therefore `torch>=2.7,<2.14`; the upper bound does not assert
+compatibility with an untested PyTorch 2.14.
 
 An optional same-device replay on the configured M3 cluster is:
 `sbatch scripts/slurm_gpu_matrix.sbatch --gate 3`. It requires the documented
