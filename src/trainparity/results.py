@@ -77,3 +77,28 @@ class ProcessResumeResult:
         payload["outcome"] = self.outcome.value
         return payload
 
+
+@dataclass(frozen=True)
+class AccumulationResult:
+    """Four-state result for one bounded, fresh-process update comparison."""
+
+    outcome: Outcome
+    message: str
+    case: str
+    equivalence: str
+    first_observed_phase: str | None = None
+    primary_difference: Difference | None = None
+    all_differences: tuple[Difference, ...] = ()
+    process_ids: tuple[int, ...] = ()
+    verified_equal_initial_state: bool = False
+    loss_normalization_captured: bool = False
+    comparison_policy: str = "exact"
+    peak_temporary_directory_bytes: int = 0
+    persisted_artifact_bytes: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return deterministic, JSON-compatible evidence."""
+        payload = asdict(self)
+        payload["outcome"] = self.outcome.value
+        return payload
+

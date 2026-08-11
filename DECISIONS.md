@@ -330,3 +330,25 @@
 - **Reason:** Fresh-clone user integration falls from 266-275 LOC to 30-32 LOC
   without upstream edits, framework branches, weaker comparison, or loss of
   fresh-process/four-state/first-divergence behavior.
+
+## D-0031: Accept Gate 4B and authorize Gate 5 only
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** The human reviewer accepted Gate 4B and authorized only the
+  bounded accumulation-equivalence work in Gate 5. Gate 6 sample-coverage work
+  remains unauthorized.
+- **Reason:** The framework-neutral production integration surface met its LOC,
+  fresh-clone, runtime, exact-state, four-state, environment, and preservation
+  requirements.
+
+## D-0032: Make accumulation equivalence explicit and bounded
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Treat full-batch versus microbatch accumulation as a
+  user-declared relation over one optimizer-update boundary. Observe only loss
+  accounting, completed gradients, optimizer state, parameter update, and
+  scheduler/scaler state in separate fresh processes.
+- **Reason:** This detects the specified accumulation faults without claiming
+  universal equivalence or creating a general event-tracing platform.

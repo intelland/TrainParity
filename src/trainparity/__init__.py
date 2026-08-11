@@ -1,5 +1,11 @@
 """Public API for TrainParity's accepted gates."""
 
+from trainparity.accumulation import (
+    AccumulationExecutionPlan,
+    AccumulationRunner,
+    UnsafeBatchSplit,
+    split_tensor_tree,
+)
 from trainparity.assertions import assert_resume_equivalent
 from trainparity.comparison import (
     ComparisonResult,
@@ -7,10 +13,17 @@ from trainparity.comparison import (
     ExactComparison,
     ToleranceComparison,
 )
-from trainparity.importing import CaseImportError, load_case, load_process_case
+from trainparity.importing import (
+    CaseImportError,
+    load_accumulation_case,
+    load_case,
+    load_process_case,
+)
 from trainparity.outcomes import Outcome
 from trainparity.process_resume import ProcessResumeRunner
 from trainparity.protocols import (
+    AccumulationCase,
+    LossAccounting,
     ProcessExecutionPlan,
     ProcessResumeCase,
     ResumeCase,
@@ -19,6 +32,7 @@ from trainparity.protocols import (
     TrainingState,
 )
 from trainparity.results import (
+    AccumulationResult,
     ExternalProcessEvidence,
     ProcessEvidence,
     ProcessResumeResult,
@@ -28,12 +42,17 @@ from trainparity.runner import ResumeRunner
 from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot
 
 __all__ = [
+    "AccumulationCase",
+    "AccumulationExecutionPlan",
+    "AccumulationResult",
+    "AccumulationRunner",
     "CaptureResult",
     "CaseImportError",
     "ComparisonResult",
     "Difference",
     "ExactComparison",
     "ExternalProcessEvidence",
+    "LossAccounting",
     "Outcome",
     "ProcessEvidence",
     "ProcessExecutionPlan",
@@ -48,9 +67,12 @@ __all__ = [
     "StepObservation",
     "ToleranceComparison",
     "TrainingState",
+    "UnsafeBatchSplit",
     "assert_resume_equivalent",
     "capture_snapshot",
     "load_case",
+    "load_accumulation_case",
     "load_process_case",
+    "split_tensor_tree",
 ]
-__version__ = "0.1.0.dev5"
+__version__ = "0.1.0.dev6"

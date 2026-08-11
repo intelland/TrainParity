@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+import torch
+
 from torch import nn
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
@@ -92,3 +94,28 @@ class ProcessResumeCase(Protocol):
 
     def observe_checkpoint(self, path: Path) -> Mapping[str, object]:
         """Select explicit comparable state from an original checkpoint."""
+
+
+@dataclass(frozen=True)
+class LossAccounting:
+    """One differentiable loss with optional explicit reduction accounting."""
+
+    value: torch.Tensor
+    numerator: torch.Tensor | None = None
+    denominator: int | float | None = None
+
+
+@runtime_checkable
+class AccumulationCase(Protocol):
+    """User-owned semantics for one declared accumulation equivalence check."""
+
+    equivalence: str
+
+    def build(self, seed: int, device: str) -> TrainingState:
+        """Construct verified-repeatable state in a fresh process."""
+
+    def batch(self, device: str) -> object:
+        """Return the complete ordered batch for one optimizer update."""
+
+    def loss(self, state: TrainingState, batch: object) -> LossAccounting:
+        """Compute loss and, when known, its numerator and denominator."""

@@ -148,3 +148,10 @@ build, isolated Gate 0-4 and friction verifier replays, the pinned Gate 4 case,
 and a wheel-installed Gate 4B nanoGPT fresh-clone case. The final dedicated
 Gate 4B verifier returns `PASS`, the report recommends `GO`, accepted evidence
 remains preserved, and Gate 5 remains unauthorized.
+
+Gate 4B was accepted by the human reviewer on 2026-08-11. Gate 5 is now the
+only authorized scope and is under development on branch `gate-5`. The formal
+equivalence relation and one-update boundary are frozen in
+`docs/GATE5_ACCUMULATION_CONTRACT.md`. Gate 6 and all distributed,
+sample-coverage, framework-adapter, dashboard, and service work remain
+unauthorized.
