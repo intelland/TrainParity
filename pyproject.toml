@@ -50,6 +50,7 @@ testpaths = ["tests"]
 omit = [
   "src/trainparity/__init__.py",
   "src/trainparity/__main__.py",
+  "src/trainparity/accumulation_worker.py",
   "src/trainparity/cli.py",
   "src/trainparity/examples/*",
   "src/trainparity/importing.py",
