@@ -196,7 +196,7 @@ class AccumulationRunner:
             peak = 0
             for name, plan in (("baseline_a", baseline), ("baseline_b", baseline), ("candidate", candidate)):
                 record, observed_peak = self._worker(
-                    case, plan, device, seed, Path(cwd or Path.cwd()), root / name,
+                    case, plan, device, seed, root / name, Path(cwd or Path.cwd()),
                     dict(environment or {}), root,
                 )
                 peak = max(peak, observed_peak)
