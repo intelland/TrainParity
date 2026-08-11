@@ -85,7 +85,7 @@ The four outcomes are intentionally distinct:
 
 Resume and accumulation checks require a small importable case that states project semantics: how to execute, locate/load a checkpoint or construct one optimizer-update boundary, and expose the required state. TrainParity owns generic fresh-process orchestration and deterministic reporting; it does not rewrite a training loop or provide framework-specific adapters. See the [public API](docs/api.md), [design](docs/design.md), and shipped quickstart modules.
 
-Coverage users provide stable sample IDs. An ID must be semantically unique within the declared expected universe: two different semantic samples must not share it. TrainParity validates ID trajectories, not sample contents. Worker provenance is optional and unavailable worker information is represented by `None` / JSON `null`, never worker 0. One audit proves only its declared finite window; it does not prove sample contents, infinite-stream exactly-once behavior, or general shuffle quality.
+Coverage users provide stable sample IDs. An ID must be semantically unique within the declared expected universe: two different semantic samples must not share it. TrainParity validates ID trajectories, not sample contents. Worker provenance is optional and unavailable worker information is represented by `None` / JSON `null`, never worker 0. One audit proves only one finite observation window—the declared window; it does not prove sample contents, infinite-stream exactly-once behavior, or general shuffle quality.
 
 ## What it does not do
 
