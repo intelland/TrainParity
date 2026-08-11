@@ -1,0 +1,591 @@
+{
+  "device": "cpu",
+  "python": "3.11.15",
+  "rows": [
+    {
+      "expected": "PASS",
+      "name": "world_size_1",
+      "requirements": [
+        "world_size_1"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/world_size_1.json",
+        "expected_id_count": 12,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 12
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "world_size_2",
+      "requirements": [
+        "world_size_2"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/world_size_2.json",
+        "expected_id_count": 12,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 12
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "world_size_3",
+      "requirements": [
+        "world_size_3"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/world_size_3.json",
+        "expected_id_count": 12,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 12
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "world_size_4",
+      "requirements": [
+        "world_size_4"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/world_size_4.json",
+        "expected_id_count": 12,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 12
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "non_divisible_padding",
+      "requirements": [
+        "expected_padding",
+        "non_divisible",
+        "padding_duplicate"
+      ],
+      "result": {
+        "actual_padding_count": 2,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              0,
+              1
+            ],
+            "sample_id": 1,
+            "workers": []
+          },
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              1,
+              2
+            ],
+            "sample_id": 9,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 2,
+        "evidence_path": "outputs/gate6/machine_evidence/non_divisible_padding.json",
+        "expected_id_count": 10,
+        "expected_padding_count": 2,
+        "first_violation": null,
+        "message": "observed repetitions match the declared padding policy",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "expected_padding",
+        "repeated_id_count": 2,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 10
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "drop_last_missing",
+      "requirements": [
+        "drop_last",
+        "missing_ids"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [
+          {
+            "epochs": [],
+            "kind": "missing_id",
+            "occurrence_count": 0,
+            "ranks": [],
+            "sample_id": 4,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/drop_last.json",
+        "expected_id_count": 10,
+        "expected_padding_count": null,
+        "first_violation": {
+          "epoch": null,
+          "kind": "missing_id",
+          "path": "coverage.missing_ids",
+          "position": null,
+          "rank": null,
+          "sample_id": 4,
+          "worker": null
+        },
+        "message": "exactly_once policy was violated",
+        "missing_id_count": 1,
+        "outcome": "FAIL",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 9,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 9
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "same_rank_duplicate",
+      "requirements": [
+        "same_rank_duplication"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "repeated_id+same_rank_duplicate",
+            "occurrence_count": 2,
+            "ranks": [
+              0
+            ],
+            "sample_id": 0,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/same_rank.json",
+        "expected_id_count": 2,
+        "expected_padding_count": null,
+        "first_violation": {
+          "epoch": 0,
+          "kind": "same_rank_duplicate",
+          "path": "coverage.same_rank_duplicate",
+          "position": 1,
+          "rank": 0,
+          "sample_id": 0,
+          "worker": null
+        },
+        "message": "exactly_once policy was violated",
+        "missing_id_count": 0,
+        "outcome": "FAIL",
+        "policy": "exactly_once",
+        "repeated_id_count": 1,
+        "same_rank_duplicate_id_count": 1,
+        "total_observations": 3,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 2
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "same_rank_allowed_by_no_cross",
+      "requirements": [
+        "same_rank_distinct_condition"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "repeated_id+same_rank_duplicate",
+            "occurrence_count": 2,
+            "ranks": [
+              0
+            ],
+            "sample_id": 0,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": null,
+        "expected_id_count": null,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "no sample ID was observed on more than one rank",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "no_cross_rank_overlap",
+        "repeated_id_count": 1,
+        "same_rank_duplicate_id_count": 1,
+        "total_observations": 3,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 2
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "cross_rank_overlap",
+      "requirements": [
+        "cross_rank_overlap"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              0,
+              1
+            ],
+            "sample_id": 0,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 1,
+        "evidence_path": "outputs/gate6/machine_evidence/cross_rank.json",
+        "expected_id_count": null,
+        "expected_padding_count": null,
+        "first_violation": {
+          "epoch": 0,
+          "kind": "cross_rank_overlap",
+          "path": "coverage.cross_rank_overlap",
+          "position": 0,
+          "rank": 1,
+          "sample_id": 0,
+          "worker": null
+        },
+        "message": "no_cross_rank_overlap policy was violated",
+        "missing_id_count": 0,
+        "outcome": "FAIL",
+        "policy": "no_cross_rank_overlap",
+        "repeated_id_count": 1,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 3,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 2
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "missing_id",
+      "requirements": [
+        "at_least_once",
+        "missing_ids"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [
+          {
+            "epochs": [],
+            "kind": "missing_id",
+            "occurrence_count": 0,
+            "ranks": [],
+            "sample_id": 4,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": null,
+        "expected_id_count": 5,
+        "expected_padding_count": null,
+        "first_violation": {
+          "epoch": null,
+          "kind": "missing_id",
+          "path": "coverage.missing_ids",
+          "position": null,
+          "rank": null,
+          "sample_id": 4,
+          "worker": null
+        },
+        "message": "at_least_once policy was violated",
+        "missing_id_count": 1,
+        "outcome": "FAIL",
+        "policy": "at_least_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 4,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 4
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "padding_count_mismatch",
+      "requirements": [
+        "expected_padding",
+        "padding_duplicate"
+      ],
+      "result": {
+        "actual_padding_count": 1,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              0,
+              1
+            ],
+            "sample_id": 0,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 1,
+        "evidence_path": null,
+        "expected_id_count": 2,
+        "expected_padding_count": 2,
+        "first_violation": {
+          "epoch": null,
+          "kind": "padding_count",
+          "path": "coverage.actual_padding_count",
+          "position": null,
+          "rank": null,
+          "sample_id": null,
+          "worker": null
+        },
+        "message": "expected_padding policy was violated",
+        "missing_id_count": 0,
+        "outcome": "FAIL",
+        "policy": "expected_padding",
+        "repeated_id_count": 1,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 3,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 2
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "custom_sampler",
+      "requirements": [
+        "custom_sampler"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": null,
+        "expected_id_count": 5,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 5,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 5
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "finite_iterable_dataset",
+      "requirements": [
+        "finite_iterable_dataset"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": null,
+        "expected_id_count": 5,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 5,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 5
+      }
+    },
+    {
+      "expected": "ABSTAIN",
+      "name": "unknown_universe",
+      "requirements": [
+        "unknown_universe_abstain"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": null,
+        "expected_id_count": null,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "a reliable finite expected ID universe is required for this policy",
+        "missing_id_count": 0,
+        "outcome": "ABSTAIN",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 0,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 0
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "at_least_once_repeats",
+      "requirements": [
+        "at_least_once"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              0,
+              1
+            ],
+            "sample_id": 0,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 1,
+        "evidence_path": null,
+        "expected_id_count": 2,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed at least once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "at_least_once",
+        "repeated_id_count": 1,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 3,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 2
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "shuffle_epoch_0",
+      "requirements": [
+        "multi_epoch_shuffle"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/shuffle_epoch_0.json",
+        "expected_id_count": 12,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 12
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "shuffle_epoch_1",
+      "requirements": [
+        "multi_epoch_shuffle"
+      ],
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": "outputs/gate6/machine_evidence/shuffle_epoch_1.json",
+        "expected_id_count": 12,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 12
+      }
+    }
+  ],
+  "schema_version": 1,
+  "torch": "2.7.0+cu126"
+}

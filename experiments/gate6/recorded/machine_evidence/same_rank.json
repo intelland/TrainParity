@@ -1,0 +1,70 @@
+{
+  "actual_padding_count": 1,
+  "cross_rank_overlaps": [],
+  "expected_ids": [
+    0,
+    1
+  ],
+  "first_violation": {
+    "epoch": 0,
+    "kind": "same_rank_duplicate",
+    "path": "coverage.same_rank_duplicate",
+    "position": 1,
+    "rank": 0,
+    "sample_id": 0,
+    "worker": null
+  },
+  "missing_ids": [],
+  "outcome": "FAIL",
+  "policy": "exactly_once",
+  "repeated_ids": [
+    {
+      "occurrence_count": 2,
+      "ranks": [
+        0
+      ],
+      "sample_id": 0
+    }
+  ],
+  "same_rank_duplicates": [
+    {
+      "rank": 0,
+      "sample_id": 0
+    }
+  ],
+  "schema_version": 1,
+  "traces": [
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 0,
+          "rank": 0,
+          "sample_id": 0,
+          "worker": null
+        },
+        {
+          "epoch": 0,
+          "position": 1,
+          "rank": 0,
+          "sample_id": 0,
+          "worker": null
+        }
+      ],
+      "sample_id": 0
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 0,
+          "rank": 1,
+          "sample_id": 1,
+          "worker": null
+        }
+      ],
+      "sample_id": 1
+    }
+  ],
+  "unexpected_ids": []
+}

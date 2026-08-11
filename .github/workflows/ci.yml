@@ -99,3 +99,9 @@ jobs:
             python .trainparity_user/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/report.json"
       - name: Verify Gate 5 report
         run: python scripts/verify_gate5.py --allow-pending-ci
+      - name: Run Gate 6 CPU policy matrix
+        run: python -m experiments.gate6.run_matrix --output "$RUNNER_TEMP/gate6/cpu_matrix.json"
+      - name: Run Gate 6 standard-sampler product surface
+        run: python -m experiments.gate6.run_product_surface --output "$RUNNER_TEMP/gate6/product_surface.json"
+      - name: Verify Gate 6 report
+        run: python scripts/verify_gate6.py --allow-pending-ci

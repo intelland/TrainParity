@@ -1371,6 +1371,14 @@ def main() -> None:
         report = verify_gate_3(root)
     elif args.gate == 4:
         report = verify_gate_4(root)
+    elif args.gate == 6:
+        from verify_gate6 import verify as verify_gate_6
+
+        gate_6 = verify_gate_6(root)
+        report = {
+            "status": gate_6["status"],
+            "recommendation": gate_6["recommendation"],
+        }
     else:
         raise SystemExit(f"gate {args.gate} is not implemented")
     print(

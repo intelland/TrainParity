@@ -1,0 +1,192 @@
+{
+  "actual_padding_count": 2,
+  "cross_rank_overlaps": [
+    {
+      "ranks": [
+        0,
+        1
+      ],
+      "sample_id": 1
+    },
+    {
+      "ranks": [
+        1,
+        2
+      ],
+      "sample_id": 9
+    }
+  ],
+  "expected_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "first_violation": null,
+  "missing_ids": [],
+  "outcome": "PASS",
+  "policy": "expected_padding",
+  "repeated_ids": [
+    {
+      "occurrence_count": 2,
+      "ranks": [
+        0,
+        1
+      ],
+      "sample_id": 1
+    },
+    {
+      "occurrence_count": 2,
+      "ranks": [
+        1,
+        2
+      ],
+      "sample_id": 9
+    }
+  ],
+  "same_rank_duplicates": [],
+  "schema_version": 1,
+  "traces": [
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 2,
+          "rank": 0,
+          "sample_id": 0,
+          "worker": null
+        }
+      ],
+      "sample_id": 0
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 0,
+          "rank": 0,
+          "sample_id": 1,
+          "worker": null
+        },
+        {
+          "epoch": 0,
+          "position": 3,
+          "rank": 1,
+          "sample_id": 1,
+          "worker": null
+        }
+      ],
+      "sample_id": 1
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 0,
+          "rank": 2,
+          "sample_id": 2,
+          "worker": null
+        }
+      ],
+      "sample_id": 2
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 2,
+          "rank": 1,
+          "sample_id": 3,
+          "worker": null
+        }
+      ],
+      "sample_id": 3
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 3,
+          "rank": 0,
+          "sample_id": 4,
+          "worker": null
+        }
+      ],
+      "sample_id": 4
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 1,
+          "rank": 0,
+          "sample_id": 5,
+          "worker": null
+        }
+      ],
+      "sample_id": 5
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 1,
+          "rank": 1,
+          "sample_id": 6,
+          "worker": null
+        }
+      ],
+      "sample_id": 6
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 1,
+          "rank": 2,
+          "sample_id": 7,
+          "worker": null
+        }
+      ],
+      "sample_id": 7
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 2,
+          "rank": 2,
+          "sample_id": 8,
+          "worker": null
+        }
+      ],
+      "sample_id": 8
+    },
+    {
+      "occurrences": [
+        {
+          "epoch": 0,
+          "position": 0,
+          "rank": 1,
+          "sample_id": 9,
+          "worker": null
+        },
+        {
+          "epoch": 0,
+          "position": 3,
+          "rank": 2,
+          "sample_id": 9,
+          "worker": null
+        }
+      ],
+      "sample_id": 9
+    }
+  ],
+  "unexpected_ids": []
+}

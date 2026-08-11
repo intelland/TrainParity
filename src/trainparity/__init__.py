@@ -99,4 +99,4 @@ __all__ = [
     "load_process_case",
     "split_tensor_tree",
 ]
-__version__ = "0.1.0.dev6"
+__version__ = "0.1.0.dev7"

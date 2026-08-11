@@ -1,0 +1,84 @@
+{
+  "cases": [
+    {
+      "case": "sequential_sampler",
+      "result": {
+        "actual_padding_count": null,
+        "anomaly_examples": [],
+        "cross_rank_overlap_id_count": 0,
+        "evidence_path": null,
+        "expected_id_count": 11,
+        "expected_padding_count": null,
+        "first_violation": null,
+        "message": "every expected sample ID was observed exactly once",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "exactly_once",
+        "repeated_id_count": 0,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 11,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 11
+      },
+      "returncode": 0,
+      "sampler": "torch.utils.data.SequentialSampler",
+      "upstream_modified_loc": 0,
+      "user_file": "experiments/gate6/user_files/sequential_sampler.py",
+      "user_required_logical_loc": 15
+    },
+    {
+      "case": "distributed_sampler",
+      "result": {
+        "actual_padding_count": 2,
+        "anomaly_examples": [
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              0,
+              1
+            ],
+            "sample_id": 0,
+            "workers": []
+          },
+          {
+            "epochs": [
+              0
+            ],
+            "kind": "cross_rank_overlap+repeated_id",
+            "occurrence_count": 2,
+            "ranks": [
+              1,
+              2
+            ],
+            "sample_id": 1,
+            "workers": []
+          }
+        ],
+        "cross_rank_overlap_id_count": 2,
+        "evidence_path": null,
+        "expected_id_count": 10,
+        "expected_padding_count": 2,
+        "first_violation": null,
+        "message": "observed repetitions match the declared padding policy",
+        "missing_id_count": 0,
+        "outcome": "PASS",
+        "policy": "expected_padding",
+        "repeated_id_count": 2,
+        "same_rank_duplicate_id_count": 0,
+        "total_observations": 12,
+        "unexpected_id_count": 0,
+        "unique_observed_ids": 10
+      },
+      "returncode": 0,
+      "sampler": "torch.utils.data.DistributedSampler",
+      "upstream_modified_loc": 0,
+      "user_file": "experiments/gate6/user_files/distributed_sampler.py",
+      "user_required_logical_loc": 18
+    }
+  ],
+  "schema_version": 1
+}
