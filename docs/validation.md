@@ -80,12 +80,13 @@ Tested compatibility for this release candidate is deliberately narrow:
 Untested Python, PyTorch, CUDA, operating-system, accelerator, distributed, and
 large-model combinations are not covered by this matrix.
 
-Gate 7I compatibility Slurm array job `59002218` built the wheel once per row,
-installed it without source-tree fallback into a new Python 3.11 environment,
-and ran resume, accumulation, and sample-coverage clean/fault quickstarts from
-an outside-repository directory. All three rows passed. The declared runtime
-dependency is therefore `torch>=2.7,<2.14`; the upper bound does not assert
-compatibility with an untested PyTorch 2.14.
+Gate 7I resolver-aware compatibility Slurm array job `59002633` built the wheel
+once per row, installed the selected PyTorch and then installed TrainParity
+with normal dependency resolution into a new Python 3.11 environment, and ran
+resume, accumulation, and sample-coverage clean/fault quickstarts from an
+outside-repository directory. All three rows passed without source-tree
+fallback. The declared runtime dependency is therefore `torch>=2.7,<2.14`;
+the upper bound does not assert compatibility with an untested PyTorch 2.14.
 
 An optional same-device replay on the configured M3 cluster is:
 `sbatch scripts/slurm_gpu_matrix.sbatch --gate 3`. It requires the documented
