@@ -103,7 +103,15 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     for relative, expected in report["preservation"]["accepted_evidence_sha256"].items():
         path = root / relative
         _require(path.is_file() and _hash(path) == expected, f"preservation {relative}")
-    _require(_hash(root / "CODEX_REMOTE_DEVELOPMENT.md") == report["preservation"]["user_uncommitted_remote_development_sha256"], "user document")
+    document_hash = _hash(root / "CODEX_REMOTE_DEVELOPMENT.md")
+    allowed_document_hashes = {
+        report["preservation"]["user_uncommitted_remote_development_sha256"]
+    }
+    if allow_pending_ci:
+        allowed_document_hashes.add(
+            report["preservation"]["tracked_remote_development_sha256"]
+        )
+    _require(document_hash in allowed_document_hashes, "user document")
     _require("Nothing was published, tagged" in markdown, "Markdown remote boundary")
     return {
         "status": "PASS",

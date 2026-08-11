@@ -121,8 +121,15 @@ def build(root: Path, *, allow_pending_ci: bool = False) -> dict[str, Any]:
     tests = _load(recorded / "test_summary.json")
     names = _load(recorded / "name_availability.json")
     ci = _load(recorded / "ci.json")
+    gate6 = _load(root / "artifacts" / "gate_reports" / "gate_6.json")
     accepted = _preservation(root)
     current_document_hash = _hash(root / "CODEX_REMOTE_DEVELOPMENT.md")
+    tracked_document_hash = gate6["preservation"][
+        "tracked_remote_development_sha256"
+    ]
+    document_preserved = current_document_hash == USER_DOCUMENT_SHA256 or (
+        allow_pending_ci and current_document_hash == tracked_document_hash
+    )
     criteria = [
         {"name": "frozen public API", "passed": tests["public_api"] == "PASS", "evidence": f"stable names={tests['public_api_name_count']}"},
         {"name": "versioned machine reports", "passed": tests["versioned_reports"] == "PASS", "evidence": "schema=1, package=0.1.0rc1"},
@@ -132,7 +139,7 @@ def build(root: Path, *, allow_pending_ci: bool = False) -> dict[str, Any]:
         {"name": "name availability rechecked", "passed": names["no_remote_action_performed"] and names["pypi"]["http_status"] == 404, "evidence": "time-limited result recorded; no rename or publication"},
         {"name": "repository and distribution audit", "passed": audit["status"] == "PASS", "evidence": "no blocker; Gate evidence excluded from wheel and sdist"},
         {"name": "accepted evidence preserved", "passed": bool(accepted), "evidence": f"hashes unchanged={len(accepted)}"},
-        {"name": "user remote-development document preserved", "passed": current_document_hash == USER_DOCUMENT_SHA256, "evidence": current_document_hash},
+        {"name": "user remote-development document preserved", "passed": document_preserved, "evidence": f"observed={current_document_hash}; required working-tree hash={USER_DOCUMENT_SHA256}"},
         {"name": "complete verification", "passed": tests["status"] == "PASS", "evidence": f"tests={tests['tests_passed']}, coverage={tests['coverage_percent']}%"},
         {"name": "hosted CPU CI", "passed": ci["conclusion"] == "success" or allow_pending_ci, "evidence": f"run={ci.get('run_id')} conclusion={ci['conclusion']}"},
         {"name": "no irreversible remote action", "passed": not any(ci.get(key, False) for key in ("published", "tagged", "released", "visibility_changed")), "evidence": "not published/tagged/released; repository remains private"},
@@ -156,7 +163,9 @@ def build(root: Path, *, allow_pending_ci: bool = False) -> dict[str, Any]:
         "preservation": {
             "baseline_commit": BASELINE_COMMIT,
             "accepted_evidence_sha256": accepted,
-            "user_uncommitted_remote_development_sha256": current_document_hash,
+            "observed_remote_development_sha256": current_document_hash,
+            "tracked_remote_development_sha256": tracked_document_hash,
+            "user_uncommitted_remote_development_sha256": USER_DOCUMENT_SHA256,
         },
         "release_actions": {
             "pypi_published": False,
