@@ -7,6 +7,7 @@ from typing import Any
 
 from trainparity.comparison import Difference
 from trainparity.outcomes import Outcome
+from trainparity.version import add_report_metadata
 
 
 @dataclass(frozen=True)
@@ -41,7 +42,7 @@ class ResumeResult:
         """Return a stable JSON-compatible representation."""
         payload = asdict(self)
         payload["outcome"] = self.outcome.value
-        return payload
+        return add_report_metadata(payload)
 
 
 @dataclass(frozen=True)
@@ -75,7 +76,7 @@ class ProcessResumeResult:
         """Return a stable JSON-compatible representation without environment values."""
         payload = asdict(self)
         payload["outcome"] = self.outcome.value
-        return payload
+        return add_report_metadata(payload)
 
 
 @dataclass(frozen=True)
@@ -100,5 +101,5 @@ class AccumulationResult:
         """Return deterministic, JSON-compatible evidence."""
         payload = asdict(self)
         payload["outcome"] = self.outcome.value
-        return payload
+        return add_report_metadata(payload)
 

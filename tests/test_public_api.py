@@ -1,0 +1,57 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import trainparity
+from trainparity import api
+from trainparity.api import (
+    MACHINE_REPORT_SCHEMA_VERSION,
+    PACKAGE_VERSION,
+    ExactlyOnce,
+    SampleObservation,
+    audit_sample_coverage,
+)
+from trainparity.quickstarts import accumulation, resume, sample_coverage
+
+
+def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
+    assert set(trainparity.__all__) == {*api.__all__, "__version__"}
+    assert trainparity.__version__ == PACKAGE_VERSION == "0.1.0rc1"
+    assert MACHINE_REPORT_SCHEMA_VERSION == 1
+    for internal in (
+        "AccumulationRunner",
+        "ProcessResumeRunner",
+        "ResumeRunner",
+        "Snapshot",
+        "capture_snapshot",
+        "load_case",
+    ):
+        assert internal not in trainparity.__all__
+
+
+def test_public_machine_report_has_schema_and_package_versions(tmp_path: Path) -> None:
+    evidence = tmp_path / "coverage.json"
+    result = audit_sample_coverage(
+        [SampleObservation("sample-1", 0, 0, 0)],
+        ExactlyOnce(("sample-1",)),
+        evidence_path=evidence,
+    )
+    assert result.to_dict()["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
+    assert result.to_dict()["trainparity_version"] == PACKAGE_VERSION
+    payload = json.loads(evidence.read_text(encoding="utf-8"))
+    assert payload["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
+    assert payload["trainparity_version"] == PACKAGE_VERSION
+    assert payload["traces"][0]["occurrences"][0]["worker"] is None
+
+
+def test_three_quickstarts_have_clean_pass_and_intentional_fail() -> None:
+    for payload in (sample_coverage.run(), accumulation.run(), resume.run()):
+        assert payload["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
+        assert payload["trainparity_version"] == PACKAGE_VERSION
+        clean = payload["clean"]
+        fault = payload["intentional_fail"]
+        assert isinstance(clean, dict) and clean["outcome"] == "PASS"
+        assert isinstance(fault, dict) and fault["outcome"] == "FAIL"
+        assert clean["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
+        assert fault["trainparity_version"] == PACKAGE_VERSION

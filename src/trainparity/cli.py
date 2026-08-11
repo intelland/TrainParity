@@ -39,7 +39,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error(str(error))
     print(
         json.dumps(
-            {"case": args.case, "class": type(case).__name__, "protocol": "ResumeCase"},
+            {
+                "schema_version": 1,
+                "trainparity_version": __version__,
+                "case": args.case,
+                "class": type(case).__name__,
+                "protocol": "ResumeCase",
+            },
             sort_keys=True,
         )
     )

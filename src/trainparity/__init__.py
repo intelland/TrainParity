@@ -1,102 +1,62 @@
-"""Public API for TrainParity's accepted gates."""
+"""TrainParity v0.1 public API and compatibility imports."""
 
-from trainparity.accumulation import (
+from trainparity.api import (
+    AccumulationCase,
     AccumulationExecutionPlan,
-    AccumulationRunner,
-    UnsafeBatchSplit,
-    split_tensor_tree,
-)
-from trainparity.assertions import assert_resume_equivalent
-from trainparity.comparison import (
-    ComparisonResult,
+    AccumulationResult,
+    AtLeastOnce,
+    ComparisonPolicy,
     Difference,
     ExactComparison,
-    ToleranceComparison,
-)
-from trainparity.importing import (
-    CaseImportError,
-    load_accumulation_case,
-    load_case,
-    load_process_case,
-)
-from trainparity.outcomes import Outcome
-from trainparity.process_resume import ProcessResumeRunner
-from trainparity.protocols import (
-    AccumulationCase,
-    LossAccounting,
-    ProcessExecutionPlan,
-    ProcessResumeCase,
-    ResumeCase,
-    ResumeExecutionCase,
-    StepObservation,
-    TrainingState,
-)
-from trainparity.results import (
-    AccumulationResult,
-    ExternalProcessEvidence,
-    ProcessEvidence,
-    ProcessResumeResult,
-    ResumeResult,
-)
-from trainparity.runner import ResumeRunner
-from trainparity.sample_coverage import (
-    AtLeastOnce,
     ExactlyOnce,
     ExpectedPadding,
+    ExternalProcessEvidence,
+    LossAccounting,
+    MACHINE_REPORT_SCHEMA_VERSION,
     NoCrossRankOverlap,
+    Outcome,
+    PACKAGE_VERSION,
+    ProcessExecutionPlan,
+    ProcessResumeCase,
+    ProcessResumeResult,
     SampleAnomaly,
     SampleCoverageAuditor,
     SampleCoverageResult,
     SampleObservation,
     SampleViolation,
+    ToleranceComparison,
+    TrainingState,
     audit_rank_iterables,
     audit_sample_coverage,
+    check_accumulation,
+    check_resume,
 )
-from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot
+from trainparity.api import __all__ as _PUBLIC_API
 
-__all__ = [
-    "AccumulationCase",
-    "AccumulationExecutionPlan",
-    "AccumulationResult",
-    "AccumulationRunner",
-    "AtLeastOnce",
-    "CaptureResult",
-    "CaseImportError",
-    "ComparisonResult",
-    "Difference",
-    "ExactComparison",
-    "ExactlyOnce",
-    "ExpectedPadding",
-    "ExternalProcessEvidence",
-    "LossAccounting",
-    "NoCrossRankOverlap",
-    "Outcome",
-    "ProcessEvidence",
-    "ProcessExecutionPlan",
-    "ProcessResumeCase",
-    "ProcessResumeResult",
-    "ProcessResumeRunner",
-    "ResumeCase",
-    "ResumeExecutionCase",
-    "ResumeResult",
-    "ResumeRunner",
-    "SampleAnomaly",
-    "SampleCoverageAuditor",
-    "SampleCoverageResult",
-    "SampleObservation",
-    "SampleViolation",
-    "Snapshot",
-    "StepObservation",
-    "ToleranceComparison",
-    "TrainingState",
-    "UnsafeBatchSplit",
-    "assert_resume_equivalent",
-    "audit_rank_iterables",
-    "audit_sample_coverage",
-    "capture_snapshot",
-    "load_accumulation_case",
-    "load_case",
-    "load_process_case",
-    "split_tensor_tree",
-]
-__version__ = "0.1.0.dev7"
+__version__ = PACKAGE_VERSION
+__all__ = [*_PUBLIC_API, "__version__"]
+
+# Compatibility imports retained so accepted Gate evidence remains replayable.
+# They are intentionally absent from ``__all__`` and the frozen v0.1 API.
+from trainparity.accumulation import (  # noqa: E402
+    AccumulationRunner,
+    UnsafeBatchSplit,
+    split_tensor_tree,
+)
+from trainparity.assertions import assert_resume_equivalent  # noqa: E402
+from trainparity.comparison import ComparisonResult  # noqa: E402
+from trainparity.importing import (  # noqa: E402
+    CaseImportError,
+    load_accumulation_case,
+    load_case,
+    load_process_case,
+)
+from trainparity.process_resume import ProcessResumeRunner  # noqa: E402
+from trainparity.protocols import (  # noqa: E402
+    ResumeCase,
+    ResumeExecutionCase,
+    StepObservation,
+)
+from trainparity.results import ProcessEvidence, ResumeResult  # noqa: E402
+from trainparity.runner import ResumeRunner  # noqa: E402
+from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot  # noqa: E402

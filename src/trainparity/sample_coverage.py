@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, ClassVar, Generic, TypeAlias, TypeVar
 
 from trainparity.outcomes import Outcome
+from trainparity.version import add_report_metadata
 
 SampleId: TypeAlias = int | str
 BatchT = TypeVar("BatchT")
@@ -111,7 +112,7 @@ class SampleCoverageResult:
         """Return a deterministic JSON-compatible bounded summary."""
         payload = asdict(self)
         payload["outcome"] = self.outcome.value
-        return payload
+        return add_report_metadata(payload)
 
 
 @dataclass(frozen=True)
@@ -346,8 +347,7 @@ def _anomalies(analysis: _Analysis, limit: int) -> tuple[SampleAnomaly, ...]:
 def _full_evidence(
     policy: CoveragePolicy, outcome: Outcome, analysis: _Analysis, first: SampleViolation | None
 ) -> dict[str, Any]:
-    return {
-        "schema_version": 1,
+    return add_report_metadata({
         "outcome": outcome.value,
         "policy": _policy_name(policy),
         "first_violation": None if first is None else asdict(first),
@@ -381,7 +381,7 @@ def _full_evidence(
             }
             for sample_id, trace in analysis.traces.items()
         ],
-    }
+    })
 
 
 def audit_sample_coverage(

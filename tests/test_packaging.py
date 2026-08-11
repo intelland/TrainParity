@@ -19,3 +19,12 @@ def test_forbidden_runtime_dependencies_are_absent() -> None:
     names = {dependency.split("[", 1)[0].split(">", 1)[0] for dependency in project["dependencies"]}
     assert names.isdisjoint(forbidden)
 
+
+def test_release_candidate_metadata_is_conservative() -> None:
+    root = Path(__file__).resolve().parents[1]
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))[
+        "project"
+    ]
+    assert project["version"] == "0.1.0rc1"
+    assert project["requires-python"] == ">=3.11,<3.12"
+    assert "Programming Language :: Python :: 3.12" not in project["classifiers"]
