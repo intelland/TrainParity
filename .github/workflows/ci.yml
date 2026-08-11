@@ -29,7 +29,7 @@ jobs:
       - run: make typecheck
       - run: make test
       - name: Run the complete README integration
-        run: python -m pytest -q examples/test_readme_case.py
+        run: python -m pytest -q --no-cov examples/test_readme_case.py
       - name: Run every README quickstart command
         run: |
           python -m trainparity.quickstarts.resume

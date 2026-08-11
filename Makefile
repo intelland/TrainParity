@@ -1,4 +1,5 @@
 PYTHON ?= python
+PYTEST_ARGS ?=
 
 .PHONY: lint typecheck test build release-check verify-gate-1 verify-gate-2 verify-gate-3 verify-gate-4 verify-gate-4b verify-gate-5 verify-gate-6 verify-gate-7 verify-gate-7i
 
@@ -9,7 +10,7 @@ typecheck:
 	$(PYTHON) -m mypy
 
 test:
-	$(PYTHON) -m pytest -q
+	$(PYTHON) -m pytest -q $(PYTEST_ARGS)
 
 build:
 	$(PYTHON) -m build

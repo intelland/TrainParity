@@ -54,7 +54,7 @@ def test_duplicate_loader_reports_first_observed_path() -> None:
 ```
 
 ```bash
-pytest -q examples/test_readme_case.py
+python -m pytest -q --no-cov examples/test_readme_case.py
 ```
 
 Representative first-observed-divergence output:

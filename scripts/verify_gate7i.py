@@ -129,7 +129,10 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
     _require("Asking Codex" not in readme, "Codex paragraph")
     placeholder = re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
     _require("class CoverageCase:" in first and placeholder is None, "complete first-screen case")
-    _require("pytest -q examples/test_readme_case.py" in first, "README pytest command")
+    _require(
+        "python -m pytest -q --no-cov examples/test_readme_case.py" in first,
+        "README pytest command",
+    )
     _verify_workflows(root)
     links = _verify_links(root)
     gate7 = _load(root / "artifacts/gate_reports/gate_7.json")

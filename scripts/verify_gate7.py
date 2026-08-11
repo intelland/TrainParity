@@ -88,10 +88,36 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     _require(smoke["status"] == "PASS" and not smoke["source_tree_imported"], "wheel smoke")
     _require(len(smoke["examples"]) == 3, "wheel example count")
     _require(all(item["clean"] == "PASS" and item["intentional_fail"] == "FAIL" for item in smoke["examples"]), "wheel example outcomes")
-    audit = report["release_audit"]
-    _require(audit["status"] == "PASS" and not audit["blockers"], "release audit")
-    wheel = root / "dist" / audit["distributions"]["wheel"]["file"]
-    sdist = root / "dist" / audit["distributions"]["sdist"]["file"]
+    historical_audit = report["release_audit"]
+    _require(
+        historical_audit["status"] == "PASS" and not historical_audit["blockers"],
+        "historical release audit",
+    )
+    wheel = root / "dist" / historical_audit["distributions"]["wheel"]["file"]
+    sdist = root / "dist" / historical_audit["distributions"]["sdist"]["file"]
+    audit = historical_audit
+    historical_artifacts_present = wheel.is_file() and sdist.is_file()
+    historical_artifacts_match = historical_artifacts_present and (
+        _hash(wheel) == historical_audit["distributions"]["wheel"]["sha256"]
+        and _hash(sdist) == historical_audit["distributions"]["sdist"]["sha256"]
+    )
+    if not historical_artifacts_match:
+        # Gate 7I deliberately rebuilds distributions after hardening release-facing
+        # metadata. Keep the accepted Gate 7 audit immutable, but require the current
+        # artifacts to pass the same archive audit before replaying this verifier.
+        current_audit_path = (
+            root / "experiments" / "gate7i" / "recorded" / "release_audit.json"
+        )
+        _require(current_audit_path.is_file(), "current release audit after Gate 7I rebuild")
+        audit = _load(current_audit_path)
+        _require(
+            audit["status"] == "PASS"
+            and not audit["blockers"]
+            and audit["trainparity_version"] == report["trainparity_version"],
+            "current release audit after Gate 7I rebuild",
+        )
+        wheel = root / "dist" / audit["distributions"]["wheel"]["file"]
+        sdist = root / "dist" / audit["distributions"]["sdist"]["file"]
     _require(_hash(wheel) == audit["distributions"]["wheel"]["sha256"], "wheel hash")
     _require(_hash(sdist) == audit["distributions"]["sdist"]["sha256"], "sdist hash")
     with zipfile.ZipFile(wheel) as archive:

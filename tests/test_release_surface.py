@@ -69,7 +69,7 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
     assert "class CoverageCase:" in first
     assert "coverage.same_rank_duplicate" in first
     assert not re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
-    assert "pytest -q examples/test_readme_case.py" in first
+    assert "python -m pytest -q --no-cov examples/test_readme_case.py" in first
     for module in ("resume", "accumulation", "sample_coverage"):
         assert f"python -m trainparity.quickstarts.{module}" in readme
 

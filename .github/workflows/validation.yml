@@ -59,7 +59,7 @@ jobs:
       - run: make lint
       - run: make typecheck
       - run: make test
-      - run: python -m pytest -q examples/test_readme_case.py
+      - run: python -m pytest -q --no-cov examples/test_readme_case.py
       - run: make build
       - run: python -m twine check dist/*
       - name: Replay Gate 0 verifier in an isolated copy
