@@ -6,6 +6,12 @@ contract. A user either supplies `SampleObservation` records or rank-labelled
 finite iterables plus one `sample_id_extractor` that returns ordered `int` or
 `str` IDs. Sample contents, masks, labels, and weights are never logged.
 
+A stable sample ID is semantically unique within the declared expected
+universe: two distinct semantic samples must not share an ID. TrainParity
+validates the resulting ID trajectory, not the sample contents or the truth of
+the extractor. Unavailable worker provenance is represented explicitly as
+`None` / JSON `null`; it is never encoded as worker 0.
+
 ## Explicit policies
 
 - `ExactlyOnce(expected_ids)` requires every member of an explicit finite
@@ -50,5 +56,6 @@ declared universe is correct. Worker provenance is optional because ordinary
 parent-process `DataLoader` iteration does not expose the producing worker;
 users with observable worker metadata may supply it in `SampleObservation`.
 The module does not claim general epoch/shuffle equivalence, data-order
-equivalence, sample-content equivalence, or distributed training correctness.
-
+equivalence, sample-content equivalence, infinite-stream exactly-once behavior,
+or distributed training correctness. One audit proves only the declared finite
+observation window.

@@ -6,11 +6,11 @@ Build a small, deterministic PyTorch differential-testing library that verifies 
 
 Read, in order:
 
-1. `PLAN.md`
-2. `ACCEPTANCE.md`
-3. `STATUS.md`
-4. `DECISIONS.md`
-5. `CODEX_GOALS.md`
+1. `docs/development/PLAN.md`
+2. `docs/development/ACCEPTANCE.md`
+3. `docs/development/STATUS.md`
+4. `docs/development/DECISIONS.md`
+5. `docs/development/CODEX_GOALS.md`
 
 ## Hard boundaries
 
@@ -29,7 +29,7 @@ Read, in order:
 
 For the active Gate:
 
-1. Update `STATUS.md` with the Gate objective, constraints, and verification commands.
+1. Update `docs/development/STATUS.md` with the Gate objective, constraints, and verification commands.
 2. Implement only that Gate.
 3. Add or update tests before declaring completion.
 4. Run lint, type-check, focused tests, full tests, and the Gate verifier.
@@ -67,5 +67,5 @@ Create Git checkpoints before and after each Gate. Avoid concurrent write access
 - Subprocess behavior must be tested.
 - Temporary files must be isolated and cleaned safely.
 - Untrusted external repositories must not be executed without an explicit experiment boundary.
-- Record new dependencies and architectural decisions in `DECISIONS.md`.
+- Record new dependencies and architectural decisions in `docs/development/DECISIONS.md`.
 - Keep examples tiny and reproducible.

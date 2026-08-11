@@ -1,0 +1,16 @@
+include README.md
+include CHANGELOG.md
+include LICENSE
+include CONTRIBUTING.md
+include SECURITY.md
+include pyproject.toml
+recursive-include src/trainparity *.py py.typed
+prune src/trainparity/examples
+recursive-include docs *.md *.png *.svg
+prune docs/development
+prune docs/launch
+prune artifacts
+prune experiments
+prune scripts
+prune tests
+global-exclude __pycache__ *.py[cod] .DS_Store

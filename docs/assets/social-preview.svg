@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">TrainParity first observed divergence report</title>
+  <desc id="description">A concise terminal-style resume equivalence failure showing a scheduler divergence.</desc>
+  <rect width="1280" height="640" fill="#0b1020"/>
+  <circle cx="1085" cy="98" r="185" fill="#172554" opacity="0.65"/>
+  <circle cx="1180" cy="560" r="245" fill="#134e4a" opacity="0.45"/>
+  <text x="92" y="105" fill="#f8fafc" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="700">TrainParity</text>
+  <text x="94" y="151" fill="#94a3b8" font-family="Segoe UI, Arial, sans-serif" font-size="24">Explicit PyTorch training-equivalence checks</text>
+  <rect x="92" y="198" width="1096" height="354" rx="18" fill="#111827" stroke="#334155" stroke-width="2"/>
+  <circle cx="126" cy="230" r="7" fill="#ef4444"/>
+  <circle cx="150" cy="230" r="7" fill="#f59e0b"/>
+  <circle cx="174" cy="230" r="7" fill="#22c55e"/>
+  <text x="214" y="239" fill="#94a3b8" font-family="Consolas, monospace" font-size="21">resume-equivalence.json</text>
+  <text x="128" y="302" fill="#fca5a5" font-family="Consolas, monospace" font-size="27" font-weight="700">FAIL</text>
+  <text x="128" y="354" fill="#cbd5e1" font-family="Consolas, monospace" font-size="24">first_observed_divergence</text>
+  <text x="488" y="354" fill="#f8fafc" font-family="Consolas, monospace" font-size="24">scheduler.last_epoch</text>
+  <text x="128" y="405" fill="#94a3b8" font-family="Consolas, monospace" font-size="24">baseline</text>
+  <text x="488" y="405" fill="#86efac" font-family="Consolas, monospace" font-size="24">4</text>
+  <text x="128" y="456" fill="#94a3b8" font-family="Consolas, monospace" font-size="24">candidate_after_resume</text>
+  <text x="488" y="456" fill="#fca5a5" font-family="Consolas, monospace" font-size="24">2</text>
+  <text x="128" y="507" fill="#64748b" font-family="Consolas, monospace" font-size="20">observed evidence, not a root-cause claim</text>
+  <text x="94" y="605" fill="#94a3b8" font-family="Segoe UI, Arial, sans-serif" font-size="21">resume · accumulation · finite sample coverage</text>
+</svg>

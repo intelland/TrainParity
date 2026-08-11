@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.1.0rc1 - 2026-08-11
+
+- Freeze the public 0.1 API for resume equivalence, accumulation equivalence,
+  and finite sample-coverage policies.
+- Add schema and package versions to machine reports and three installed CPU
+  examples with clean and intentional-failure outcomes.
+- Add evidence-first user, API, validation, design, limitation, provenance,
+  contribution, security, and release documentation.
+- Add clean-environment wheel tests and source/distribution audits while
+  excluding Gate experiments and accepted evidence from runtime artifacts.
+- Preserve exact comparison semantics, explicit tolerance, four-state results,
+  and first-observed-divergence wording.
+
+## 0.1.0.dev7 - 2026-08-11
+
+- Add four explicit sample-coverage policies with stable-ID trajectory,
+  rank/worker/epoch/position provenance, finite-universe controls, bounded
+  output, and optional complete anomaly evidence.
+
+## 0.1.0.dev6 - 2026-08-11
+
+- Add user-declared full-batch/microbatch accumulation equivalence at a single
+  optimizer-update boundary with bounded loss, gradient, optimizer/parameter,
+  and scheduler observations.
+
 ## 0.1.0.dev5 - 2026-08-11
 
 - Move framework-neutral continuous/interrupted planning, checkpoint staging,

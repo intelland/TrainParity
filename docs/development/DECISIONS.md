@@ -422,3 +422,35 @@
 - **Reason:** These boundaries prevent IDs, unavailable provenance, finite
   streams, and shuffle observations from being interpreted as stronger claims
   than the recorded evidence supports.
+
+## D-0039: Freeze a narrow versioned public API for 0.1
+
+- **Status:** Accepted for Gate 7 verification
+- **Date:** 2026-08-11
+- **Decision:** The stable API is the explicit facade in `trainparity.api` and
+  its top-level `__all__` re-exports. Internal runners, snapshot backends,
+  subprocess workers, experiments, and Gate tools are not stable public API.
+  Machine reports use schema version 1 and package version `0.1.0rc1`.
+- **Reason:** A small declared surface permits honest compatibility while
+  retaining historical imports only for accepted-evidence replay.
+
+## D-0040: Exclude development evidence from release distributions
+
+- **Status:** Accepted for Gate 7 verification
+- **Date:** 2026-08-11
+- **Decision:** Preserve Gate reports, recorded experiments, development plans,
+  and the user's remote-development document in the repository, but exclude
+  them from both wheel and source distribution. Ship only runtime code and
+  user-facing documentation.
+- **Reason:** Auditability and a minimal runtime artifact are compatible when
+  the packaging boundary is explicit and machine-verified.
+
+## D-0041: Pin release-candidate compatibility to tested versions
+
+- **Status:** Accepted for Gate 7 verification
+- **Date:** 2026-08-11
+- **Decision:** Declare Python `>=3.11,<3.12` and PyTorch `>=2.7,<2.8` for the
+  0.1 release candidate. Document only the exact CPU, CUDA, and GPU environments
+  actually exercised; do not imply future-version support.
+- **Reason:** Open-ended dependency metadata would contradict the conservative
+  tested-compatibility claim required at the release gate.

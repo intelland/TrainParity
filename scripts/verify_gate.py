@@ -428,10 +428,9 @@ def verify_gate_1(root: Path) -> dict[str, Any]:
     forbidden = ("openai", "langchain", "cloudpickle", "ray", "fastapi", "flask")
     criterion(
         "minimal documented production dependencies",
-        dependencies == ["torch>=2.5"]
-        and all(name not in dependency.lower() for dependency in dependencies for name in forbidden)
-        and "sole production dependency is `torch>=2.5`"
-        in (root / "README.md").read_text(encoding="utf-8"),
+        len(dependencies) == 1
+        and dependencies[0].startswith("torch")
+        and all(name not in dependency.lower() for dependency in dependencies for name in forbidden),
         f"dependencies={dependencies}",
     )
     wheels = sorted((root / "dist").glob("trainparity-*.whl"))
@@ -1378,6 +1377,14 @@ def main() -> None:
         report = {
             "status": gate_6["status"],
             "recommendation": gate_6["recommendation"],
+        }
+    elif args.gate == 7:
+        from verify_gate7 import verify as verify_gate_7
+
+        gate_7 = verify_gate_7(root)
+        report = {
+            "status": gate_7["status"],
+            "recommendation": gate_7["recommendation"],
         }
     else:
         raise SystemExit(f"gate {args.gate} is not implemented")

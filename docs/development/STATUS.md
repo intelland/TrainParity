@@ -2,38 +2,36 @@
 
 ## Active gate
 
-Gate 4B production-integration-surface verification is complete with outcome
-`GO`; awaiting final human review. Gate 5 has not been started.
+Gate 6 is accepted with outcome `INCLUDE_MODULE`. Gate 7 release-candidate
+preparation is active. No release, tag, publication, repository visibility
+change, or later Gate is authorized.
 
 ## Objective
 
-Move only generic resume-test orchestration into the production library, retain
-small explicit project-semantics adapters, and reproduce all three pinned Gate 4
-projects from fresh clones within the Gate 4B LOC, wall-time, artifact, behavior,
-and evidence-preservation thresholds.
+Freeze and document the v0.1 public surface for resume equivalence,
+gradient-accumulation equivalence, and sample-coverage policies; prepare and
+audit an honest installable release candidate without publishing it.
 
 ## Constraints
 
-- Implement Gate 4B only and stop for human acceptance.
+- Implement Gate 7 only and stop for final human acceptance.
 - Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
 - Keep every environment, cache, checkout, log, and output under
   `/scratch/mp25/jwuu0254/zxh/TrainParity`.
-- Preserve all accepted Gate 0 evidence unchanged.
-- Preserve all accepted Gate 0 and Gate 1 evidence unchanged.
-- Pin three external repositories to exact commits and record their licenses;
-  keep at least two projects external rather than copying their code.
-- Exercise original upstream checkpoint save/load implementations; do not replace
-  them with TrainParity-authored clean checkpoint routines.
-- Record adapter, supporting glue, upstream modified, and total integration LOC.
-- Target median adapter logical LOC <= 30 and explain integrations over 50 total LOC.
-- Use tiny generated data and one realistic resume fault per project; adapters
-  must not specialize their comparison behavior to the injected fault.
-- Compare integration effort and diagnostics with a minimal hand-written test.
-- Measure runtime, peak memory, checkpoint/snapshot size, and comparison overhead.
+- Preserve all accepted Gate 0-6 evidence unchanged.
+- Freeze the feature set; add no check, framework adapter, service, dashboard,
+  registry, distributed launcher, or general event tracer.
+- Keep stable public objects distinct from internal runners, backends,
+  experiments, and Gate tooling.
+- Put machine-schema and package versions in JSON reports.
+- Ship three tiny CPU examples, each with a clean `PASS` and intentional `FAIL`.
+- Test the built wheel from outside the repository in a clean environment.
+- Audit source and distributions for secrets, local metadata, large data, and
+  unintended runtime contents without deleting accepted evidence.
+- Report name availability but do not infer reservation or rename the project.
+- Do not publish to PyPI, create a tag/release, or change repository visibility.
 - Do not add runtime LLM/agent dependencies, distributed support, a web UI,
   service, registry, or platform functionality.
-- Do not implement framework-specific production adapters, distributed support,
-  later checks, a dashboard, service, or snapshot optimization.
 - Continue to describe outputs as first observed divergence, never root cause.
 - Preserve the user's uncommitted `CODEX_REMOTE_DEVELOPMENT.md` changes exactly.
 
@@ -46,18 +44,23 @@ make lint
 make typecheck
 make test
 make build
-python -m experiments.gate4.run_matrix \
-  --external-root "$PROJECT_ROOT/external/gate4" \
-  --output "$PROJECT_ROOT/outputs/gate4/matrix.json"
+make release-check
+python scripts/verify_gate.py 0
+python scripts/verify_gate.py 1
+python scripts/verify_gate.py 2
+python scripts/verify_gate.py 3
 python scripts/verify_gate.py 4
-python scripts/verify_gate4_friction_audit.py
+python scripts/verify_gate4b.py
+python scripts/verify_gate5.py
+python scripts/verify_gate.py 6
+python scripts/verify_gate.py 7
 git diff --check
 ```
 
-The final Gate 4 report will record repository commits and licenses, original
-checkpoint paths, clean/fault results, LOC categories, upstream diffs, hand-test
-comparison, runtime/memory/artifact measurements, CI evidence, and a candid
-GO/REWORK/STOP recommendation.
+The final Gate 7 report will record the frozen API, example outcomes, exact
+compatibility evidence, source/distribution audit, clean-environment wheel
+test, package/repository-name check, historical verifier results, hosted CI,
+and any remaining limitation or blocked criterion.
 
 ## Current state
 
