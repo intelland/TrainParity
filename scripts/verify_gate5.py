@@ -8,7 +8,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from experiments.gate5.build_report import FAULTS
+FAULTS = {
+    "missing_accumulation_scaling",
+    "variable_length_mean_of_means",
+    "optimizer_step_per_microbatch",
+    "scheduler_step_per_microbatch",
+    "zero_grad_wrong_time",
+    "gradient_clip_wrong_time",
+    "amp_unscale_scaler_timing",
+    "incomplete_final_window",
+}
 
 
 def _require(value: bool, message: str) -> None:
@@ -38,7 +47,7 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     _require(metrics["all_initial_states_verified_equal"], "initial state")
     _require(metrics["peak_temporary_directory_bytes"] > 0, "peak temporary disk")
     _require(metrics["recorded_persisted_artifact_bytes"] > 0, "persisted artifacts")
-    _require({row["name"] for row in report["faults"]} == set(FAULTS), "fault inventory")
+    _require({row["name"] for row in report["faults"]} == FAULTS, "fault inventory")
     _require(all(row["detected"] for row in report["faults"]), "fault detection")
     _require(report["gpu"]["same_device_only"] and not report["gpu"]["cross_gpu_model_comparison"], "GPU semantics")
     _require(report["gpu"]["name"] == "NVIDIA L40S" and report["gpu"]["slurm_job_id"] == "58980407", "GPU evidence")
