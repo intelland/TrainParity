@@ -46,8 +46,9 @@ def main() -> None:
         torch_index = os.environ.get(
             "TRAINPARITY_TORCH_INDEX_URL", "https://download.pytorch.org/whl/cpu"
         )
-        smoke_environment = os.environ.copy()
-        smoke_environment.pop("PYTHONPATH", None)
+        clean_environment = os.environ.copy()
+        clean_environment.pop("PYTHONPATH", None)
+        clean_environment.pop("PYTHONHOME", None)
         _run(
             [
                 str(python),
@@ -59,9 +60,21 @@ def main() -> None:
                 torch_index,
             ],
             cwd=work,
-            environment=smoke_environment,
+            environment=clean_environment,
         )
-        _run([str(python), "-m", "pip", "install", "--no-deps", str(wheel)], cwd=work)
+        _run(
+            [
+                str(python),
+                "-m",
+                "pip",
+                "install",
+                "--force-reinstall",
+                "--no-deps",
+                str(wheel),
+            ],
+            cwd=work,
+            environment=clean_environment,
+        )
         _run(
             [
                 str(python),
@@ -72,6 +85,7 @@ def main() -> None:
                 str(root / "experiments" / "gate7" / "recorded" / "wheel_smoke.json"),
             ],
             cwd=work,
+            environment=clean_environment,
         )
     finally:
         if arguments.keep_environment:
