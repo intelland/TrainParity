@@ -28,3 +28,14 @@ mitigation. Do not include live credentials or private training data.
 
 No response-time or remediation-time guarantee is made for this pre-release
 project.
+
+## Release permissions
+
+Pull-request CI and scheduled validation use an explicit read-only
+`GITHUB_TOKEN`, persist no checkout credential, and receive no repository
+secrets or OIDC permission. The manual release workflow is restricted to the
+default branch and references the `pypi` environment. Before enabling it, the
+repository owner must configure that environment with required human reviewers
+and set `PYPI_ENVIRONMENT_PROTECTED=true`; otherwise the publish job is skipped.
+PyPI publication uses Trusted Publishing with a job-scoped OIDC token and does
+not consume artifacts from pull-request workflows.

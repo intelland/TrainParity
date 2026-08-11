@@ -7,8 +7,8 @@ import numpy as np
 import torch
 from torch import nn
 
-from trainparity import ExactComparison, Outcome, capture_snapshot
-from trainparity.snapshot import Snapshot
+from trainparity import ExactComparison, Outcome
+from trainparity.snapshot import Snapshot, capture_snapshot
 from trainparity.state import FrozenMapping, FrozenTensor, FrozenValue
 
 

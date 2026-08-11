@@ -13,10 +13,12 @@ from trainparity import (
     ExpectedPadding,
     NoCrossRankOverlap,
     Outcome,
+    audit_sample_coverage,
+)
+from trainparity.sample_coverage import (
     SampleCoverageAuditor,
     SampleObservation,
     audit_rank_iterables,
-    audit_sample_coverage,
 )
 
 

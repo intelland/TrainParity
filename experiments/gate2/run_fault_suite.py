@@ -13,7 +13,8 @@ from typing import Any
 import torch
 from torch import nn
 
-from trainparity import ExactComparison, Outcome, Snapshot, ToleranceComparison, capture_snapshot
+from trainparity import ExactComparison, Outcome, ToleranceComparison
+from trainparity.snapshot import Snapshot, capture_snapshot
 from trainparity.state import FrozenMapping, FrozenTensor, FullValueBackend
 
 

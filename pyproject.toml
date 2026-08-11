@@ -9,9 +9,10 @@ description = "Explicit differential tests for PyTorch training semantics"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 license = "MIT"
-authors = [{name = "TrainParity contributors"}]
+authors = [{name = "Zhou Xianhao", email = "593403766@qq.com"}]
+maintainers = [{name = "Zhou Xianhao", email = "593403766@qq.com"}]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
@@ -27,10 +28,8 @@ dev = [
   "pytest>=8.3",
   "pytest-cov>=6.0",
   "ruff>=0.9",
+  "twine>=6.1",
 ]
-
-[project.scripts]
-trainparity = "trainparity.cli:main"
 
 [project.urls]
 Repository = "https://github.com/intelland/TrainParity"
@@ -50,12 +49,8 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 omit = [
-  "src/trainparity/__init__.py",
-  "src/trainparity/__main__.py",
   "src/trainparity/accumulation_worker.py",
-  "src/trainparity/cli.py",
   "src/trainparity/examples/*",
-  "src/trainparity/importing.py",
   "src/trainparity/protocols.py",
   "src/trainparity/prototypes.py",
   "src/trainparity/process_worker.py",

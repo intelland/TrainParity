@@ -25,6 +25,12 @@ def _run(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--keep-environment", action="store_true")
+    parser.add_argument("--torch-version", default="2.13.0")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("experiments/gate7i/recorded/wheel_smoke.json"),
+    )
     arguments = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     wheel = root / "dist" / f"trainparity-{VERSION}-py3-none-any.whl"
@@ -55,7 +61,7 @@ def main() -> None:
                 "-m",
                 "pip",
                 "install",
-                "torch==2.7.0",
+                f"torch=={arguments.torch_version}",
                 "--index-url",
                 torch_index,
             ],
@@ -82,7 +88,7 @@ def main() -> None:
                 "--repository",
                 str(root),
                 "--output",
-                str(root / "experiments" / "gate7" / "recorded" / "wheel_smoke.json"),
+                str(root / arguments.output),
             ],
             cwd=work,
             environment=clean_environment,

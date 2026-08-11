@@ -11,10 +11,10 @@ from typing import Any
 
 import torch
 
-from trainparity import (
+from trainparity import ToleranceComparison
+from trainparity.accumulation import (
     AccumulationExecutionPlan,
     AccumulationRunner,
-    ToleranceComparison,
 )
 
 

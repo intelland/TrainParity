@@ -5,7 +5,7 @@ from __future__ import annotations
 import torch
 from torch import nn
 
-from trainparity import LossAccounting, TrainingState
+from trainparity.protocols import LossAccounting, TrainingState
 
 
 class LinearCase:

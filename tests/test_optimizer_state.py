@@ -3,8 +3,8 @@ from __future__ import annotations
 import torch
 from torch import nn
 
-from trainparity import ExactComparison, Outcome, capture_snapshot
-from trainparity.snapshot import Snapshot
+from trainparity import ExactComparison, Outcome
+from trainparity.snapshot import Snapshot, capture_snapshot
 from trainparity.state import FrozenMapping, FrozenValue
 
 
@@ -89,4 +89,3 @@ def test_alias_unowned_and_duplicate_parameters_abstain() -> None:
     duplicate = capture_snapshot(model, optimizer=optimizer, capture_rng=False)
     assert duplicate.outcome is Outcome.ABSTAIN
     assert duplicate.issue is not None and "more than once" in duplicate.issue.detail
-

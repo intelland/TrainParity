@@ -8,7 +8,8 @@ from typing import Any
 
 import torch
 
-from trainparity import Outcome, ProcessResumeRunner
+from trainparity import Outcome
+from trainparity.process_resume import ProcessResumeRunner
 
 
 def _fault(project: str, path: Path) -> None:

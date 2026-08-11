@@ -5,109 +5,38 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
           cache: pip
-      - name: Install CPU PyTorch
-        run: python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
+      - name: Install current CPU PyTorch
+        run: python -m pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cpu
       - name: Install project and development tools
         run: python -m pip install -e '.[dev]'
       - run: make lint
       - run: make typecheck
       - run: make test
+      - name: Run the complete README integration
+        run: python -m pytest -q examples/test_readme_case.py
+      - name: Run every README quickstart command
+        run: |
+          python -m trainparity.quickstarts.resume
+          python -m trainparity.quickstarts.accumulation
+          python -m trainparity.quickstarts.sample_coverage
       - run: make build
-      - name: Replay Gate 0 verifier in an isolated copy
-        run: |
-          cp -a . "$RUNNER_TEMP/verify-gate-0"
-          cd "$RUNNER_TEMP/verify-gate-0"
-          python scripts/verify_gate.py 0
-      - name: Replay Gate 1 verifier in an isolated copy
-        run: |
-          cp -a . "$RUNNER_TEMP/verify-gate-1"
-          cd "$RUNNER_TEMP/verify-gate-1"
-          python scripts/verify_gate.py 1
-      - name: Replay Gate 2 verifier in an isolated copy
-        run: |
-          cp -a . "$RUNNER_TEMP/verify-gate-2"
-          cd "$RUNNER_TEMP/verify-gate-2"
-          python scripts/verify_gate.py 2
-      - name: Replay Gate 3 verifier in an isolated copy
-        run: |
-          cp -a . "$RUNNER_TEMP/verify-gate-3"
-          cd "$RUNNER_TEMP/verify-gate-3"
-          python scripts/verify_gate.py 3
-      - name: Replay Gate 4 verifier in an isolated copy
-        run: |
-          cp -a . "$RUNNER_TEMP/verify-gate-4"
-          cd "$RUNNER_TEMP/verify-gate-4"
-          python scripts/verify_gate.py 4
-      - name: Replay Gate 4 friction verifier in an isolated copy
-        run: |
-          cp -a . "$RUNNER_TEMP/verify-gate-4-friction"
-          cd "$RUNNER_TEMP/verify-gate-4-friction"
-          python scripts/verify_gate4_friction_audit.py
-      - name: Run pinned nanoGPT Gate 4 integration
-        run: |
-          mkdir -p "$RUNNER_TEMP/gate4/nanogpt"
-          git -C "$RUNNER_TEMP/gate4/nanogpt" init
-          git -C "$RUNNER_TEMP/gate4/nanogpt" remote add origin https://github.com/karpathy/nanoGPT.git
-          git -C "$RUNNER_TEMP/gate4/nanogpt" fetch --depth 1 origin 3adf61e154c3fe3fca428ad6bc3818b27a3b8291
-          git -C "$RUNNER_TEMP/gate4/nanogpt" checkout --detach FETCH_HEAD
-          python -m experiments.gate4.run_matrix \
-            --external-root "$RUNNER_TEMP/gate4" \
-            --output "$RUNNER_TEMP/gate4-output/matrix.json" \
-            --project nanogpt
-      - name: Run Gate 4B wheel-installed nanoGPT fresh-clone case
-        run: |
-          mkdir -p "$RUNNER_TEMP/gate4b-source"
-          git archive daaaf0d7d62d6d6cda2a53a091c4c3ab9f117801 | tar -x -C "$RUNNER_TEMP/gate4b-source"
-          python -m build --wheel --outdir "$RUNNER_TEMP/gate4b-source/dist" "$RUNNER_TEMP/gate4b-source"
-          export TRAINPARITY_GATE4_DEVICE=cpu
-          export TRAINPARITY_GATE4_SITE="$(python -c 'import site; print(site.getsitepackages()[0])')"
-          cd "$RUNNER_TEMP/gate4b-source"
-          python -m experiments.gate4b.run_matrix \
-            --output-root "$RUNNER_TEMP/gate4b-run" \
-            --output "$RUNNER_TEMP/gate4b-matrix.json" \
-            --profile-pre experiments/gate4b/recorded/profile_pre.json \
-            --profile-post experiments/gate4b/recorded/profile_post.json \
-            --project nanogpt
-      - name: Verify Gate 4B report when present
-        run: |
-          if [ -f artifacts/gate_reports/gate_4b.json ]; then
-            python scripts/verify_gate4b.py
-          fi
-      - name: Run Gate 5 wheel-installed nanoGPT accumulation surface
-        run: |
-          mkdir -p "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user" "$RUNNER_TEMP/gate5-site"
-          git -C "$RUNNER_TEMP/gate5-nanogpt" init
-          git -C "$RUNNER_TEMP/gate5-nanogpt" remote add origin https://github.com/karpathy/nanoGPT.git
-          git -C "$RUNNER_TEMP/gate5-nanogpt" fetch --depth 1 origin 3adf61e154c3fe3fca428ad6bc3818b27a3b8291
-          git -C "$RUNNER_TEMP/gate5-nanogpt" checkout --detach FETCH_HEAD
-          cp experiments/gate5/user_files/nanogpt/trainparity_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user/"
-          cp experiments/gate5/user_files/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user/"
-          python -m pip install --no-deps --target "$RUNNER_TEMP/gate5-site" dist/*.whl
-          cd "$RUNNER_TEMP/gate5-nanogpt"
-          PYTHONPATH="$RUNNER_TEMP/gate5-site:$RUNNER_TEMP/gate5-nanogpt/.trainparity_user:$RUNNER_TEMP/gate5-nanogpt" \
-            python .trainparity_user/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/report.json"
-      - name: Verify Gate 5 report
-        run: python scripts/verify_gate5.py --allow-pending-ci
-      - name: Run Gate 6 CPU policy matrix
-        run: python -m experiments.gate6.run_matrix --output "$RUNNER_TEMP/gate6/cpu_matrix.json"
-      - name: Run Gate 6 standard-sampler product surface
-        run: python -m experiments.gate6.run_product_surface --output "$RUNNER_TEMP/gate6/product_surface.json"
-      - name: Verify Gate 6 report
-        run: python scripts/verify_gate6.py --allow-pending-ci
-      - name: Test release artifacts from a clean environment outside the repository
-        run: make release-check
-      - name: Build and verify Gate 7 release-candidate report
-        run: |
-          python -m experiments.gate7.build_report --allow-pending-ci
-          python scripts/verify_gate7.py --allow-pending-ci
+      - name: Validate distribution metadata and rendered README
+        run: python -m twine check dist/*
+      - name: Verify release-surface contracts
+        run: python scripts/verify_gate7i.py --fast

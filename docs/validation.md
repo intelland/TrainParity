@@ -24,7 +24,7 @@ exact commits with zero upstream modified LOC:
 | --- | --- | --- | --- | --- | ---: |
 | PyTorch examples ImageNet classifier | `acc295dc7b90714f1bf47f06004fc19a7fe235c4` | BSD-3-Clause | PASS | scheduler state detected | 30 |
 | nanoGPT sequence model | `3adf61e154c3fe3fca428ad6bc3818b27a3b8291` | MIT | PASS | training control state detected | 31 |
-| Ignite MNIST Engine recipe | pinned in Gate 4 evidence | BSD-3-Clause | PASS | scheduler state detected | 32 |
+| Ignite MNIST Engine recipe | `e08ff9257ed18d8d805304e32ba85a44553195fc` | BSD-3-Clause | PASS | scheduler state detected | 32 |
 
 These tiny L40S fixtures are product-surface checks, not claims about all uses
 of those projects. Detailed pins, license hashes, checkpoint paths, LOC, and
@@ -86,3 +86,25 @@ cluster environment and is not a portable launcher.
 The Gate 7 CPU release check can be replayed on M3 with
 `sbatch scripts/slurm_gate7_release.sbatch --gate 7`; it builds both archives,
 creates a new wheel environment, and runs the three installed examples.
+
+## Coverage measurement boundary
+
+The source-coverage configuration omits only modules whose execution is not
+represented correctly by the parent pytest process:
+
+- `accumulation_worker.py`, `process_worker.py`, and `worker.py` run in real
+  fresh subprocesses. `tests/test_accumulation.py`,
+  `tests/test_process_resume.py`, and `tests/test_runner.py` assert their exit,
+  IPC, error, identity, and result behavior. The current coverage run does not
+  combine subprocess coverage files, so counting these files as uncovered
+  would misstate the tested process boundary.
+- `protocols.py` contains structural protocols plus data carriers exercised by
+  the runners; protocol placeholder bodies are not executable behavior.
+- `prototypes.py` and `trainparity/examples/` are Gate replay fixtures, not the
+  release API. Gate 1/3 verifiers and integration tests execute them, and the
+  examples package is excluded from the wheel.
+
+Public facade, importing, comparison, orchestration, serialization, reporting,
+and quickstart modules are included in measured source coverage. Subprocess
+coverage is therefore documented separately rather than silently presented as
+parent-process line coverage.

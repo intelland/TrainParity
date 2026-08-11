@@ -4,7 +4,7 @@ import torch
 from imagenet import main
 from torch.nn import functional as F
 
-from trainparity import LossAccounting, TrainingState
+from trainparity.api import LossAccounting, TrainingState
 
 
 class Case:

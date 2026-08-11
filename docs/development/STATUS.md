@@ -274,3 +274,27 @@ The PyPI endpoint returned 404 for `trainparity` at the recorded check time,
 and GitHub name search found only the existing private owner repository. These
 checks do not reserve the name. Nothing was published, tagged, released,
 renamed, merged, or made public. Gate 7 stops for final human review.
+
+Gate 7 was accepted as a release candidate on 2026-08-11, with publication
+held. Gate 7I is the only authorized scope: harden the public import surface,
+replace the README placeholder-style introduction with a complete CI-tested
+case, turn `docs/api.md` into a signature-level reference, verify a current
+PyTorch compatibility range, split and least-privilege-harden GitHub Actions,
+prepare (but never execute) a protected-environment Trusted Publishing
+workflow, correct maintainer/release metadata, document coverage exclusions,
+and create a real-path human-review bundle.
+
+Gate 7I must not add checks or adapters, alter comparison semantics, publish to
+PyPI, create a tag or GitHub release, rename the project, change repository
+visibility, or consume untrusted PR artifacts in a release job. The current
+branch is `gate-7i`. The user's uncommitted `CODEX_REMOTE_DEVELOPMENT.md` must
+remain byte-identical at SHA-256
+`6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300`.
+
+Planned verification is Ruff, strict Mypy, unit/contract/integration tests,
+every accepted Gate verifier, Python 3.11 with PyTorch 2.7.0/2.10.0/2.13.0,
+wheel and sdist build, installed-wheel smoke outside the repository, all three
+quickstarts, Twine metadata/README rendering checks, workflow contract tests,
+repository/archive security audit, link inventory verification, and hosted
+CI/validation where their non-release triggers permit. Gate 7I stops for human
+publication review.

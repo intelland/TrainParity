@@ -7,7 +7,8 @@ from dataclasses import replace
 import pytest
 import torch
 
-from trainparity import ExactComparison, Outcome, Snapshot, ToleranceComparison
+from trainparity import ExactComparison, Outcome, ToleranceComparison
+from trainparity.snapshot import Snapshot
 from trainparity.state import FrozenMapping, FrozenTensor, FullValueBackend
 
 
@@ -145,4 +146,3 @@ def test_snapshot_metadata_is_compared_before_state() -> None:
     assert ExactComparison().compare(base, replace(base, schema_version=2)).first_difference.path == "schema_version"  # type: ignore[union-attr]
     assert ExactComparison().compare(base, replace(base, backend="other")).first_difference.path == "backend"  # type: ignore[union-attr]
     assert ExactComparison().compare(base, replace(base, step=2)).first_difference.path == "step"  # type: ignore[union-attr]
-

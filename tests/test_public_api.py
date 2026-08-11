@@ -9,16 +9,30 @@ import trainparity
 from trainparity import api
 from trainparity.api import (
     MACHINE_REPORT_SCHEMA_VERSION,
-    PACKAGE_VERSION,
     ExactlyOnce,
     SampleObservation,
     audit_sample_coverage,
 )
 from trainparity.quickstarts import accumulation, resume, sample_coverage
+from trainparity.version import PACKAGE_VERSION
+
+TOP_LEVEL_API = {
+    "check_resume",
+    "check_accumulation",
+    "audit_sample_coverage",
+    "ExactlyOnce",
+    "AtLeastOnce",
+    "NoCrossRankOverlap",
+    "ExpectedPadding",
+    "ExactComparison",
+    "ToleranceComparison",
+    "Outcome",
+    "__version__",
+}
 
 
 def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
-    assert set(trainparity.__all__) == {*api.__all__, "__version__"}
+    assert set(trainparity.__all__) == TOP_LEVEL_API
     assert trainparity.__version__ == PACKAGE_VERSION == "0.1.0rc1"
     assert MACHINE_REPORT_SCHEMA_VERSION == 1
     for internal in (
@@ -28,8 +42,12 @@ def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
         "Snapshot",
         "capture_snapshot",
         "load_case",
+        "PACKAGE_VERSION",
+        "ExternalProcessEvidence",
+        "SampleCoverageAuditor",
     ):
         assert internal not in trainparity.__all__
+        assert internal not in api.__all__
 
 
 def test_public_machine_report_has_schema_and_package_versions(tmp_path: Path) -> None:

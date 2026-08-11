@@ -6,7 +6,7 @@ from typing import Any
 
 import torch
 
-from trainparity import ProcessExecutionPlan
+from trainparity.api import ProcessExecutionPlan
 
 
 class Case:

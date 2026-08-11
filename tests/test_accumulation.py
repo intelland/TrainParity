@@ -6,11 +6,10 @@ from pathlib import Path
 import pytest
 import torch
 
-from trainparity import (
+from trainparity import ExactComparison, ToleranceComparison
+from trainparity.accumulation import (
     AccumulationExecutionPlan,
     AccumulationRunner,
-    ExactComparison,
-    ToleranceComparison,
     UnsafeBatchSplit,
     split_tensor_tree,
 )

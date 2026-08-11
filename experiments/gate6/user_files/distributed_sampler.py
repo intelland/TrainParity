@@ -6,7 +6,8 @@ from pathlib import Path
 
 from torch.utils.data import DistributedSampler
 
-from trainparity import ExpectedPadding, audit_rank_iterables
+from trainparity import ExpectedPadding
+from trainparity.api import audit_rank_iterables
 
 dataset = list(range(10))
 ranks = {}

@@ -6,11 +6,11 @@ import json
 
 from trainparity.api import (
     MACHINE_REPORT_SCHEMA_VERSION,
-    PACKAGE_VERSION,
     ExactlyOnce,
     SampleObservation,
     audit_sample_coverage,
 )
+from trainparity.version import PACKAGE_VERSION
 
 
 def run() -> dict[str, object]:
@@ -39,4 +39,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

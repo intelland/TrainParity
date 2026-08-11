@@ -12,10 +12,10 @@ import torch
 
 from trainparity.api import (
     MACHINE_REPORT_SCHEMA_VERSION,
-    PACKAGE_VERSION,
     ProcessExecutionPlan,
     check_resume,
 )
+from trainparity.version import PACKAGE_VERSION
 
 
 def _train(run_dir: Path, end_step: int, resume_from: Path | None, fault: bool) -> None:

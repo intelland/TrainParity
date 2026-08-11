@@ -9,13 +9,13 @@ from torch import nn
 
 from trainparity.api import (
     MACHINE_REPORT_SCHEMA_VERSION,
-    PACKAGE_VERSION,
     AccumulationExecutionPlan,
     LossAccounting,
     ToleranceComparison,
     TrainingState,
     check_accumulation,
 )
+from trainparity.version import PACKAGE_VERSION
 
 
 class Case:
@@ -80,4 +80,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

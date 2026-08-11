@@ -1,37 +1,92 @@
 # TrainParity
 
 [![CI](https://github.com/intelland/TrainParity/actions/workflows/ci.yml/badge.svg)](https://github.com/intelland/TrainParity/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/trainparity.svg)](https://pypi.org/project/trainparity/)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-TrainParity is a deterministic PyTorch differential-testing library that checks user-declared equivalence across resume, gradient-accumulation, and finite sample-ID trajectories and reports their first observed divergence.
+TrainParity checks user-declared equivalence across PyTorch resume, gradient-accumulation, and finite sample-ID executions. It returns `PASS`, `FAIL`, `ABSTAIN`, or `ERROR` and locates the first observed divergence; it is not a universal bug detector and does not invoke an LLM at runtime.
 
-A checkpoint that restores model weights but resets the scheduler can look healthy while changing every later update. Run the installed CPU resume example:
+## A complete integration
 
-```bash
-python -m trainparity.quickstarts.resume
+This 27-logical-line pytest case audits stable IDs emitted by a real PyTorch
+`DataLoader`. The clean loader passes; the faulty loader repeats ID `1` and
+omits ID `2`. The file is [`examples/test_readme_case.py`](examples/test_readme_case.py),
+and CI executes the command shown below.
+
+```python
+from dataclasses import dataclass
+
+import torch
+from torch.utils.data import DataLoader, TensorDataset
+
+from trainparity import ExactlyOnce, Outcome
+from trainparity.api import SampleCoverageResult, audit_rank_iterables
+
+
+@dataclass(frozen=True)
+class CoverageCase:
+    sample_ids: tuple[int, ...]
+    expected_ids: tuple[int, ...] = (0, 1, 2, 3)
+
+    @staticmethod
+    def extract(batch: list[torch.Tensor]) -> list[int]:
+        return [int(value) for value in batch[0]]
+
+    def run(self) -> SampleCoverageResult:
+        dataset = TensorDataset(torch.tensor(self.sample_ids))
+        loader = DataLoader(dataset, batch_size=2, shuffle=False)
+        return audit_rank_iterables(
+            {0: loader},
+            sample_id_extractor=self.extract,
+            policy=ExactlyOnce(self.expected_ids),
+        )
+
+
+def test_clean_loader_passes() -> None:
+    assert CoverageCase((0, 1, 2, 3)).run().outcome is Outcome.PASS
+
+
+def test_duplicate_loader_reports_first_observed_path() -> None:
+    result = CoverageCase((0, 1, 1, 3)).run()
+    assert result.outcome is Outcome.FAIL
+    assert result.first_violation is not None
+    assert result.first_violation.path == "coverage.same_rank_duplicate"
 ```
 
-It performs a clean check and the intentional scheduler-reset fault, producing a report shaped like:
+```bash
+pytest -q examples/test_readme_case.py
+```
+
+Representative failing result:
 
 ```json
 {
-  "clean": {"outcome": "PASS"},
-  "intentional_fail": {
-    "outcome": "FAIL",
-    "primary_difference": {
-      "path": "scheduler.last_epoch",
-      "baseline": 4,
-      "candidate": 2
-    }
+  "outcome": "FAIL",
+  "first_violation": {
+    "kind": "same_rank_duplicate",
+    "path": "coverage.same_rank_duplicate",
+    "sample_id": 1,
+    "rank": 0,
+    "epoch": 0,
+    "position": 2
   },
   "schema_version": 1,
   "trainparity_version": "0.1.0rc1"
 }
 ```
 
-This is a first observed divergence, not a root-cause claim. TrainParity is not a universal bug detector and does not invoke an LLM at runtime.
+This is the first observed policy violation, not a root-cause claim.
+
+## Installed quickstarts
+
+The installed CPU quickstarts each emit one clean `PASS` and one intentional
+`FAIL`:
+
+```bash
+python -m trainparity.quickstarts.resume
+python -m trainparity.quickstarts.accumulation
+python -m trainparity.quickstarts.sample_coverage
+```
 
 ## Reproducible validation suite
 
@@ -50,21 +105,8 @@ Exact commits, environments, outcomes, and limitations are in [validation](docs/
 
 The project is an unpublished release candidate. Build the wheel from this checkout and install that artifact; do not interpret the PyPI badge as a publication claim.
 
-The three installed, CPU-runnable examples each emit a clean `PASS` and a small intentional `FAIL`:
-
-```bash
-python -m trainparity.quickstarts.resume
-```
-
-```bash
-python -m trainparity.quickstarts.accumulation
-```
-
-```bash
-python -m trainparity.quickstarts.sample_coverage
-```
-
-CI executes these exact commands against the built wheel from outside the repository directory.
+CI executes the pytest integration and all three quickstart commands. The
+quickstarts run against the built wheel from outside the repository directory.
 
 ## What it checks
 
@@ -91,7 +133,8 @@ Coverage users provide stable sample IDs. An ID must be semantically unique with
 
 TrainParity does not diagnose arbitrary scripts, infer root causes, judge model quality, launch distributed jobs, manage checkpoints, or provide Lightning, Transformers, DeepSpeed, DDP, FSDP, dashboard, service, registry, or runtime agent integration. It does not claim that all full-batch and microbatch executions should be equivalent; the user declares the relation and any tolerance.
 
-Asking Codex can help inspect or modify code, but it is an interactive, probabilistic development activity. TrainParity instead runs fixed local code, declared observations, explicit predicates, and versioned machine reports. Codex assisted this repository's implementation under human-defined gated specifications; it is absent from runtime decisions. See [development provenance](docs/development-provenance.md).
+Implementation provenance and the separation between assisted development and
+deterministic runtime behavior are documented in [development provenance](docs/development-provenance.md).
 
 [TrainCheck](https://github.com/OrderLab/TrainCheck) infers and checks training invariants using reference and target traces. TrainParity performs explicit A/B differential tests over user-declared equivalence relations and fresh-process boundaries. Neither structural approach makes the other a universal detector. The scoped comparison and cited upstream material are in [comparison with TrainCheck](docs/comparison-with-traincheck.md).
 

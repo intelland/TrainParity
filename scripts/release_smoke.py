@@ -21,6 +21,19 @@ MODULES = (
     "trainparity.quickstarts.accumulation",
     "trainparity.quickstarts.sample_coverage",
 )
+TOP_LEVEL_API = {
+    "check_resume",
+    "check_accumulation",
+    "audit_sample_coverage",
+    "ExactlyOnce",
+    "AtLeastOnce",
+    "NoCrossRankOverlap",
+    "ExpectedPadding",
+    "ExactComparison",
+    "ToleranceComparison",
+    "Outcome",
+    "__version__",
+}
 
 
 def _run_example(module: str, working_directory: Path) -> dict[str, Any]:
@@ -73,8 +86,8 @@ def run(working_directory: Path, repository: Path | None) -> dict[str, Any]:
     imported = importlib.import_module("trainparity.api")
     if imported is not api:
         raise RuntimeError("public API import identity changed")
-    if set(trainparity.__all__) != {*api.__all__, "__version__"}:
-        raise RuntimeError("top-level public exports do not match trainparity.api")
+    if set(trainparity.__all__) != TOP_LEVEL_API:
+        raise RuntimeError("top-level public exports do not match the release contract")
     required = {
         "check_resume",
         "check_accumulation",
@@ -92,7 +105,8 @@ def run(working_directory: Path, repository: Path | None) -> dict[str, Any]:
         "installed_distribution": f"trainparity-{trainparity.__version__}",
         "python": ".".join(str(value) for value in sys.version_info[:3]),
         "torch": torch.__version__,
-        "public_api_names": sorted(api.__all__),
+        "top_level_api_names": sorted(trainparity.__all__),
+        "advanced_api_names": sorted(api.__all__),
         "examples": results,
         "source_tree_imported": False,
     }

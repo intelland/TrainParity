@@ -48,7 +48,7 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     readme = (root / "README.md").read_text(encoding="utf-8")
     readme_lower = readme.lower()
     _require(not any(word in readme_lower for word in BANNED_README_WORDS), "README promotional language")
-    _require(readme.count("![") == 4, "top badge count")
+    _require(readme.count("![") == 3, "top badge count")
     _require(readme.index("## Reproducible validation suite") < len(readme) // 2, "validation matrix placement")
     for phrase in (
         "not a universal bug detector",

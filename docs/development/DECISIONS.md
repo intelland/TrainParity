@@ -467,3 +467,18 @@
   compatibility claims, documentation, clean wheel, distribution audit,
   accepted-evidence hashes, user document hash, M3 release check, and hosted CI
   all pass with no release blocker.
+
+## D-0043: Reopen only the release surface for Gate 7I
+
+- **Status:** Authorized for implementation
+- **Date:** 2026-08-11
+- **Decision:** Keep the three accepted checks and their comparison semantics
+  frozen. Reduce only the top-level import surface, retain supported advanced
+  objects under `trainparity.api` or documented modules, replace accidental
+  Gate compatibility imports, harden documentation and release engineering,
+  and determine the PyTorch upper bound from installed evidence. Publication
+  remains held.
+- **Reason:** Gate 7 correctness and validation evidence are accepted, while
+  the README integration, 30-name top-level namespace, narrow dependency cap,
+  monolithic CI, release permissions, maintainer metadata, and API reference
+  require bounded correction before publication approval.

@@ -4,7 +4,7 @@ import torch
 from model import GPT, GPTConfig
 from torch.nn import functional as F
 
-from trainparity import LossAccounting, TrainingState
+from trainparity.api import LossAccounting, TrainingState
 
 
 class Case:

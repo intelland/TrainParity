@@ -1,0 +1,151 @@
+name: Full validation
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    name: Python 3.11 / PyTorch ${{ matrix.torch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        torch: ["2.7.0", "2.10.0", "2.13.0"]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install the selected CPU PyTorch
+        run: python -m pip install torch==${{ matrix.torch }} --index-url https://download.pytorch.org/whl/cpu
+      - name: Build and install the wheel without replacing PyTorch
+        run: |
+          python -m pip install build
+          python -m build --wheel
+          python -m pip install --force-reinstall --no-deps dist/*.whl
+      - name: Run installed-package compatibility smoke outside the repository
+        run: |
+          cd "$RUNNER_TEMP"
+          python "$GITHUB_WORKSPACE/scripts/compatibility_check.py" \
+            --expected-torch "${{ matrix.torch }}" \
+            --repository "$GITHUB_WORKSPACE" \
+            --output "$RUNNER_TEMP/compatibility-${{ matrix.torch }}.json"
+
+  full-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install minimum CPU PyTorch
+        run: python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
+      - name: Install project and development tools
+        run: python -m pip install -e '.[dev]'
+      - run: make lint
+      - run: make typecheck
+      - run: make test
+      - run: python -m pytest -q examples/test_readme_case.py
+      - run: make build
+      - run: python -m twine check dist/*
+      - name: Replay Gate 0 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-0"
+          cd "$RUNNER_TEMP/verify-gate-0"
+          python scripts/verify_gate.py 0
+      - name: Replay Gate 1 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-1"
+          cd "$RUNNER_TEMP/verify-gate-1"
+          python scripts/verify_gate.py 1
+      - name: Replay Gate 2 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-2"
+          cd "$RUNNER_TEMP/verify-gate-2"
+          python scripts/verify_gate.py 2
+      - name: Replay Gate 3 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-3"
+          cd "$RUNNER_TEMP/verify-gate-3"
+          python scripts/verify_gate.py 3
+      - name: Replay Gate 4 verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-4"
+          cd "$RUNNER_TEMP/verify-gate-4"
+          python scripts/verify_gate.py 4
+      - name: Replay Gate 4 friction verifier in an isolated copy
+        run: |
+          cp -a . "$RUNNER_TEMP/verify-gate-4-friction"
+          cd "$RUNNER_TEMP/verify-gate-4-friction"
+          python scripts/verify_gate4_friction_audit.py
+      - name: Run pinned nanoGPT Gate 4 integration
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate4/nanogpt"
+          git -C "$RUNNER_TEMP/gate4/nanogpt" init
+          git -C "$RUNNER_TEMP/gate4/nanogpt" remote add origin https://github.com/karpathy/nanoGPT.git
+          git -C "$RUNNER_TEMP/gate4/nanogpt" fetch --depth 1 origin 3adf61e154c3fe3fca428ad6bc3818b27a3b8291
+          git -C "$RUNNER_TEMP/gate4/nanogpt" checkout --detach FETCH_HEAD
+          python -m experiments.gate4.run_matrix \
+            --external-root "$RUNNER_TEMP/gate4" \
+            --output "$RUNNER_TEMP/gate4-output/matrix.json" \
+            --project nanogpt
+      - name: Run Gate 4B wheel-installed nanoGPT fresh-clone case
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate4b-source"
+          git archive daaaf0d7d62d6d6cda2a53a091c4c3ab9f117801 | tar -x -C "$RUNNER_TEMP/gate4b-source"
+          python -m build --wheel --outdir "$RUNNER_TEMP/gate4b-source/dist" "$RUNNER_TEMP/gate4b-source"
+          export TRAINPARITY_GATE4_DEVICE=cpu
+          export TRAINPARITY_GATE4_SITE="$(python -c 'import site; print(site.getsitepackages()[0])')"
+          cd "$RUNNER_TEMP/gate4b-source"
+          python -m experiments.gate4b.run_matrix \
+            --output-root "$RUNNER_TEMP/gate4b-run" \
+            --output "$RUNNER_TEMP/gate4b-matrix.json" \
+            --profile-pre experiments/gate4b/recorded/profile_pre.json \
+            --profile-post experiments/gate4b/recorded/profile_post.json \
+            --project nanogpt
+      - name: Verify Gate 4B report when present
+        run: |
+          if [ -f artifacts/gate_reports/gate_4b.json ]; then
+            python scripts/verify_gate4b.py
+          fi
+      - name: Run Gate 5 wheel-installed nanoGPT accumulation surface
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user" "$RUNNER_TEMP/gate5-site"
+          git -C "$RUNNER_TEMP/gate5-nanogpt" init
+          git -C "$RUNNER_TEMP/gate5-nanogpt" remote add origin https://github.com/karpathy/nanoGPT.git
+          git -C "$RUNNER_TEMP/gate5-nanogpt" fetch --depth 1 origin 3adf61e154c3fe3fca428ad6bc3818b27a3b8291
+          git -C "$RUNNER_TEMP/gate5-nanogpt" checkout --detach FETCH_HEAD
+          cp experiments/gate5/user_files/nanogpt/trainparity_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user/"
+          cp experiments/gate5/user_files/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user/"
+          python -m pip install --no-deps --target "$RUNNER_TEMP/gate5-site" dist/*.whl
+          cd "$RUNNER_TEMP/gate5-nanogpt"
+          PYTHONPATH="$RUNNER_TEMP/gate5-site:$RUNNER_TEMP/gate5-nanogpt/.trainparity_user:$RUNNER_TEMP/gate5-nanogpt" \
+            python .trainparity_user/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/report.json"
+      - name: Verify Gate 5 report
+        run: python scripts/verify_gate5.py --allow-pending-ci
+      - name: Run Gate 6 CPU policy matrix
+        run: python -m experiments.gate6.run_matrix --output "$RUNNER_TEMP/gate6/cpu_matrix.json"
+      - name: Run Gate 6 standard-sampler product surface
+        run: python -m experiments.gate6.run_product_surface --output "$RUNNER_TEMP/gate6/product_surface.json"
+      - name: Verify Gate 6 report
+        run: python scripts/verify_gate6.py --allow-pending-ci
+      - name: Test release artifacts from a clean environment outside the repository
+        run: make release-check
+      - name: Verify accepted Gate 7 evidence
+        run: python scripts/verify_gate7.py --allow-pending-ci
+      - name: Verify Gate 7I release surface
+        run: python scripts/verify_gate7i.py

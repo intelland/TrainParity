@@ -6,7 +6,8 @@ from pathlib import Path
 
 from torch.utils.data import SequentialSampler
 
-from trainparity import ExactlyOnce, audit_rank_iterables
+from trainparity import ExactlyOnce
+from trainparity.api import audit_rank_iterables
 
 dataset = list(range(11))
 sampler = SequentialSampler(dataset)

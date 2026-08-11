@@ -7,7 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from trainparity import CaseImportError, ResumeCase, load_case
+from trainparity.importing import CaseImportError, load_case
+from trainparity.protocols import ResumeCase
 
 CASE_SPEC = "trainparity.examples.resume_cases:CorrectResumeCase"
 
@@ -17,7 +18,9 @@ def test_load_case_matches_protocol() -> None:
     assert isinstance(case, ResumeCase)
 
 
-@pytest.mark.parametrize("spec", ["invalid", "trainparity:missing", "trainparity.cli:main"])
+@pytest.mark.parametrize(
+    "spec", ["invalid", "trainparity:missing", "trainparity.version:add_report_metadata"]
+)
 def test_load_case_rejects_invalid_targets(spec: str) -> None:
     with pytest.raises(CaseImportError):
         load_case(spec)
