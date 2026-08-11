@@ -385,8 +385,8 @@ def _full_evidence(
 
 
 def audit_sample_coverage(
-    observations: Iterable[SampleObservation],
-    policy: CoveragePolicy,
+    observations: Iterable[object],
+    policy: object,
     *,
     max_examples: int = 10,
     evidence_path: Path | None = None,
@@ -412,13 +412,15 @@ def audit_sample_coverage(
         materialized = tuple(observations)
     except Exception as error:
         return SampleCoverageResult(Outcome.ERROR, name, f"observations could not be read: {type(error).__name__}")
-    for observation in materialized:
-        if not isinstance(observation, SampleObservation):
+    validated: list[SampleObservation] = []
+    for value in materialized:
+        if not isinstance(value, SampleObservation):
             return SampleCoverageResult(Outcome.ERROR, name, "observations must be SampleObservation values")
-        error = _validate_observation(observation)
-        if error is not None:
-            return SampleCoverageResult(Outcome.ERROR, name, error)
-    analysis = _analyse(materialized, expected)
+        validation_error = _validate_observation(value)
+        if validation_error is not None:
+            return SampleCoverageResult(Outcome.ERROR, name, validation_error)
+        validated.append(value)
+    analysis = _analyse(tuple(validated), expected)
     outcome, message, first = _outcome(policy, analysis)
     target = None
     if evidence_path is not None:
