@@ -27,6 +27,17 @@ LOCAL_PATTERNS = {
 }
 UNWANTED_SUFFIXES = {".ckpt", ".npy", ".npz", ".pt", ".pth", ".pyc"}
 FORBIDDEN_WHEEL = ("trainparity/examples/",)
+DEVELOPMENT_DOCS = {
+    "docs/API_PROTOTYPES.md",
+    "docs/COMPETITOR_ANALYSIS.md",
+    "docs/GATE4_GLUE_DECOMPOSITION.md",
+    "docs/GATE4_INTEGRATIONS.md",
+    "docs/GATE5_ACCUMULATION_CONTRACT.md",
+    "docs/GATE6_SAMPLE_COVERAGE_CONTRACT.md",
+    "docs/PRODUCT_CONTRACT.md",
+    "docs/RESUME_EQUIVALENCE.md",
+    "docs/SNAPSHOT_CONTRACT.md",
+}
 FORBIDDEN_SDIST = (
     "artifacts/",
     "experiments/",
@@ -36,6 +47,7 @@ FORBIDDEN_SDIST = (
     "docs/launch/",
     "CODEX_REMOTE_DEVELOPMENT.md",
     "TrainParity_Codex_Handoff.zip",
+    *tuple(sorted(DEVELOPMENT_DOCS)),
 )
 
 
@@ -56,7 +68,11 @@ def _text_files(root: Path) -> list[Path]:
 def _classify(relative: str) -> str:
     if relative.startswith(("artifacts/", "experiments/")):
         return "accepted_or_recorded_evidence"
-    if relative.startswith("docs/development/") or relative == "CODEX_REMOTE_DEVELOPMENT.md":
+    if (
+        relative.startswith("docs/development/")
+        or relative == "CODEX_REMOTE_DEVELOPMENT.md"
+        or relative in DEVELOPMENT_DOCS
+    ):
         return "development_provenance"
     if relative.startswith(("scripts/", "tests/")):
         return "repository_tooling"
@@ -189,8 +205,6 @@ def run(root: Path) -> dict[str, Any]:
         ),
         "environment_values_recorded_by_default": False,
     }
-    if blockers:
-        raise RuntimeError("; ".join(blockers))
     return report
 
 
@@ -205,6 +219,8 @@ def main() -> None:
         json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     print(json.dumps({"status": report["status"], "blockers": report["blockers"]}))
+    if report["status"] != "PASS":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
