@@ -156,7 +156,7 @@ equivalence relation and one-update boundary are frozen in
 sample-coverage, framework-adapter, dashboard, and service work remain
 unauthorized.
 
-Gate 5 implementation and M3 evidence are complete pending hosted CI. The
+Gate 5 implementation and M3 evidence are complete. The
 formal CPU matrix passed 30/30 expected outcomes across three repeats; same-
 device L40S Slurm job `58980407` passed 12/12, including clean AMP and the AMP
 unscale/GradScaler timing fault. All eight required faults were detected, all
@@ -165,3 +165,9 @@ processes, and clean false positives were zero. Full regression is 107 tests at
 92.54% coverage. Fresh pinned ImageNet and nanoGPT product checks pass at 38
 and 37 total user logical LOC with zero upstream modifications. Gate 6 has not
 been started.
+
+Hosted GitHub Actions run `31453089659` for PR `#2` at commit
+`ee7951f67052ad965b4c26188c048e2401742077` passed all steps, including 107
+tests, build, isolated Gate 0-4 replay, Gate 4/4B external checks from their
+accepted package versions, the dev6 wheel-installed nanoGPT Gate 5 surface,
+and the dedicated Gate 5 verifier.

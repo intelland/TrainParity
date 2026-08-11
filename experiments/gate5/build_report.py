@@ -156,6 +156,7 @@ optimizer-update boundary. Human review is required before Gate 6.
 - Verified-equal initial state and three distinct fresh PIDs: yes
 - Peak temporary-directory disk: {peak} bytes
 - Persisted recorded evidence: {recorded_bytes} bytes
+- Hosted CI: run `{ci.get('run_id', 'pending')}`, conclusion `{ci.get('conclusion', 'pending')}`
 
 ## First observed divergences
 
