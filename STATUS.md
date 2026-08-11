@@ -2,8 +2,8 @@
 
 ## Active gate
 
-Gate 4B production-integration-surface verification is complete on M3 and is
-awaiting hosted CI evidence and final human review. Gate 5 has not been started.
+Gate 4B production-integration-surface verification is complete with outcome
+`GO`; awaiting final human review. Gate 5 has not been started.
 
 ## Objective
 
@@ -132,3 +132,19 @@ acceptable without a human decision. No production API, framework adapter,
 backend optimization, new project, or Gate 5 code was added. Final verification
 passed Ruff, Mypy, 79 tests at 94.86% coverage, build, the accepted Gate 4
 verifier, the dedicated friction verifier, and `git diff --check`.
+
+Gate 4B moved only framework-neutral process orchestration into production.
+Fresh-clone user integration is now 30, 31, and 32 logical LOC (median 31),
+with adapter maxima of 19 LOC, supporting glue of 13 LOC, and zero upstream
+modifications. M3 L40S Slurm job `58970083` passed 3/3 clean controls and
+detected 3/3 faults; total wall multipliers were 5.261x, 5.202x, and 4.949x,
+and all artifact thresholds passed. The profiled ImageNet full-value snapshot
+path improved from 22.278513s to 0.183875s without changing exact bytes or
+comparison semantics. Full tests passed 97/97 at 94.27% coverage.
+
+Hosted GitHub Actions run `31437964382` at commit
+`5b8a84de2df502252d73e6eb806f6371f29e42ce` passed lint, type-check, tests,
+build, isolated Gate 0-4 and friction verifier replays, the pinned Gate 4 case,
+and a wheel-installed Gate 4B nanoGPT fresh-clone case. The final dedicated
+Gate 4B verifier returns `PASS`, the report recommends `GO`, accepted evidence
+remains preserved, and Gate 5 remains unauthorized.

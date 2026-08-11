@@ -1,0 +1,26 @@
+{
+  "conclusion": "success",
+  "event": "pull_request",
+  "head_sha": "5b8a84de2df502252d73e6eb806f6371f29e42ce",
+  "job_id": 93616315223,
+  "job_name": "verify",
+  "prior_attempt": {
+    "conclusion": "failure",
+    "head_sha": "0487d8d8bfb6e8766a114ba0da7a73b74d125e8a",
+    "reason": "historical verifiers rewrote accepted reports when replayed sequentially; corrected by isolated-copy replay",
+    "run_id": 31437846798
+  },
+  "run_id": 31437964382,
+  "url": "https://github.com/intelland/TrainParity/actions/runs/31437964382",
+  "verified_steps": [
+    "make lint",
+    "make typecheck",
+    "make test",
+    "make build",
+    "Gate 0-4 isolated verifier replay",
+    "Gate 4 friction isolated verifier replay",
+    "pinned nanoGPT Gate 4 integration",
+    "Gate 4B wheel-installed nanoGPT fresh-clone case"
+  ],
+  "workflow": "CI"
+}

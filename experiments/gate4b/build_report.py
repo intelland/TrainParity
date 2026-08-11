@@ -122,7 +122,7 @@ def build(repo_root: Path, matrix_path: Path, ci_path: Path, test_path: Path) ->
     for project in matrix["projects"]:
         differences = project["fault"]["all_differences"]
         parameter_divergence = any(
-            difference["path"].startswith(("model.", "state_dict."))
+            difference["path"].startswith(("model.", "model[", "state_dict.", "state_dict["))
             for difference in differences
         )
         primary = project["fault"]["primary_difference"]

@@ -80,6 +80,12 @@ def verify(repo_root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     _require(not optimization["comparison_semantics_changed"], "comparison weakened")
     _require(optimization["post_total_seconds"] < optimization["pre_total_seconds"], "profile")
     _require(not report["production_surface"]["framework_specific_branches"], "framework branch")
+    faults = {fault["project"]: fault for fault in report["faults"]}
+    _require(faults["nanogpt"]["classification"] == "trajectory-affecting", "nano fault")
+    _require(faults["nanogpt"]["downstream_parameter_divergence_observed"], "nano params")
+    for name in ("pytorch_examples_imagenet", "ignite_mnist_engine"):
+        _require(faults[name]["classification"] == "control-state", f"{name} fault")
+        _require(not faults[name]["downstream_parameter_divergence_observed"], f"{name} params")
     _require(report["test_summary"]["outcome"] == "PASS", "test summary")
     if not allow_pending_ci:
         _require(report["hosted_ci"]["conclusion"] == "success", "hosted CI")
