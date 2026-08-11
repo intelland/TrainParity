@@ -171,3 +171,31 @@ Hosted GitHub Actions run `31453089659` for PR `#2` at commit
 tests, build, isolated Gate 0-4 replay, Gate 4/4B external checks from their
 accepted package versions, the dev6 wheel-installed nanoGPT Gate 5 surface,
 and the dedicated Gate 5 verifier.
+
+Gate 5 was accepted by the human reviewer on 2026-08-11. Gate 6 is now the
+only authorized scope and is an optional sample-coverage inclusion decision.
+The implementation must audit only user-supplied stable sample IDs under the
+explicit `exactly_once`, `at_least_once`, `no_cross_rank_overlap`, and
+`expected_padding` policies. Unknown expected universes must `ABSTAIN`; same-
+rank duplication and cross-rank overlap remain distinct; terminal summaries
+must be bounded while optional machine evidence remains complete. Gate 6 must
+not add a distributed launcher, training integration, checkpointing, GPU work,
+framework adapter, dashboard, service, release work, or later expansion.
+
+The Gate 5 nanoGPT product fixture excludes the shared
+`transformer.wte.weight` / `lm_head.weight` tensor from the optimizer, so its
+optimizer parameter groups and optimizer state contain neither alias. All
+other unique model parameters in the fixture are included. Full model and
+gradient phase observations use `named_parameters(remove_duplicate=False)` and
+therefore still include both tied aliases, including the tied gradient. No
+project-specific optimizer mapping rule was added. The Gate 5 verifier already
+confirmed that every accepted Gate 0-4B evidence hash remained unchanged; this
+record closes that carry-forward without rerunning GPU work.
+
+Gate 6 verification commands are `make lint`, `make typecheck`, `make test`,
+`make build`, `python scripts/verify_gate.py 0` through `4`,
+`python scripts/verify_gate4_friction_audit.py`,
+`python scripts/verify_gate4b.py`, `python scripts/verify_gate5.py`,
+`python scripts/verify_gate.py 6`, the dedicated Gate 6 verifier, and
+`git diff --check`. The final report must conclude `INCLUDE_MODULE`,
+`REWORK_MODULE`, or `OMIT_MODULE` and then stop for human review.

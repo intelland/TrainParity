@@ -364,3 +364,26 @@
 - **Reason:** The bounded observations distinguish loss accounting, gradient,
   optimizer, parameter, and scheduler state without asserting universal
   accumulation equivalence or expanding into general tracing.
+
+## D-0034: Accept Gate 5 and authorize optional Gate 6 only
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** The human reviewer accepted Gate 5 and authorized only the
+  bounded sample-coverage inclusion evaluation in Gate 6. Gate 6 may conclude
+  `INCLUDE_MODULE`, `REWORK_MODULE`, or `OMIT_MODULE`; release work remains
+  unauthorized.
+- **Reason:** Resume and accumulation already form a viable product. Sample
+  coverage should be included only if explicit policies and structured anomaly
+  evidence add meaningful value beyond a short `Counter` script.
+
+## D-0035: Audit observations without owning distributed execution
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Gate 6 consumes stable sample IDs and declared rank, worker, and
+  epoch provenance. It does not launch ranks, workers, DDP, Slurm, NCCL, or
+  training. Exactly-once and at-least-once claims require an explicit finite
+  expected universe; unknown exactly-once universes return `ABSTAIN`.
+- **Reason:** This preserves observable coverage semantics and four-state
+  reporting without expanding TrainParity into a distributed training system.

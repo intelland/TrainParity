@@ -151,6 +151,8 @@
   },
   "outcome": "GO",
   "preservation": {
+    "accepted_gate_0_through_4b_hashes_verified_unchanged": true,
+    "verification_source": "scripts/verify_gate5.py checked every recorded SHA-256 before Gate 5 acceptance",
     "accepted_evidence_sha256": {
       "artifacts/gate_reports/gate_0.json": "3f72383d025304a8559773ac961b8fae0e1e7f0c21adaa6eb3bae07f2684dcc2",
       "artifacts/gate_reports/gate_0.md": "29f5fd42ee9a7f51126546e3dc02a558c1925bd7e1f84702fd12b84663eb53ad",
@@ -264,7 +266,25 @@
   "strict_control": {
     "message": "initial state capture failed",
     "nanogpt_tied_parameter_mapping": "ABSTAIN",
-    "resolution": "user fixture explicitly excludes the ambiguous tied parameter from its optimizer; production mapping remains strict"
+    "resolution": "user fixture explicitly excludes the ambiguous tied parameter from its optimizer; production mapping remains strict",
+    "tied_parameter_observation_scope": {
+      "full_gradient_includes": [
+        "gradient.transformer.wte.weight",
+        "gradient.lm_head.weight"
+      ],
+      "full_model_parameters_include": [
+        "model.transformer.wte.weight",
+        "model.lm_head.weight"
+      ],
+      "optimizer_excludes": [
+        "transformer.wte.weight",
+        "lm_head.weight"
+      ],
+      "optimizer_includes": "every other unique parameter returned by model.parameters()",
+      "optimizer_state_for_tied_parameter": "excluded",
+      "production_project_specific_mapping_rule_added": false,
+      "reason": "the two names identify one shared Parameter and strict canonicalization ABSTAINS when that object appears in an optimizer"
+    }
   },
   "test_summary": {
     "build": "PASS",

@@ -44,6 +44,22 @@ claimed equivalent without explicit user semantics. nanoGPT's tied parameter
 mapping first returns `ABSTAIN`; the product fixture explicitly chooses an
 unambiguous optimizer subset without weakening production mapping.
 
+### nanoGPT tied-parameter observation scope
+
+The fixture's `transformer.wte.weight` and `lm_head.weight` names refer to one
+shared parameter. That parameter is excluded from optimizer parameter groups,
+so neither alias nor any state for it is included in optimizer observations;
+every other unique model parameter is included. Full parameter-update and
+gradient observations use `named_parameters(remove_duplicate=False)`, so both
+`model.transformer.wte.weight` / `model.lm_head.weight` and
+`gradient.transformer.wte.weight` / `gradient.lm_head.weight` remain observed.
+The tied gradient is therefore still checked. No project-specific mapping rule
+was added.
+
+The accepted Gate 0-4B SHA-256 inventory in this report was checked unchanged
+by `scripts/verify_gate5.py` before Gate 5 acceptance. This carry-forward was
+recorded without rerunning GPU work.
+
 ## Policy and scope
 
 Loss numerator/denominator accounting is optional and unavailable accounting is
