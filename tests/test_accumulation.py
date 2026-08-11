@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -62,6 +63,8 @@ def test_clean_and_fault_run_in_three_fresh_processes(tmp_path: Path) -> None:
     assert clean.loss_normalization_captured
     assert clean.peak_temporary_directory_bytes > 0
     assert clean.persisted_artifact_bytes > 0
+    stored = json.loads((tmp_path / "clean.json").read_text(encoding="utf-8"))
+    assert stored["persisted_artifact_bytes"] == (tmp_path / "clean.json").stat().st_size
 
     fault = runner.run(
         "experiments.gate5.cases:LinearCase",

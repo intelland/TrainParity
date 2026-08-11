@@ -338,11 +338,18 @@ class AccumulationRunner:
         if report_path is None:
             return result
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        payload = json.dumps(result.to_dict(), indent=2, sort_keys=True) + "\n"
+        finished = result
+        payload = ""
+        for _ in range(3):
+            payload = json.dumps(finished.to_dict(), indent=2, sort_keys=True) + "\n"
+            observed_size = len(payload.encode("utf-8"))
+            if observed_size == finished.persisted_artifact_bytes:
+                break
+            finished = replace(finished, persisted_artifact_bytes=observed_size)
         temporary = report_path.with_suffix(report_path.suffix + ".tmp")
         temporary.write_text(payload, encoding="utf-8")
         temporary.replace(report_path)
-        return replace(result, persisted_artifact_bytes=report_path.stat().st_size)
+        return replace(finished, persisted_artifact_bytes=report_path.stat().st_size)
 
 
 def _tree_size(root: Path) -> int:
