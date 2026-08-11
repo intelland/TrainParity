@@ -1,0 +1,491 @@
+{
+  "device": "cuda",
+  "duration_seconds": 146.47993191803107,
+  "gpu": "NVIDIA L40S",
+  "python": "3.11.15",
+  "repeats": 1,
+  "rows": [
+    {
+      "expected": "PASS",
+      "name": "clean_linear",
+      "repeat": 0,
+      "result": {
+        "all_differences": [],
+        "case": "experiments.gate5.cases:LinearCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same four ordered samples; full mean equals summed numerator/denominator",
+        "first_observed_phase": null,
+        "loss_normalization_captured": true,
+        "message": "declared executions are equivalent for one optimizer-update boundary",
+        "outcome": "PASS",
+        "peak_temporary_directory_bytes": 187677,
+        "persisted_artifact_bytes": 602,
+        "primary_difference": null,
+        "process_ids": [
+          1389686,
+          1389726,
+          1389736
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "clean_mlp",
+      "repeat": 0,
+      "result": {
+        "all_differences": [],
+        "case": "experiments.gate5.cases:MLPCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same ordered tensor-tree batch; deterministic MLP with no batch-coupled layer",
+        "first_observed_phase": null,
+        "loss_normalization_captured": true,
+        "message": "declared executions are equivalent for one optimizer-update boundary",
+        "outcome": "PASS",
+        "peak_temporary_directory_bytes": 200487,
+        "persisted_artifact_bytes": 604,
+        "primary_difference": null,
+        "process_ids": [
+          1389755,
+          1389765,
+          1389775
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "clean_token",
+      "repeat": 0,
+      "result": {
+        "all_differences": [],
+        "case": "experiments.gate5.cases:TokenCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same ordered masked tokens; token loss uses global numerator/denominator",
+        "first_observed_phase": null,
+        "loss_normalization_captured": true,
+        "message": "declared executions are equivalent for one optimizer-update boundary",
+        "outcome": "PASS",
+        "peak_temporary_directory_bytes": 190308,
+        "persisted_artifact_bytes": 601,
+        "primary_difference": null,
+        "process_ids": [
+          1389820,
+          1389830,
+          1389840
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "missing_accumulation_scaling",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "4.0",
+            "candidate": "<missing>",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.denominator",
+            "reason": "missing_candidate"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[15.819629669189453])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[31.639259338378906])",
+            "max_abs_error": 15.819629669189453,
+            "max_rel_error": 1.0,
+            "path": "loss_accounting.effective_loss",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "True",
+            "candidate": "False",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.normalization_captured",
+            "reason": "value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[63.27851867675781])",
+            "candidate": "<missing>",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.numerator",
+            "reason": "missing_candidate"
+          }
+        ],
+        "case": "experiments.gate5.cases:LinearCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same four ordered samples; full mean equals summed numerator/denominator",
+        "first_observed_phase": "loss_accounting",
+        "loss_normalization_captured": false,
+        "message": "first observed divergence in loss_accounting; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 187481,
+        "persisted_artifact_bytes": 1872,
+        "primary_difference": {
+          "baseline": "4.0",
+          "candidate": "<missing>",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "loss_accounting.denominator",
+          "reason": "missing_candidate"
+        },
+        "process_ids": [
+          1389852,
+          1389862,
+          1389874
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "variable_length_mean_of_means",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "9.0",
+            "candidate": "<missing>",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.denominator",
+            "reason": "missing_candidate"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[1.6378313302993774])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[1.7130721807479858])",
+            "max_abs_error": 0.0752408504486084,
+            "max_rel_error": 0.04593931564055207,
+            "path": "loss_accounting.effective_loss",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "True",
+            "candidate": "False",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.normalization_captured",
+            "reason": "value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[14.740482330322266])",
+            "candidate": "<missing>",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.numerator",
+            "reason": "missing_candidate"
+          }
+        ],
+        "case": "experiments.gate5.cases:TokenCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same ordered masked tokens; token loss uses global numerator/denominator",
+        "first_observed_phase": "loss_accounting",
+        "loss_normalization_captured": false,
+        "message": "first observed divergence in loss_accounting; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 190112,
+        "persisted_artifact_bytes": 1888,
+        "primary_difference": {
+          "baseline": "9.0",
+          "candidate": "<missing>",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "loss_accounting.denominator",
+          "reason": "missing_candidate"
+        },
+        "process_ids": [
+          1389886,
+          1389896,
+          1389906
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "optimizer_step_per_microbatch",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-36.66972351074219])",
+            "candidate": "None",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "gradient.weight",
+            "reason": "type"
+          }
+        ],
+        "case": "experiments.gate5.cases:LinearCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same four ordered samples; full mean equals summed numerator/denominator",
+        "first_observed_phase": "gradient",
+        "loss_normalization_captured": true,
+        "message": "first observed divergence in gradient; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 187568,
+        "persisted_artifact_bytes": 1102,
+        "primary_difference": {
+          "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-36.66972351074219])",
+          "candidate": "None",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "gradient.weight",
+          "reason": "type"
+        },
+        "process_ids": [
+          1389918,
+          1389928,
+          1389938
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "scheduler_step_per_microbatch",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "0.125",
+            "candidate": "0.03125",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "optimizer.param_groups[0].lr",
+            "reason": "value"
+          }
+        ],
+        "case": "experiments.gate5.cases:LinearCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same four ordered samples; full mean equals summed numerator/denominator",
+        "first_observed_phase": "optimizer_state",
+        "loss_normalization_captured": true,
+        "message": "first observed divergence in optimizer_state; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 187677,
+        "persisted_artifact_bytes": 989,
+        "primary_difference": {
+          "baseline": "0.125",
+          "candidate": "0.03125",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "optimizer.param_groups[0].lr",
+          "reason": "value"
+        },
+        "process_ids": [
+          1389950,
+          1389962,
+          1389972
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "zero_grad_wrong_time",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-36.66972351074219])",
+            "candidate": "None",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "gradient.weight",
+            "reason": "type"
+          }
+        ],
+        "case": "experiments.gate5.cases:LinearCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same four ordered samples; full mean equals summed numerator/denominator",
+        "first_observed_phase": "gradient",
+        "loss_normalization_captured": true,
+        "message": "first observed divergence in gradient; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 187422,
+        "persisted_artifact_bytes": 1102,
+        "primary_difference": {
+          "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-36.66972351074219])",
+          "candidate": "None",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "gradient.weight",
+          "reason": "type"
+        },
+        "process_ids": [
+          1389984,
+          1389994,
+          1390004
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "gradient_clip_wrong_time",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-0.7256336212158203])",
+            "candidate": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-0.9999998807907104])",
+            "max_abs_error": 0.27436625957489014,
+            "max_rel_error": 0.37810577067140505,
+            "path": "gradient.weight",
+            "reason": "tensor_value"
+          }
+        ],
+        "case": "experiments.gate5.cases:ClipCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same ordered opposing gradients; clipping occurs once after accumulation",
+        "first_observed_phase": "gradient",
+        "loss_normalization_captured": true,
+        "message": "first observed divergence in gradient; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 187677,
+        "persisted_artifact_bytes": 1342,
+        "primary_difference": {
+          "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-0.7256336212158203])",
+          "candidate": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-0.9999998807907104])",
+          "max_abs_error": 0.27436625957489014,
+          "max_rel_error": 0.37810577067140505,
+          "path": "gradient.weight",
+          "reason": "tensor_value"
+        },
+        "process_ids": [
+          1390016,
+          1390026,
+          1390069
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "incomplete_final_window",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "4.0",
+            "candidate": "2.0",
+            "max_abs_error": null,
+            "max_rel_error": null,
+            "path": "loss_accounting.denominator",
+            "reason": "value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[15.819629669189453])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[1.8611328601837158])",
+            "max_abs_error": 13.958496809005737,
+            "max_rel_error": 0.8823529438360693,
+            "path": "loss_accounting.effective_loss",
+            "reason": "tensor_value"
+          },
+          {
+            "baseline": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[63.27851867675781])",
+            "candidate": "tensor(shape=(), dtype=torch.float32, device=cuda:0, values=[3.7222657203674316])",
+            "max_abs_error": 59.55625295639038,
+            "max_rel_error": 0.9411764719180347,
+            "path": "loss_accounting.numerator",
+            "reason": "tensor_value"
+          }
+        ],
+        "case": "experiments.gate5.cases:LinearCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same four ordered samples; full mean equals summed numerator/denominator",
+        "first_observed_phase": "loss_accounting",
+        "loss_normalization_captured": true,
+        "message": "first observed divergence in loss_accounting; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 187677,
+        "persisted_artifact_bytes": 1739,
+        "primary_difference": {
+          "baseline": "4.0",
+          "candidate": "2.0",
+          "max_abs_error": null,
+          "max_rel_error": null,
+          "path": "loss_accounting.denominator",
+          "reason": "value"
+        },
+        "process_ids": [
+          1390082,
+          1390092,
+          1390102
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "PASS",
+      "name": "clean_amp",
+      "repeat": 0,
+      "result": {
+        "all_differences": [],
+        "case": "experiments.gate5.cases:AmpCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same ordered CUDA samples and explicit reduction under GradScaler",
+        "first_observed_phase": null,
+        "loss_normalization_captured": true,
+        "message": "declared executions are equivalent for one optimizer-update boundary",
+        "outcome": "PASS",
+        "peak_temporary_directory_bytes": 189468,
+        "persisted_artifact_bytes": 592,
+        "primary_difference": null,
+        "process_ids": [
+          1390114,
+          1390124,
+          1390134
+        ],
+        "verified_equal_initial_state": true
+      }
+    },
+    {
+      "expected": "FAIL",
+      "name": "amp_unscale_scaler_timing",
+      "repeat": 0,
+      "result": {
+        "all_differences": [
+          {
+            "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-36.66972351074219])",
+            "candidate": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-586.715576171875])",
+            "max_abs_error": 550.0458526611328,
+            "max_rel_error": 15.0,
+            "path": "gradient.weight",
+            "reason": "tensor_value"
+          }
+        ],
+        "case": "experiments.gate5.cases:AmpCase",
+        "comparison_policy": "explicit_tolerance",
+        "equivalence": "same ordered CUDA samples and explicit reduction under GradScaler",
+        "first_observed_phase": "gradient",
+        "loss_normalization_captured": true,
+        "message": "first observed divergence in gradient; not a root-cause claim",
+        "outcome": "FAIL",
+        "peak_temporary_directory_bytes": 189468,
+        "persisted_artifact_bytes": 1294,
+        "primary_difference": {
+          "baseline": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-36.66972351074219])",
+          "candidate": "tensor(shape=(1, 1), dtype=torch.float32, device=cuda:0, values=[-586.715576171875])",
+          "max_abs_error": 550.0458526611328,
+          "max_rel_error": 15.0,
+          "path": "gradient.weight",
+          "reason": "tensor_value"
+        },
+        "process_ids": [
+          1390147,
+          1390166,
+          1394988
+        ],
+        "verified_equal_initial_state": true
+      }
+    }
+  ],
+  "schema_version": 1,
+  "torch": "2.7.0+cu126"
+}
