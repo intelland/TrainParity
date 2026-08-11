@@ -492,6 +492,6 @@
   separate clean environments and runs all three installed quickstarts from
   outside the repository. GPU claims remain limited to the accepted PyTorch
   2.7.0 same-device fixtures.
-- **Reason:** M3 array job `59002218` passed every row. PyTorch 2.14 and other
+- **Reason:** M3 resolver-aware array job `59002633` passed every row. PyTorch 2.14 and other
   Python versions remain untested, so the range stops before 2.14 rather than
   extrapolating from the current release.
