@@ -1,9 +1,9 @@
 """Explicit accumulation semantics for the pinned ImageNet recipe."""
 
 import torch
+from imagenet import main
 from torch.nn import functional as F
 
-from imagenet import main
 from trainparity import LossAccounting, TrainingState
 
 

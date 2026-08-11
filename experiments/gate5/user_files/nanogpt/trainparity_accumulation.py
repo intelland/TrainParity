@@ -1,9 +1,9 @@
 """Explicit accumulation semantics for the pinned nanoGPT model."""
 
 import torch
+from model import GPT, GPTConfig
 from torch.nn import functional as F
 
-from model import GPT, GPTConfig
 from trainparity import LossAccounting, TrainingState
 
 
