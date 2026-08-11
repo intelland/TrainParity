@@ -82,3 +82,7 @@ large-model combinations are not covered by this matrix.
 An optional same-device replay on the configured M3 cluster is:
 `sbatch scripts/slurm_gpu_matrix.sbatch --gate 3`. It requires the documented
 cluster environment and is not a portable launcher.
+
+The Gate 7 CPU release check can be replayed on M3 with
+`sbatch scripts/slurm_gate7_release.sbatch --gate 7`; it builds both archives,
+creates a new wheel environment, and runs the three installed examples.
