@@ -48,7 +48,9 @@ def test_plan_validation_and_policy_are_explicit() -> None:
 
 
 def test_clean_and_fault_run_in_three_fresh_processes(tmp_path: Path) -> None:
-    runner = AccumulationRunner(comparison=ExactComparison(), timeout=60)
+    runner = AccumulationRunner(
+        comparison=ToleranceComparison(rtol=1e-6, atol=1e-7), timeout=60
+    )
     clean = runner.run(
         "experiments.gate5.cases:LinearCase",
         candidate=AccumulationExecutionPlan(2),

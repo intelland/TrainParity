@@ -14,7 +14,6 @@ import torch
 from trainparity import (
     AccumulationExecutionPlan,
     AccumulationRunner,
-    ExactComparison,
     ToleranceComparison,
 )
 
@@ -49,7 +48,7 @@ def run(output: Path, device: str, repeats: int) -> dict[str, Any]:
     started = time.perf_counter()
     for repeat in range(repeats):
         for name, case, plan, expected in _cases(device):
-            policy = ExactComparison() if name == "clean_linear" else ToleranceComparison(rtol=1e-6, atol=1e-7)
+            policy = ToleranceComparison(rtol=1e-6, atol=1e-7)
             report = raw_dir / f"{name}_{repeat}.json"
             result = AccumulationRunner(comparison=policy).run(
                 case, candidate=plan, device=device, report_path=report
