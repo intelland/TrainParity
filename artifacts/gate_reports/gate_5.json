@@ -115,7 +115,7 @@
     "gpu_rows": 12,
     "max_per_run_persisted_artifact_bytes": 1888,
     "peak_temporary_directory_bytes": 23237352,
-    "recorded_persisted_artifact_bytes": 67954
+    "recorded_persisted_artifact_bytes": 68485
   },
   "outcome": "GO",
   "preservation": {
@@ -177,12 +177,12 @@
           "message": "declared executions are equivalent for one optimizer-update boundary",
           "outcome": "PASS",
           "peak_temporary_directory_bytes": 23237352,
-          "persisted_artifact_bytes": 0,
+          "persisted_artifact_bytes": 603,
           "primary_difference": null,
           "process_ids": [
-            1730092,
-            1736005,
-            1742905
+            2761714,
+            2768273,
+            2775410
           ],
           "verified_equal_initial_state": true
         },
@@ -210,12 +210,12 @@
           "message": "declared executions are equivalent for one optimizer-update boundary",
           "outcome": "PASS",
           "peak_temporary_directory_bytes": 317736,
-          "persisted_artifact_bytes": 0,
+          "persisted_artifact_bytes": 613,
           "primary_difference": null,
           "process_ids": [
-            1759753,
-            1762915,
-            1765384
+            2791879,
+            2794988,
+            2797923
           ],
           "verified_equal_initial_state": true
         },
@@ -235,6 +235,17 @@
     "resolution": "user fixture explicitly excludes the ambiguous tied parameter from its optimizer; production mapping remains strict"
   },
   "test_summary": {
-    "outcome": "PENDING"
+    "build": "PASS",
+    "coverage_percent": 92.54,
+    "gate_0_through_4_isolated_verifier_replay": "PASS (Gate 1 requires built dist copied into isolated tree)",
+    "gate_4_friction_verifier_replay": "PASS",
+    "gate_4b_verifier_replay": "PASS",
+    "lint": "PASS",
+    "m3_python": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+    "outcome": "PASS",
+    "test_command": "make test PYTHON=/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+    "tests_failed": 0,
+    "tests_passed": 107,
+    "typecheck": "PASS"
   }
 }

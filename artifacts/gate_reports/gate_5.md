@@ -14,7 +14,7 @@ optimizer-update boundary. Human review is required before Gate 6.
 - Same-device GPU faults: 8/8 including AMP timing, NVIDIA L40S, job `58980407`
 - Verified-equal initial state and three distinct fresh PIDs: yes
 - Peak temporary-directory disk: 23237352 bytes
-- Persisted recorded evidence: 67954 bytes
+- Persisted recorded evidence: 68485 bytes
 
 ## First observed divergences
 
