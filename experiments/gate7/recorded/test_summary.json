@@ -4,8 +4,8 @@
   "coverage_percent": 90.9,
   "lint": "PASS",
   "m3_python": "3.11.15",
-  "m3_release_check": "PENDING",
-  "m3_release_job_id": "58994585",
+  "m3_release_check": "PASS",
+  "m3_release_job_id": "58995900",
   "public_api": "PASS",
   "public_api_name_count": 30,
   "public_api_names": [

@@ -1,0 +1,158 @@
+{
+  "blockers": [],
+  "dependency_licenses": [
+    {
+      "dependency": "torch>=2.7,<2.8",
+      "license": "BSD-3-Clause",
+      "source": "https://github.com/pytorch/pytorch/blob/v2.7.0/LICENSE"
+    }
+  ],
+  "distributions": {
+    "sdist": {
+      "bytes": 97977,
+      "file": "trainparity-0.1.0rc1.tar.gz",
+      "files": [
+        "CHANGELOG.md",
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "MANIFEST.in",
+        "PKG-INFO",
+        "README.md",
+        "SECURITY.md",
+        "docs/api.md",
+        "docs/assets/social-preview.png",
+        "docs/assets/social-preview.svg",
+        "docs/comparison-with-traincheck.md",
+        "docs/design.md",
+        "docs/development-provenance.md",
+        "docs/limitations.md",
+        "docs/name-availability.md",
+        "docs/release-notes/0.1.0rc1.md",
+        "docs/validation.md",
+        "pyproject.toml",
+        "setup.cfg",
+        "src/trainparity.egg-info/PKG-INFO",
+        "src/trainparity.egg-info/SOURCES.txt",
+        "src/trainparity.egg-info/dependency_links.txt",
+        "src/trainparity.egg-info/entry_points.txt",
+        "src/trainparity.egg-info/requires.txt",
+        "src/trainparity.egg-info/top_level.txt",
+        "src/trainparity/__init__.py",
+        "src/trainparity/__main__.py",
+        "src/trainparity/accumulation.py",
+        "src/trainparity/accumulation_worker.py",
+        "src/trainparity/api.py",
+        "src/trainparity/assertions.py",
+        "src/trainparity/cli.py",
+        "src/trainparity/comparison.py",
+        "src/trainparity/importing.py",
+        "src/trainparity/optimizer_state.py",
+        "src/trainparity/outcomes.py",
+        "src/trainparity/process_resume.py",
+        "src/trainparity/process_worker.py",
+        "src/trainparity/protocols.py",
+        "src/trainparity/prototypes.py",
+        "src/trainparity/py.typed",
+        "src/trainparity/quickstarts/__init__.py",
+        "src/trainparity/quickstarts/accumulation.py",
+        "src/trainparity/quickstarts/resume.py",
+        "src/trainparity/quickstarts/sample_coverage.py",
+        "src/trainparity/results.py",
+        "src/trainparity/runner.py",
+        "src/trainparity/sample_coverage.py",
+        "src/trainparity/serialization.py",
+        "src/trainparity/snapshot.py",
+        "src/trainparity/state.py",
+        "src/trainparity/version.py",
+        "src/trainparity/worker.py"
+      ],
+      "forbidden_files": [],
+      "secret_matches": [],
+      "sha256": "efc3e88b93eed8ecdb888ee554905e461b065071b1e33d8fba0383e8f5852952"
+    },
+    "wheel": {
+      "bytes": 49123,
+      "file": "trainparity-0.1.0rc1-py3-none-any.whl",
+      "files": [
+        "trainparity-0.1.0rc1.dist-info/METADATA",
+        "trainparity-0.1.0rc1.dist-info/RECORD",
+        "trainparity-0.1.0rc1.dist-info/WHEEL",
+        "trainparity-0.1.0rc1.dist-info/entry_points.txt",
+        "trainparity-0.1.0rc1.dist-info/licenses/LICENSE",
+        "trainparity-0.1.0rc1.dist-info/top_level.txt",
+        "trainparity/__init__.py",
+        "trainparity/__main__.py",
+        "trainparity/accumulation.py",
+        "trainparity/accumulation_worker.py",
+        "trainparity/api.py",
+        "trainparity/assertions.py",
+        "trainparity/cli.py",
+        "trainparity/comparison.py",
+        "trainparity/importing.py",
+        "trainparity/optimizer_state.py",
+        "trainparity/outcomes.py",
+        "trainparity/process_resume.py",
+        "trainparity/process_worker.py",
+        "trainparity/protocols.py",
+        "trainparity/prototypes.py",
+        "trainparity/py.typed",
+        "trainparity/quickstarts/__init__.py",
+        "trainparity/quickstarts/accumulation.py",
+        "trainparity/quickstarts/resume.py",
+        "trainparity/quickstarts/sample_coverage.py",
+        "trainparity/results.py",
+        "trainparity/runner.py",
+        "trainparity/sample_coverage.py",
+        "trainparity/serialization.py",
+        "trainparity/snapshot.py",
+        "trainparity/state.py",
+        "trainparity/version.py",
+        "trainparity/worker.py"
+      ],
+      "forbidden_files": [],
+      "secret_matches": [],
+      "sha256": "cee4c1aad095c74f70dc34c88756acb02ea0dc2407b9faf4e2f893c44792a035"
+    }
+  },
+  "environment_values_recorded_by_default": false,
+  "historical_metadata_policy": "Machine paths and cluster/user identifiers in accepted evidence, development provenance, and repository-only verification tooling are preserved for auditability and excluded from distributions.",
+  "repository": {
+    "checkpoint_dataset_cache_files": [],
+    "large_files_over_5mb": [],
+    "local_metadata_summary": {
+      "accepted_or_recorded_evidence:cluster_absolute_path": {
+        "files": 18,
+        "occurrences": 537
+      },
+      "accepted_or_recorded_evidence:cluster_username": {
+        "files": 18,
+        "occurrences": 541
+      },
+      "development_provenance:cluster_absolute_path": {
+        "files": 4,
+        "occurrences": 7
+      },
+      "development_provenance:cluster_username": {
+        "files": 4,
+        "occurrences": 7
+      },
+      "development_provenance:windows_absolute_path": {
+        "files": 1,
+        "occurrences": 1
+      },
+      "repository_tooling:cluster_absolute_path": {
+        "files": 2,
+        "occurrences": 4
+      },
+      "repository_tooling:cluster_username": {
+        "files": 2,
+        "occurrences": 5
+      }
+    },
+    "release_facing_local_metadata": {},
+    "secret_matches": []
+  },
+  "schema_version": 1,
+  "status": "PASS",
+  "trainparity_version": "0.1.0rc1"
+}

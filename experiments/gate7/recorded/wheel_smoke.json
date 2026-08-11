@@ -1,0 +1,66 @@
+{
+  "examples": [
+    {
+      "clean": "PASS",
+      "first_observed": "scheduler.last_epoch",
+      "intentional_fail": "FAIL",
+      "module": "trainparity.quickstarts.resume",
+      "schema_version": 1,
+      "trainparity_version": "0.1.0rc1"
+    },
+    {
+      "clean": "PASS",
+      "first_observed": "loss_accounting.denominator",
+      "intentional_fail": "FAIL",
+      "module": "trainparity.quickstarts.accumulation",
+      "schema_version": 1,
+      "trainparity_version": "0.1.0rc1"
+    },
+    {
+      "clean": "PASS",
+      "first_observed": "coverage.same_rank_duplicate",
+      "intentional_fail": "FAIL",
+      "module": "trainparity.quickstarts.sample_coverage",
+      "schema_version": 1,
+      "trainparity_version": "0.1.0rc1"
+    }
+  ],
+  "installed_distribution": "trainparity-0.1.0rc1",
+  "public_api_names": [
+    "AccumulationCase",
+    "AccumulationExecutionPlan",
+    "AccumulationResult",
+    "AtLeastOnce",
+    "ComparisonPolicy",
+    "Difference",
+    "ExactComparison",
+    "ExactlyOnce",
+    "ExpectedPadding",
+    "ExternalProcessEvidence",
+    "LossAccounting",
+    "MACHINE_REPORT_SCHEMA_VERSION",
+    "NoCrossRankOverlap",
+    "Outcome",
+    "PACKAGE_VERSION",
+    "ProcessExecutionPlan",
+    "ProcessResumeCase",
+    "ProcessResumeResult",
+    "SampleAnomaly",
+    "SampleCoverageAuditor",
+    "SampleCoverageResult",
+    "SampleObservation",
+    "SampleViolation",
+    "ToleranceComparison",
+    "TrainingState",
+    "audit_rank_iterables",
+    "audit_sample_coverage",
+    "check_accumulation",
+    "check_resume"
+  ],
+  "python": "3.11.15",
+  "schema_version": 1,
+  "source_tree_imported": false,
+  "status": "PASS",
+  "torch": "2.7.0+cpu",
+  "trainparity_version": "0.1.0rc1"
+}

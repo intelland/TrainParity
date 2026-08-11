@@ -454,3 +454,16 @@
   actually exercised; do not imply future-version support.
 - **Reason:** Open-ended dependency metadata would contradict the conservative
   tested-compatibility claim required at the release gate.
+
+## D-0042: Recommend the audited 0.1 release candidate for human review
+
+- **Status:** Proposed for final human review
+- **Date:** 2026-08-11
+- **Decision:** Gate 7 is `PASS` with recommendation
+  `READY_FOR_HUMAN_REVIEW`. Stop without publishing, tagging, creating a GitHub
+  release, changing repository visibility, renaming, merging the draft PR, or
+  beginning a later Gate.
+- **Reason:** The stable API, versioned reports, installed examples, exact
+  compatibility claims, documentation, clean wheel, distribution audit,
+  accepted-evidence hashes, user document hash, M3 release check, and hosted CI
+  all pass with no release blocker.

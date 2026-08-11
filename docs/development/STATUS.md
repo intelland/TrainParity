@@ -2,9 +2,9 @@
 
 ## Active gate
 
-Gate 6 is accepted with outcome `INCLUDE_MODULE`. Gate 7 release-candidate
-preparation is active. No release, tag, publication, repository visibility
-change, or later Gate is authorized.
+Gate 7 release-candidate preparation is complete with status `PASS` and
+recommendation `READY_FOR_HUMAN_REVIEW`. No release, tag, publication,
+repository visibility change, or later Gate is authorized.
 
 ## Objective
 
@@ -57,10 +57,10 @@ python scripts/verify_gate.py 7
 git diff --check
 ```
 
-The final Gate 7 report will record the frozen API, example outcomes, exact
+The final Gate 7 report records the frozen API, example outcomes, exact
 compatibility evidence, source/distribution audit, clean-environment wheel
 test, package/repository-name check, historical verifier results, hosted CI,
-and any remaining limitation or blocked criterion.
+and remaining limitations. No criterion is blocked.
 
 ## Current state
 
@@ -246,3 +246,31 @@ unintended content, and preserve accepted evidence plus the user's uncommitted
 accepted Gate verifier, `python scripts/verify_gate.py 7`, and hosted CPU CI.
 PyPI publication, tags/releases, visibility changes, automatic renaming, and
 all irreversible remote release actions remain prohibited.
+
+Gate 7 implementation and verification are complete. The frozen public surface
+contains 30 top-level names including `__version__`; public reports use schema
+version 1 and package version `0.1.0rc1`. All three installed CPU examples pass
+their clean case and fail their intentional case at the expected first observed
+path. M3 Slurm job `58995900` completed `make release-check`: Ruff, strict Mypy,
+141 tests at 90.90% coverage, wheel/sdist build, new-environment wheel install,
+three examples outside the repository, and the zero-blocker release audit.
+
+The final archives are `trainparity-0.1.0rc1-py3-none-any.whl` and
+`trainparity-0.1.0rc1.tar.gz`. Gate experiments, accepted evidence, development
+plans, launch drafts, and historical Gate documents are excluded. The audit
+found no secret-like credentials or release-facing local metadata. Historical
+machine/user paths remain only in preserved evidence, development provenance,
+and repository-only tooling.
+
+Draft PR `#4` targets `gate-6`. Hosted GitHub Actions run `31465100016` at
+commit `8fba5a5cce2090272ef971e54f2a04237cc3953f` passed every configured step,
+including isolated Gate 0-4 replay, Gate 4B/5/6 verification, external product
+surfaces, `make release-check`, the three installed examples, report generation,
+and Gate 7 verification. The final Gate 7 verifier reports `PASS`, 57 unchanged
+accepted-evidence hashes, and the exact user document hash
+`6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300`.
+
+The PyPI endpoint returned 404 for `trainparity` at the recorded check time,
+and GitHub name search found only the existing private owner repository. These
+checks do not reserve the name. Nothing was published, tagged, released,
+renamed, merged, or made public. Gate 7 stops for final human review.
