@@ -199,3 +199,23 @@ Gate 6 verification commands are `make lint`, `make typecheck`, `make test`,
 `python scripts/verify_gate.py 6`, the dedicated Gate 6 verifier, and
 `git diff --check`. The final report must conclude `INCLUDE_MODULE`,
 `REWORK_MODULE`, or `OMIT_MODULE` and then stop for human review.
+
+Gate 6 implementation and evidence are complete. The CPU-only matrix matched
+17/17 expected four-state outcomes and covers world sizes 1/2/3/4,
+non-divisible lengths, `drop_last`, declared padding, missing IDs, same-rank
+duplication, cross-rank overlap, a custom sampler, finite `IterableDataset`,
+unknown-universe `ABSTAIN`, and multi-epoch shuffle windows. Full regression is
+134 tests at 92.46% coverage. SequentialSampler and DistributedSampler product
+surfaces pass at 15 and 18 user logical LOC with zero upstream modifications.
+
+The 11-logical-line Counter baseline reports flat missing and duplicate IDs.
+TrainParity adds seven recorded structural benefits: rank/worker/epoch/position
+provenance, expected-padding interpretation, finite-universe missing detection,
+same-rank versus cross-rank separation, resume-cursor coverage, deterministic
+first observed violations with four-state JSON, and bounded summaries with
+optional complete evidence. The Gate 6 recommendation is `INCLUDE_MODULE`.
+
+Draft PR `#3` targets `gate-5`. Hosted GitHub Actions run `31456866444` for
+commit `b219358dbccfc17c235ef272c66bfadd2d28b7ed` completed successfully,
+including all prior verifiers and the Gate 6 matrix, product surface, and
+dedicated verifier. Gate 7 has not been started and remains unauthorized.

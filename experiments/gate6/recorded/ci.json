@@ -1,0 +1,29 @@
+{
+  "base_branch": "gate-5",
+  "conclusion": "success",
+  "event": "pull_request",
+  "head_sha": "b219358dbccfc17c235ef272c66bfadd2d28b7ed",
+  "job_id": 93672395654,
+  "job_name": "verify",
+  "pull_request": 3,
+  "run_id": 31456866444,
+  "schema_version": 1,
+  "url": "https://github.com/intelland/TrainParity/actions/runs/31456866444",
+  "verified_steps": [
+    "make lint",
+    "make typecheck",
+    "make test",
+    "make build",
+    "Gate 0-4 isolated verifier replay",
+    "Gate 4 friction verifier",
+    "pinned nanoGPT Gate 4 integration",
+    "Gate 4B wheel-installed nanoGPT fresh-clone case",
+    "Gate 4B verifier",
+    "Gate 5 wheel-installed nanoGPT accumulation surface",
+    "Gate 5 verifier",
+    "Gate 6 CPU policy matrix",
+    "Gate 6 standard-sampler product surface",
+    "Gate 6 verifier"
+  ],
+  "workflow": "CI"
+}

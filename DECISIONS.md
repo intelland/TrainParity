@@ -387,3 +387,15 @@
   expected universe; unknown exactly-once universes return `ABSTAIN`.
 - **Reason:** This preserves observable coverage semantics and four-state
   reporting without expanding TrainParity into a distributed training system.
+
+## D-0036: Recommend inclusion of the bounded sample-coverage module
+
+- **Status:** Proposed for human review
+- **Date:** 2026-08-11
+- **Decision:** Recommend `INCLUDE_MODULE` after Gate 6 and stop before Gate 7.
+  Retain only the four explicit policies, stable-ID inputs, bounded summaries,
+  optional complete evidence, and four-state outcomes implemented in Gate 6.
+- **Reason:** Two standard PyTorch sampler integrations require 15 and 18 user
+  logical LOC with zero upstream edits. Compared with the 11-line flat
+  `Counter` baseline, the module demonstrates seven structural benefits while
+  all 17 formal CPU rows, 134 tests, historical verifiers, and hosted CI pass.
