@@ -21,7 +21,7 @@ PROJECTS = {
 def _run(command: list[str], cwd: Path, environment: dict[str, str] | None = None) -> str:
     completed = subprocess.run(command, cwd=cwd, env=environment, capture_output=True, text=True, check=False)
     if completed.returncode:
-        raise RuntimeError(f"command failed: {command!r}\n{completed.stderr[-2000:]}")
+        raise RuntimeError(f"command failed: {command!r}\n{completed.stdout[-1000:]}\n{completed.stderr[-2000:]}")
     return completed.stdout
 
 
@@ -29,7 +29,7 @@ def _logical_loc(path: Path) -> int:
     return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip() and not line.lstrip().startswith("#"))
 
 
-def run(root: Path, wheel: Path, output: Path, device: str) -> dict[str, Any]:
+def run(root: Path, wheel: Path, output: Path, device: str, dependency_path: Path | None) -> dict[str, Any]:
     rows = []
     source = Path(__file__).parent / "user_files"
     for name, (url, commit) in PROJECTS.items():
@@ -44,7 +44,10 @@ def run(root: Path, wheel: Path, output: Path, device: str) -> dict[str, Any]:
         _run([sys.executable, "-m", "pip", "install", "--no-deps", "--target", str(site), str(wheel)], clone)
         report = clone / ".trainparity_report.json"
         environment = os.environ.copy()
-        environment["PYTHONPATH"] = os.pathsep.join((str(site), str(user), str(clone)))
+        paths = [str(site), str(user), str(clone)]
+        if dependency_path is not None:
+            paths.append(str(dependency_path))
+        environment["PYTHONPATH"] = os.pathsep.join(paths)
         environment["TRAINPARITY_GATE5_DEVICE"] = device
         _run([sys.executable, str(user / "test_accumulation.py"), str(report)], clone, environment)
         tracked = _run(["git", "diff", "--numstat", commit], clone).strip()
@@ -74,9 +77,13 @@ def main() -> int:
     parser.add_argument("--wheel", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--dependency-path", type=Path)
     arguments = parser.parse_args()
     arguments.root.mkdir(parents=True, exist_ok=True)
-    payload = run(arguments.root, arguments.wheel, arguments.output, arguments.device)
+    payload = run(
+        arguments.root, arguments.wheel, arguments.output, arguments.device,
+        arguments.dependency_path,
+    )
     passed = all(row["result"]["outcome"] == "PASS" and row["total_user_logical_loc"] <= 50 and row["upstream_modified_loc"] == 0 for row in payload["projects"])
     print(json.dumps({"projects": len(payload["projects"]), "passed": passed}))
     return 0 if passed else 1
