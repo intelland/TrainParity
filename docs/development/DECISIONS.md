@@ -495,3 +495,18 @@
 - **Reason:** M3 resolver-aware array job `59002633` passed every row. PyTorch 2.14 and other
   Python versions remain untested, so the range stops before 2.14 rather than
   extrapolating from the current release.
+
+## D-0045: Recommend the hardened release surface for final human review
+
+- **Status:** Proposed for final publication review
+- **Date:** 2026-08-11
+- **Decision:** Gate 7I is `PASS` with recommendation
+  `READY_FOR_FINAL_PUBLICATION_REVIEW`. Retain the 11-name top-level API, the
+  documented advanced API, the tested `torch>=2.7,<2.14` range, the split
+  least-privilege workflows, and the protected-environment OIDC release
+  workflow. Stop without executing any publication action.
+- **Reason:** M3 jobs `59002633` and `59004150` passed compatibility and full
+  release verification, including 146 tests, all accepted Gate verifiers,
+  installed-wheel examples, Twine, security/archive checks, unchanged evidence
+  hashes, and the exact user-document hash. The release workflow remains
+  deliberately unexecuted until explicit human publication approval.

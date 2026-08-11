@@ -1,0 +1,12 @@
+{
+  "coverage_percent": 90.30837004405286,
+  "errors": 0,
+  "failures": 0,
+  "gate": "7I",
+  "job_id": "59004150",
+  "passed": 146,
+  "schema_version": 1,
+  "skipped": 0,
+  "status": "PASS",
+  "tests": 146
+}

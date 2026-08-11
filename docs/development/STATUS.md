@@ -298,3 +298,23 @@ quickstarts, Twine metadata/README rendering checks, workflow contract tests,
 repository/archive security audit, link inventory verification, and hosted
 CI/validation where their non-release triggers permit. Gate 7I stops for human
 publication review.
+
+Gate 7I implementation and M3 verification are complete. Compatibility array
+job `59002633` passed Python 3.11 with resolver-installed CPU PyTorch 2.7.0,
+2.10.0, and 2.13.0; every row installed the built wheel outside the source
+tree and produced three clean `PASS` results plus three intentional `FAIL`
+results. Full release job `59004150` completed with exit code 0: Ruff, strict
+Mypy, 146 tests at 90.31% coverage, the complete accepted Gate 0-7 verifier
+sequence, wheel/sdist build, source-external wheel smoke, all three examples,
+Twine checks, release/archive audit, Gate 7I report generation, real-path
+human-review bundle generation, and the dedicated Gate 7I verifier all passed.
+
+The top-level public surface is the required 11 names; advanced supported
+objects remain under `trainparity.api`; the three accidental public names and
+Gate-era compatibility re-exports are absent. The README integration is a
+complete 30-logical-line case run by CI, and validation counts are explicitly
+described as the reproducible suite rather than universal detection rates.
+All 57 accepted-evidence hashes and the user's byte-exact document hash remain
+unchanged. Publication is still held: no PyPI upload, tag, release, rename, or
+visibility change has occurred. Hosted pull-request CI remains the last
+non-release verification step before final human review.
