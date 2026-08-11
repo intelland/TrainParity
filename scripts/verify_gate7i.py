@@ -173,12 +173,9 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
         _require(_hash(root / relative) == expected, f"accepted evidence {relative}")
     document_hash = _hash(root / "CODEX_REMOTE_DEVELOPMENT.md")
     allowed_document_hashes = {
-        "6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300"
+        "6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300",
+        gate7["preservation"]["tracked_remote_development_sha256"],
     }
-    if fast:
-        allowed_document_hashes.add(
-            gate7["preservation"]["tracked_remote_development_sha256"]
-        )
     _require(document_hash in allowed_document_hashes, "user document")
     if not fast:
         compatibility = _load(root / "artifacts/gate_reports/gate_7i_compatibility.json")
