@@ -103,6 +103,12 @@ def execute(case_spec: str, plan: AccumulationExecutionPlan, device: str, seed: 
     """Execute one plan and return serialized bounded observations."""
     random.seed(seed)
     torch.manual_seed(seed)
+    try:
+        import numpy as np
+
+        np.random.seed(seed)
+    except ImportError:
+        pass
     if device.startswith("cuda"):
         torch.cuda.manual_seed_all(seed)
     case = load_accumulation_case(case_spec)
