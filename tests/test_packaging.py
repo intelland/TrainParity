@@ -7,9 +7,9 @@ from pathlib import Path
 def test_production_dependencies_are_minimal_and_documented() -> None:
     root = Path(__file__).resolve().parents[1]
     project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
-    assert project["dependencies"] == ["torch>=2.5"]
+    assert project["dependencies"] == ["torch>=2.7,<2.8"]
     readme = (root / "README.md").read_text(encoding="utf-8")
-    assert "sole production dependency is `torch>=2.5`" in readme
+    assert "CPython 3.11 and PyTorch 2.7.0" in readme
 
 
 def test_forbidden_runtime_dependencies_are_absent() -> None:

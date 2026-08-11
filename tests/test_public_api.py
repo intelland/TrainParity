@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import torch
+
 import trainparity
 from trainparity import api
 from trainparity.api import (
@@ -55,3 +57,26 @@ def test_three_quickstarts_have_clean_pass_and_intentional_fail() -> None:
         assert isinstance(fault, dict) and fault["outcome"] == "FAIL"
         assert clean["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
         assert fault["trainparity_version"] == PACKAGE_VERSION
+
+
+def test_quickstart_case_semantics_are_directly_observable(tmp_path: Path) -> None:
+    accumulation_case = accumulation.Case()
+    state = accumulation_case.build(seed=17, device="cpu")
+    batch = accumulation_case.batch("cpu")
+    accounting = accumulation_case.loss(state, batch)
+    assert accounting.denominator == 4
+    assert torch.isfinite(accounting.value)
+
+    continuous = tmp_path / "continuous"
+    resume._train(continuous, end_step=2, resume_from=None, fault=False)
+    checkpoint = continuous / "checkpoint.pt"
+    saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
+    assert saved["step"] == saved["scheduler"]["last_epoch"] == 2
+
+    interrupted = tmp_path / "interrupted"
+    resume._train(interrupted, end_step=4, resume_from=checkpoint, fault=True)
+    faulty = torch.load(
+        interrupted / "checkpoint.pt", map_location="cpu", weights_only=True
+    )
+    assert faulty["step"] == 4
+    assert faulty["scheduler"]["last_epoch"] == 2

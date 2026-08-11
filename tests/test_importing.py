@@ -36,5 +36,6 @@ def test_case_imports_in_fresh_process(tmp_path: Path) -> None:
         "case": CASE_SPEC,
         "class": "CorrectResumeCase",
         "protocol": "ResumeCase",
+        "schema_version": 1,
+        "trainparity_version": "0.1.0rc1",
     }
-
