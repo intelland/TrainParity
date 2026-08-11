@@ -6,9 +6,9 @@ import argparse
 import json
 import os
 import random
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import torch
 
@@ -18,7 +18,7 @@ from trainparity.optimizer_state import canonicalize_optimizer
 from trainparity.outcomes import Outcome
 from trainparity.protocols import LossAccounting, TrainingState
 from trainparity.serialization import encode_snapshot
-from trainparity.snapshot import Snapshot, capture_snapshot
+from trainparity.snapshot import Snapshot, Stateful, capture_snapshot
 from trainparity.state import FrozenMapping, FullValueBackend, nested_named_values
 
 
@@ -46,8 +46,11 @@ def _gradient_state(state: TrainingState) -> dict[str, object]:
 
 def _scheduler_state(state: TrainingState) -> dict[str, object]:
     scheduler = None if state.scheduler is None else dict(state.scheduler.state_dict())
-    scaler_method = getattr(state.scaler, "state_dict", None)
-    scaler = None if not callable(scaler_method) else dict(scaler_method())
+    scaler_method = cast(
+        Callable[[], Mapping[str, object]] | None,
+        getattr(state.scaler, "state_dict", None),
+    )
+    scaler = None if scaler_method is None else dict(scaler_method())
     return {"scheduler": scheduler, "scaler": scaler}
 
 
@@ -102,7 +105,7 @@ def execute(case_spec: str, plan: AccumulationExecutionPlan, device: str, seed: 
     state = case.build(seed, device)
     captured = capture_snapshot(
         state.model, step=0, optimizer=state.optimizer, scheduler=state.scheduler,
-        scaler=state.scaler, capture_rng=True,
+        scaler=cast(Stateful | None, state.scaler), capture_rng=True,
     )
     if captured.outcome is not Outcome.PASS or captured.snapshot is None:
         return {
