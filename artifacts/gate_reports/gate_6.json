@@ -1,0 +1,263 @@
+{
+  "commands": [
+    "make lint",
+    "make typecheck",
+    "make test",
+    "make build",
+    "python -m experiments.gate6.run_matrix --output outputs/gate6/cpu_matrix.json",
+    "python -m experiments.gate6.run_product_surface --output outputs/gate6/product_surface.json",
+    "python scripts/verify_gate.py 0",
+    "python scripts/verify_gate.py 1",
+    "python scripts/verify_gate.py 2",
+    "python scripts/verify_gate.py 3",
+    "python scripts/verify_gate.py 4",
+    "python scripts/verify_gate4_friction_audit.py",
+    "python scripts/verify_gate4b.py",
+    "python scripts/verify_gate5.py",
+    "python scripts/verify_gate.py 6",
+    "git diff --check"
+  ],
+  "counter_baseline": {
+    "classification": "minimal flat missing/duplicate baseline",
+    "diagnostic_output": [
+      "missing IDs",
+      "duplicate IDs"
+    ],
+    "file": "experiments/gate6/counter_baseline.py",
+    "logical_loc": 11,
+    "max_trainparity_user_loc": 18,
+    "project_specificity": "assumes one flat ID stream and one finite expected set",
+    "structural_benefits": [
+      "rank, optional worker, epoch, and position provenance for every observed ID",
+      "declared expected-padding count plus repeated IDs and involved ranks",
+      "missing detection against a reliable finite expected universe with unknown-universe ABSTAIN",
+      "same-rank duplication distinct from cross-rank overlap",
+      "resume-cursor coverage by combining observations from one declared window",
+      "deterministic first observed violation with PASS/FAIL/ABSTAIN/ERROR JSON",
+      "bounded summaries plus optional complete trajectory evidence"
+    ]
+  },
+  "gate": 6,
+  "gate5_carry_forward": {
+    "accepted_gate_0_through_4b_hashes_verified_unchanged": true,
+    "gpu_rerun_for_carry_forward": false,
+    "tied_parameter_observation_scope": {
+      "full_gradient_includes": [
+        "gradient.transformer.wte.weight",
+        "gradient.lm_head.weight"
+      ],
+      "full_model_parameters_include": [
+        "model.transformer.wte.weight",
+        "model.lm_head.weight"
+      ],
+      "optimizer_excludes": [
+        "transformer.wte.weight",
+        "lm_head.weight"
+      ],
+      "optimizer_includes": "every other unique parameter returned by model.parameters()",
+      "optimizer_state_for_tied_parameter": "excluded",
+      "production_project_specific_mapping_rule_added": false,
+      "reason": "the two names identify one shared Parameter and strict canonicalization ABSTAINS when that object appears in an optimizer"
+    }
+  },
+  "gate_7_started": false,
+  "hosted_ci": {
+    "conclusion": "pending"
+  },
+  "limitations": [
+    "The auditor trusts the user-declared expected universe and stable sample-ID extractor.",
+    "Worker provenance is optional because ordinary parent-process DataLoader iteration does not expose it.",
+    "Each call audits one finite declared window; it does not prove sample contents or general shuffle equivalence.",
+    "The production module is materially larger than the Counter baseline because it retains four policies, provenance, deterministic evidence, and four-state errors.",
+    "No DDP launcher, distributed trainer, checkpoint system, GPU path, dashboard, service, or release work was added."
+  ],
+  "metrics": {
+    "device": "cpu",
+    "gpu_work_added": false,
+    "machine_evidence_files": 10,
+    "matrix_rows": 17,
+    "matrix_rows_matching_expected": 17,
+    "production_logical_loc": 443,
+    "recorded_artifact_bytes": 44386,
+    "world_sizes": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "module_decision": "INCLUDE_MODULE",
+  "policies": [
+    "exactly_once",
+    "at_least_once",
+    "no_cross_rank_overlap",
+    "expected_padding"
+  ],
+  "preservation": {
+    "accepted_evidence_sha256": {
+      "artifacts/gate_reports/gate_0.json": "3f72383d025304a8559773ac961b8fae0e1e7f0c21adaa6eb3bae07f2684dcc2",
+      "artifacts/gate_reports/gate_0.md": "29f5fd42ee9a7f51126546e3dc02a558c1925bd7e1f84702fd12b84663eb53ad",
+      "artifacts/gate_reports/gate_1.json": "5267ef045f8163a19a2ab71bfb483440e9778f9aec50d24c80dafab8c823d9ff",
+      "artifacts/gate_reports/gate_1.md": "998443c965f919ff1b4b7aacef1a088906c5b7193fb799b32b0c82ee3b4ccf00",
+      "artifacts/gate_reports/gate_2.json": "a80035c2847d3420593349825fb65fc974cada603a7d8dd09cb46155f1afaeb6",
+      "artifacts/gate_reports/gate_2.md": "5ec23b90b34f30ff5f34d4ba8f483edc2d24852b18c0340bfaae42ead9a03680",
+      "artifacts/gate_reports/gate_3.json": "1c29dbfbbc673f4076acb757f5324e1827a7430fbd33cbd4b861c1d3db587380",
+      "artifacts/gate_reports/gate_3.md": "751295f76f1f600285851d0773efa491c9bca18e494cdd51511f372777d9ce2b",
+      "artifacts/gate_reports/gate_4.json": "247bd525ba98d0fd059af53722838401d55b7d5881d3de0ed04a0d716459b923",
+      "artifacts/gate_reports/gate_4.md": "9d7dbdb9dc93198317bab93826075e1c5d104455a2f9c403b0806834ab0826ba",
+      "artifacts/gate_reports/gate_4_friction_audit.json": "13b4edaaa47eff4d7aba9bcd383f2a528afc49715f1c87d67c87f1dc2bc658ce",
+      "artifacts/gate_reports/gate_4_friction_audit.md": "6a0097a0f1124ee5ef4d7121e63e04122683e2427170d516018d5037d0e7b5be",
+      "artifacts/gate_reports/gate_4b.json": "25e59c95278eafe600fdf359b8638cccc3e03532e9ffb219195dd158bdb63f50",
+      "artifacts/gate_reports/gate_4b.md": "4339d44bb47fdd29fd7171680d3e5542cabfb0dd325164393f6c10c6e2db6282",
+      "artifacts/gate_reports/gate_5.json": "c6f9be8bdd1d96616c1fda1584adf27f40e63770038d913b8c85fed2f538f1f4",
+      "artifacts/gate_reports/gate_5.md": "fd0133e92c91f0b8e53113c17191e11294c204ab1edc42baae975340a1a6d0c5",
+      "docs/GATE5_ACCUMULATION_CONTRACT.md": "b1b837af4da3e153f50b67f701a9df78087408a0600ef6bfb12273b91729b773",
+      "experiments/gate0/recorded/fault_matrix.json": "3006acba2857040d2e5b1851886b3abd052e3601fcd26812fd6c6b8e5d980a81",
+      "experiments/gate0/recorded/traincheck_summary.json": "cd6d57bab81b4a3b31c64ee1942e61d673c868155883fc3ec85e174f9acc4df7",
+      "experiments/gate1/recorded/adapter_evaluation.json": "a9e9618cea4ca0c1494c64a0f059eff447232f781a18e89ad7bafdb212714054",
+      "experiments/gate2/recorded/ci_ae75212.json": "ac3d0f9268057d4d3a5bdf7133954b628eb6c09a378b30a1a0491cdba32c9bda",
+      "experiments/gate2/recorded/coverage.json": "27e0e06409360d5d8e0f9cf43765daba9069bcbddde75e450d48e7f851129abd",
+      "experiments/gate2/recorded/fault_suite.json": "bc9a4365c62b68a7f66e9ea81a2af43d75bca01d98048d4f1487ff9f5e3c3186",
+      "experiments/gate3/recorded/cpu_matrix.json": "311f3a466d1c27dc2422c422235b8ed625017042d921d470c1d43d72bc77b00b",
+      "experiments/gate3/recorded/gpu_matrix.json": "4b4a8b65937e9ff6204a97e0fc71e398425186551c0f99a2c627795e10d88be3",
+      "experiments/gate3/recorded/test_summary.json": "9b42edf052bec0a8ad813972e9e6fbfe9298891616cf6db54356a47bf525f30f",
+      "experiments/gate4/recorded/ci.json": "b339bc391a0697aed5a24252482939714a185471d88a26ae3a7dc04a0597069e",
+      "experiments/gate4/recorded/matrix.json": "672053ccac0e7b27bb3fe0960a6311e1c224163a57400634149c0640f5a15b05",
+      "experiments/gate4/recorded/test_summary.json": "b88e0f2a86ccaa4ece1e74d0d7c96209840127fb0b0e042ee35412115119619b",
+      "experiments/gate4b/recorded/ci.json": "d3d1a9329e121be4624444992d49e66743877865f14c7180cbf9d59bf9aa7e43",
+      "experiments/gate4b/recorded/matrix.json": "8d93959da310434863d5c00949ec7d7a600527663a0a47efb691b028486d0e5c",
+      "experiments/gate4b/recorded/profile_post.json": "1f22a5726dae83fe6caee9ae859767f774c5cc22582d4a3e18f94c781b7d017e",
+      "experiments/gate4b/recorded/profile_pre.json": "c4be84e6892c87407643f81d7a3eb7cc5b15000cbce283cf684cf38ed5cc51c1",
+      "experiments/gate4b/recorded/test_summary.json": "c124c3a494c66d1ce14948049c1bb60ef700e872cb242e98a27e3bc2308cd0e8",
+      "experiments/gate5/recorded/ci.json": "6007da0a1c36f6c2f0024c8c4dc802967e2de130f4372d1adf0cbcc10bb18d26",
+      "experiments/gate5/recorded/cpu_matrix.json": "526fc64f8223b760dd7f3c0c5ad11c0f7a956131cc76636709dd768a3cca078e",
+      "experiments/gate5/recorded/gpu_matrix.json": "67211909483836da94c7cda7ca4ff7544a3b2bf9bc7eb9d88cfea27bc467f5e5",
+      "experiments/gate5/recorded/imagenet_batchnorm_training_non_equivalence.json": "e47a6d17bb900f4d41ea6681d29619d7a61434d0cdafda437c41096380c4e291",
+      "experiments/gate5/recorded/nanogpt_ambiguous_optimizer_abstain.json": "7b32c5bf0dfc683c3211b0c66a2069ca637351a9eb63e1b5c67af47bd7ada24e",
+      "experiments/gate5/recorded/product_surface.json": "881403c7336ee4662f9933f8d5a55b894504d4d30fbf973f80904f98df3fc951",
+      "experiments/gate5/recorded/test_summary.json": "d0a45f18d93f6325e269c1fef5d9e2d6b9c7cc05e787035c0ea05fb149911fa9"
+    },
+    "tracked_remote_development_sha256": "0733f2f98c05979f666a02a4d1bf5eb1e3a060271010f7bc7f1fd9d3e3242684",
+    "user_uncommitted_remote_development_sha256": "6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300"
+  },
+  "product_surface": {
+    "cases": [
+      {
+        "case": "sequential_sampler",
+        "result": {
+          "actual_padding_count": null,
+          "anomaly_examples": [],
+          "cross_rank_overlap_id_count": 0,
+          "evidence_path": null,
+          "expected_id_count": 11,
+          "expected_padding_count": null,
+          "first_violation": null,
+          "message": "every expected sample ID was observed exactly once",
+          "missing_id_count": 0,
+          "outcome": "PASS",
+          "policy": "exactly_once",
+          "repeated_id_count": 0,
+          "same_rank_duplicate_id_count": 0,
+          "total_observations": 11,
+          "unexpected_id_count": 0,
+          "unique_observed_ids": 11
+        },
+        "returncode": 0,
+        "sampler": "torch.utils.data.SequentialSampler",
+        "upstream_modified_loc": 0,
+        "user_file": "experiments/gate6/user_files/sequential_sampler.py",
+        "user_required_logical_loc": 15
+      },
+      {
+        "case": "distributed_sampler",
+        "result": {
+          "actual_padding_count": 2,
+          "anomaly_examples": [
+            {
+              "epochs": [
+                0
+              ],
+              "kind": "cross_rank_overlap+repeated_id",
+              "occurrence_count": 2,
+              "ranks": [
+                0,
+                1
+              ],
+              "sample_id": 0,
+              "workers": []
+            },
+            {
+              "epochs": [
+                0
+              ],
+              "kind": "cross_rank_overlap+repeated_id",
+              "occurrence_count": 2,
+              "ranks": [
+                1,
+                2
+              ],
+              "sample_id": 1,
+              "workers": []
+            }
+          ],
+          "cross_rank_overlap_id_count": 2,
+          "evidence_path": null,
+          "expected_id_count": 10,
+          "expected_padding_count": 2,
+          "first_violation": null,
+          "message": "observed repetitions match the declared padding policy",
+          "missing_id_count": 0,
+          "outcome": "PASS",
+          "policy": "expected_padding",
+          "repeated_id_count": 2,
+          "same_rank_duplicate_id_count": 0,
+          "total_observations": 12,
+          "unexpected_id_count": 0,
+          "unique_observed_ids": 10
+        },
+        "returncode": 0,
+        "sampler": "torch.utils.data.DistributedSampler",
+        "upstream_modified_loc": 0,
+        "user_file": "experiments/gate6/user_files/distributed_sampler.py",
+        "user_required_logical_loc": 18
+      }
+    ],
+    "schema_version": 1
+  },
+  "requirements_exercised": [
+    "at_least_once",
+    "cross_rank_overlap",
+    "custom_sampler",
+    "drop_last",
+    "expected_padding",
+    "finite_iterable_dataset",
+    "missing_ids",
+    "multi_epoch_shuffle",
+    "non_divisible",
+    "padding_duplicate",
+    "same_rank_distinct_condition",
+    "same_rank_duplication",
+    "unknown_universe_abstain",
+    "world_size_1",
+    "world_size_2",
+    "world_size_3",
+    "world_size_4"
+  ],
+  "schema_version": 1,
+  "scope": "cpu_only_sample_coverage_audit",
+  "semantics": {
+    "complete_evidence_optional": true,
+    "empty_universe_distinct_from_unknown": true,
+    "expected_padding_reports_ids_ranks_and_count": true,
+    "first_observed_not_root_cause": true,
+    "same_rank_and_cross_rank_distinct": true,
+    "stable_id_extractor_only": true,
+    "terminal_output_bounded": true,
+    "unknown_universe_exactly_once": "ABSTAIN"
+  },
+  "status": "PASS",
+  "summary": "Explicit coverage policies add structured distributed provenance and padding semantics beyond the Counter baseline without owning distributed execution.",
+  "test_summary": {
+    "outcome": "PENDING"
+  }
+}

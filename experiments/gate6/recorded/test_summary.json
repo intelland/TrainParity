@@ -1,0 +1,12 @@
+{
+  "build": "PENDING",
+  "coverage_percent": 92.46,
+  "lint": "PASS",
+  "m3_python": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+  "outcome": "PASS",
+  "prior_gate_verifiers": "PENDING",
+  "test_command": "make test PYTHON=/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python with current-tree PYTHONPATH",
+  "tests_failed": 0,
+  "tests_passed": 134,
+  "typecheck": "PASS"
+}
