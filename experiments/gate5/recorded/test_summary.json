@@ -1,0 +1,11 @@
+{
+  "build": "PENDING",
+  "coverage_percent": 92.54,
+  "lint": "PENDING",
+  "m3_python": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+  "outcome": "PASS",
+  "test_command": "make test PYTHON=/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
+  "tests_failed": 0,
+  "tests_passed": 107,
+  "typecheck": "PENDING"
+}

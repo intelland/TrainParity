@@ -78,3 +78,18 @@ jobs:
           if [ -f artifacts/gate_reports/gate_4b.json ]; then
             python scripts/verify_gate4b.py
           fi
+      - name: Run Gate 5 wheel-installed nanoGPT accumulation surface
+        run: |
+          mkdir -p "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user" "$RUNNER_TEMP/gate5-site"
+          git -C "$RUNNER_TEMP/gate5-nanogpt" init
+          git -C "$RUNNER_TEMP/gate5-nanogpt" remote add origin https://github.com/karpathy/nanoGPT.git
+          git -C "$RUNNER_TEMP/gate5-nanogpt" fetch --depth 1 origin 3adf61e154c3fe3fca428ad6bc3818b27a3b8291
+          git -C "$RUNNER_TEMP/gate5-nanogpt" checkout --detach FETCH_HEAD
+          cp experiments/gate5/user_files/nanogpt/trainparity_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user/"
+          cp experiments/gate5/user_files/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/.trainparity_user/"
+          python -m pip install --no-deps --target "$RUNNER_TEMP/gate5-site" dist/*.whl
+          cd "$RUNNER_TEMP/gate5-nanogpt"
+          PYTHONPATH="$RUNNER_TEMP/gate5-site:$RUNNER_TEMP/gate5-nanogpt/.trainparity_user:$RUNNER_TEMP/gate5-nanogpt" \
+            python .trainparity_user/test_accumulation.py "$RUNNER_TEMP/gate5-nanogpt/report.json"
+      - name: Verify Gate 5 report
+        run: python scripts/verify_gate5.py --allow-pending-ci
