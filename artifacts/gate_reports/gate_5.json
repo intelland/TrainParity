@@ -1,0 +1,240 @@
+{
+  "contract": {
+    "comparison_policies": [
+      "ExactComparison",
+      "explicit ToleranceComparison(rtol=1e-6, atol=1e-7)"
+    ],
+    "default_split": "ordered tensor tree along dimension zero; unsupported complex batches ABSTAIN unless explicitly split",
+    "equivalence_is_user_declared": true,
+    "first_observed_not_root_cause": true,
+    "loss_accounting_optional": true,
+    "observed_phases": [
+      "loss_accounting",
+      "gradient",
+      "optimizer_state",
+      "parameter_update",
+      "scheduler_state"
+    ],
+    "optimizer_update_boundary": "one complete declared accumulation window, one expected optimizer step, then declared scheduler action",
+    "tolerance_inferred_or_tuned": false,
+    "unavailable_loss_accounting_reported_not_inferred": true
+  },
+  "faults": [
+    {
+      "detected": true,
+      "first_observed_path": "loss_accounting.denominator",
+      "first_observed_phase": "loss_accounting",
+      "name": "missing_accumulation_scaling",
+      "runs": 4
+    },
+    {
+      "detected": true,
+      "first_observed_path": "loss_accounting.denominator",
+      "first_observed_phase": "loss_accounting",
+      "name": "variable_length_mean_of_means",
+      "runs": 4
+    },
+    {
+      "detected": true,
+      "first_observed_path": "gradient.weight",
+      "first_observed_phase": "gradient",
+      "name": "optimizer_step_per_microbatch",
+      "runs": 4
+    },
+    {
+      "detected": true,
+      "first_observed_path": "optimizer.param_groups[0].lr",
+      "first_observed_phase": "optimizer_state",
+      "name": "scheduler_step_per_microbatch",
+      "runs": 4
+    },
+    {
+      "detected": true,
+      "first_observed_path": "gradient.weight",
+      "first_observed_phase": "gradient",
+      "name": "zero_grad_wrong_time",
+      "runs": 4
+    },
+    {
+      "detected": true,
+      "first_observed_path": "gradient.weight",
+      "first_observed_phase": "gradient",
+      "name": "gradient_clip_wrong_time",
+      "runs": 4
+    },
+    {
+      "detected": true,
+      "first_observed_path": "gradient.weight",
+      "first_observed_phase": "gradient",
+      "name": "amp_unscale_scaler_timing",
+      "runs": 1
+    },
+    {
+      "detected": true,
+      "first_observed_path": "loss_accounting.denominator",
+      "first_observed_phase": "loss_accounting",
+      "name": "incomplete_final_window",
+      "runs": 4
+    }
+  ],
+  "gate": 5,
+  "gate_6_started": false,
+  "gpu": {
+    "cross_gpu_model_comparison": false,
+    "device": "cuda",
+    "name": "NVIDIA L40S",
+    "same_device_only": true,
+    "slurm_job_id": "58980407"
+  },
+  "hosted_ci": {
+    "conclusion": "pending"
+  },
+  "known_non_equivalence": {
+    "batchnorm_training": {
+      "first_observed_phase": "loss_accounting",
+      "interpretation": "training-mode batch statistics make the proposed relation non-universal",
+      "outcome": "FAIL",
+      "path": "loss_accounting.effective_loss"
+    },
+    "dropout": "stochastic masks are not claimed equivalent without user-defined RNG/mask semantics"
+  },
+  "limitations": [
+    "Only tiny single-process updates and one NVIDIA L40S were evaluated.",
+    "BatchNorm training mode and dropout are not universally accumulation-equivalent.",
+    "The full-value correctness backend remains unchanged and unoptimized in Gate 5.",
+    "Observed phases identify first divergence, not root cause."
+  ],
+  "metrics": {
+    "all_fresh_process_ids_distinct": true,
+    "all_initial_states_verified_equal": true,
+    "clean_false_positives": 0,
+    "cpu_repeats": 3,
+    "cpu_rows": 30,
+    "fault_count": 8,
+    "faults_detected": 8,
+    "gpu_rows": 12,
+    "max_per_run_persisted_artifact_bytes": 1888,
+    "peak_temporary_directory_bytes": 23237352,
+    "recorded_persisted_artifact_bytes": 67954
+  },
+  "outcome": "GO",
+  "preservation": {
+    "accepted_evidence_sha256": {
+      "artifacts/gate_reports/gate_0.json": "3f72383d025304a8559773ac961b8fae0e1e7f0c21adaa6eb3bae07f2684dcc2",
+      "artifacts/gate_reports/gate_0.md": "29f5fd42ee9a7f51126546e3dc02a558c1925bd7e1f84702fd12b84663eb53ad",
+      "artifacts/gate_reports/gate_1.json": "5267ef045f8163a19a2ab71bfb483440e9778f9aec50d24c80dafab8c823d9ff",
+      "artifacts/gate_reports/gate_1.md": "998443c965f919ff1b4b7aacef1a088906c5b7193fb799b32b0c82ee3b4ccf00",
+      "artifacts/gate_reports/gate_2.json": "a80035c2847d3420593349825fb65fc974cada603a7d8dd09cb46155f1afaeb6",
+      "artifacts/gate_reports/gate_2.md": "5ec23b90b34f30ff5f34d4ba8f483edc2d24852b18c0340bfaae42ead9a03680",
+      "artifacts/gate_reports/gate_3.json": "1c29dbfbbc673f4076acb757f5324e1827a7430fbd33cbd4b861c1d3db587380",
+      "artifacts/gate_reports/gate_3.md": "751295f76f1f600285851d0773efa491c9bca18e494cdd51511f372777d9ce2b",
+      "artifacts/gate_reports/gate_4.json": "247bd525ba98d0fd059af53722838401d55b7d5881d3de0ed04a0d716459b923",
+      "artifacts/gate_reports/gate_4.md": "9d7dbdb9dc93198317bab93826075e1c5d104455a2f9c403b0806834ab0826ba",
+      "artifacts/gate_reports/gate_4_friction_audit.json": "13b4edaaa47eff4d7aba9bcd383f2a528afc49715f1c87d67c87f1dc2bc658ce",
+      "artifacts/gate_reports/gate_4_friction_audit.md": "6a0097a0f1124ee5ef4d7121e63e04122683e2427170d516018d5037d0e7b5be",
+      "artifacts/gate_reports/gate_4b.json": "25e59c95278eafe600fdf359b8638cccc3e03532e9ffb219195dd158bdb63f50",
+      "artifacts/gate_reports/gate_4b.md": "4339d44bb47fdd29fd7171680d3e5542cabfb0dd325164393f6c10c6e2db6282",
+      "experiments/gate0/recorded/fault_matrix.json": "3006acba2857040d2e5b1851886b3abd052e3601fcd26812fd6c6b8e5d980a81",
+      "experiments/gate0/recorded/traincheck_summary.json": "cd6d57bab81b4a3b31c64ee1942e61d673c868155883fc3ec85e174f9acc4df7",
+      "experiments/gate1/recorded/adapter_evaluation.json": "a9e9618cea4ca0c1494c64a0f059eff447232f781a18e89ad7bafdb212714054",
+      "experiments/gate2/recorded/ci_ae75212.json": "ac3d0f9268057d4d3a5bdf7133954b628eb6c09a378b30a1a0491cdba32c9bda",
+      "experiments/gate2/recorded/coverage.json": "27e0e06409360d5d8e0f9cf43765daba9069bcbddde75e450d48e7f851129abd",
+      "experiments/gate2/recorded/fault_suite.json": "bc9a4365c62b68a7f66e9ea81a2af43d75bca01d98048d4f1487ff9f5e3c3186",
+      "experiments/gate3/recorded/cpu_matrix.json": "311f3a466d1c27dc2422c422235b8ed625017042d921d470c1d43d72bc77b00b",
+      "experiments/gate3/recorded/gpu_matrix.json": "4b4a8b65937e9ff6204a97e0fc71e398425186551c0f99a2c627795e10d88be3",
+      "experiments/gate3/recorded/test_summary.json": "9b42edf052bec0a8ad813972e9e6fbfe9298891616cf6db54356a47bf525f30f",
+      "experiments/gate4/recorded/ci.json": "b339bc391a0697aed5a24252482939714a185471d88a26ae3a7dc04a0597069e",
+      "experiments/gate4/recorded/matrix.json": "672053ccac0e7b27bb3fe0960a6311e1c224163a57400634149c0640f5a15b05",
+      "experiments/gate4/recorded/test_summary.json": "b88e0f2a86ccaa4ece1e74d0d7c96209840127fb0b0e042ee35412115119619b",
+      "experiments/gate4b/recorded/ci.json": "d3d1a9329e121be4624444992d49e66743877865f14c7180cbf9d59bf9aa7e43",
+      "experiments/gate4b/recorded/matrix.json": "8d93959da310434863d5c00949ec7d7a600527663a0a47efb691b028486d0e5c",
+      "experiments/gate4b/recorded/profile_post.json": "1f22a5726dae83fe6caee9ae859767f774c5cc22582d4a3e18f94c781b7d017e",
+      "experiments/gate4b/recorded/profile_pre.json": "c4be84e6892c87407643f81d7a3eb7cc5b15000cbce283cf684cf38ed5cc51c1",
+      "experiments/gate4b/recorded/test_summary.json": "c124c3a494c66d1ce14948049c1bb60ef700e872cb242e98a27e3bc2308cd0e8"
+    },
+    "tracked_remote_development_sha256": "0733f2f98c05979f666a02a4d1bf5eb1e3a060271010f7bc7f1fd9d3e3242684",
+    "user_uncommitted_remote_development_sha256": "6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300"
+  },
+  "product_surface": {
+    "device": "cpu",
+    "projects": [
+      {
+        "adapter_logical_loc": 26,
+        "adapter_sha256": "cd828906a962ad7010917a5a26127d20bfee4495d11802fa814b1dc00316e2fb",
+        "commit": "acc295dc7b90714f1bf47f06004fc19a7fe235c4",
+        "files": [
+          ".trainparity_user/test_accumulation.py",
+          ".trainparity_user/trainparity_accumulation.py"
+        ],
+        "project": "pytorch_examples_imagenet",
+        "result": {
+          "all_differences": [],
+          "case": "trainparity_accumulation:Case",
+          "comparison_policy": "explicit_tolerance",
+          "equivalence": "same ordered images; BatchNorm fixed in eval mode; global cross-entropy mean",
+          "first_observed_phase": null,
+          "loss_normalization_captured": true,
+          "message": "declared executions are equivalent for one optimizer-update boundary",
+          "outcome": "PASS",
+          "peak_temporary_directory_bytes": 23237352,
+          "persisted_artifact_bytes": 0,
+          "primary_difference": null,
+          "process_ids": [
+            1730092,
+            1736005,
+            1742905
+          ],
+          "verified_equal_initial_state": true
+        },
+        "supporting_glue_logical_loc": 12,
+        "total_user_logical_loc": 38,
+        "upstream_modified_loc": 0,
+        "url": "https://github.com/pytorch/examples.git"
+      },
+      {
+        "adapter_logical_loc": 25,
+        "adapter_sha256": "f9d07e6d798688db0226e5db101d09aed46b641efd7bf79749b35599b299f5fb",
+        "commit": "3adf61e154c3fe3fca428ad6bc3818b27a3b8291",
+        "files": [
+          ".trainparity_user/test_accumulation.py",
+          ".trainparity_user/trainparity_accumulation.py"
+        ],
+        "project": "nanogpt",
+        "result": {
+          "all_differences": [],
+          "case": "trainparity_accumulation:Case",
+          "comparison_policy": "explicit_tolerance",
+          "equivalence": "same ordered token windows; dropout disabled; untied optimizer subset; global token mean",
+          "first_observed_phase": null,
+          "loss_normalization_captured": true,
+          "message": "declared executions are equivalent for one optimizer-update boundary",
+          "outcome": "PASS",
+          "peak_temporary_directory_bytes": 317736,
+          "persisted_artifact_bytes": 0,
+          "primary_difference": null,
+          "process_ids": [
+            1759753,
+            1762915,
+            1765384
+          ],
+          "verified_equal_initial_state": true
+        },
+        "supporting_glue_logical_loc": 12,
+        "total_user_logical_loc": 37,
+        "upstream_modified_loc": 0,
+        "url": "https://github.com/karpathy/nanoGPT.git"
+      }
+    ],
+    "schema_version": 1
+  },
+  "schema_version": 1,
+  "scope": "bounded_accumulation_equivalence",
+  "strict_control": {
+    "message": "initial state capture failed",
+    "nanogpt_tied_parameter_mapping": "ABSTAIN",
+    "resolution": "user fixture explicitly excludes the ambiguous tied parameter from its optimizer; production mapping remains strict"
+  },
+  "test_summary": {
+    "outcome": "PENDING"
+  }
+}
