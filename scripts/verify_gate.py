@@ -294,6 +294,15 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _workflow_text(root: Path) -> str:
+    """Return all workflows after the Gate 7I responsibility split."""
+    workflow_root = root / ".github" / "workflows"
+    return "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in sorted(workflow_root.glob("*.yml"))
+    )
+
+
 def _write_gate_1_reports(root: Path, report: dict[str, Any]) -> None:
     report_dir = root / "artifacts" / "gate_reports"
     report_dir.mkdir(parents=True, exist_ok=True)
@@ -435,7 +444,7 @@ def verify_gate_1(root: Path) -> dict[str, Any]:
     )
     wheels = sorted((root / "dist").glob("trainparity-*.whl"))
     criterion("wheel build", bool(wheels), f"wheels={[path.name for path in wheels]}")
-    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    workflow = _workflow_text(root)
     criterion(
         "CI covers Gate 1 checks",
         all(command in workflow for command in ("make lint", "make typecheck", "make test", "make build", "verify_gate.py 1")),
@@ -687,7 +696,7 @@ def verify_gate_2(root: Path) -> dict[str, Any]:
         not changed_evidence,
         "hashes unchanged" if not changed_evidence else f"changed={changed_evidence}",
     )
-    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    workflow = _workflow_text(root)
     criterion(
         "CI runs Gate 2 verifier",
         "verify_gate.py 2" in workflow and all(
@@ -946,7 +955,7 @@ def verify_gate_3(root: Path) -> dict[str, Any]:
         if not (root / relative).is_file() or _sha256(root / relative) != digest
     ]
     criterion("accepted Gate 0-2 evidence preserved", not changed, "hashes unchanged" if not changed else f"changed={changed}")
-    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    workflow = _workflow_text(root)
     criterion(
         "CI runs Gate 3 verifier",
         "verify_gate.py 3" in workflow
@@ -1248,7 +1257,7 @@ def verify_gate_4(root: Path) -> dict[str, Any]:
         if not (root / relative).is_file() or _sha256(root / relative) != digest
     ]
     criterion("accepted Gate 0-3 evidence preserved", not changed, "hashes unchanged" if not changed else f"changed={changed}")
-    workflow = (root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    workflow = _workflow_text(root)
     ci_configured = (
         expected["nanogpt"][0] in workflow
         and "--project nanogpt" in workflow
