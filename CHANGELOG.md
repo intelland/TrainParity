@@ -17,8 +17,7 @@
 - Verify installed CPU wheels on Python 3.11 with PyTorch 2.7.0, 2.10.0, and
   2.13.0; declare only the evidence-backed `torch>=2.7,<2.14` range.
 - Split read-only PR CI, scheduled/manual full validation, and protected
-  Trusted Publishing into separate least-privilege workflows. Publication
-  remains held.
+  Trusted Publishing into separate least-privilege workflows.
 
 ## 0.1.0.dev7 - 2026-08-11
 

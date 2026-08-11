@@ -71,6 +71,12 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
     assert "coverage.same_rank_duplicate" in first
     assert not re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
     assert "python -m pytest -q --no-cov examples/test_readme_case.py" in first
+    assert "pip install trainparity==0.1.0rc1" in readme
+    assert "unpublished release candidate" not in readme
+    relative_public_links = re.findall(
+        r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
+    )
+    assert relative_public_links == []
     for module in ("resume", "accumulation", "sample_coverage"):
         assert f"python -m trainparity.quickstarts.{module}" in readme
 
@@ -104,6 +110,34 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert "id-token: write" in release
     assert "gh-action-pypi-publish@" in release
     assert "download-artifact" not in release
+    assert "group: trainparity-pypi-release" in release
+    assert "cancel-in-progress: false" in release
+    assert release.count("python -m build") == 1
+    smoke = "- name: Smoke-test the exact wheel from outside the source tree"
+    publish = "- name: Publish with PyPI Trusted Publishing"
+    assert release.index(smoke) < release.index(publish)
+    assert "wheels=(dist/*.whl)" in release
+    assert 'cd "${RUNNER_TEMP}"' in release
+    assert 'pip install --no-deps "${wheels[0]}"' in release
+    assert "trainparity.__version__" in release
+    for module in ("resume", "accumulation", "sample_coverage"):
+        assert f'python" -m trainparity.quickstarts.{module}' in release
+    assert "packages-dir: dist/" in release
+
+
+def test_shipped_release_documents_remain_true_after_publication() -> None:
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    notes = (ROOT / "docs/release-notes/0.1.0rc1.md").read_text(encoding="utf-8")
+    held_phrases = (
+        "Publication remains held",
+        "not published to PyPI",
+        "No publication workflow has been executed",
+        "unpublished release candidate",
+    )
+    assert all(phrase not in changelog for phrase in held_phrases)
+    assert all(phrase not in notes for phrase in held_phrases)
+    assert "alpha prerelease" in notes
+    assert "pip install trainparity==0.1.0rc1" in notes
 
 
 def test_validation_and_coverage_boundary_are_documented() -> None:

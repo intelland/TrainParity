@@ -326,3 +326,19 @@ with zero annotations. This included lint, strict type checking, the complete
 test suite, the 30-line README integration, all three quickstarts, build,
 Twine validation, and the fast Gate 7I verifier. The PR remains draft and
 unmerged, and no release workflow or publication action was executed.
+
+Gate 7I was accepted after direct bundle review. Publication of
+`trainparity==0.1.0rc1` remains held for exactly two bounded activation
+blockers: release-facing documentation must remain true after a PyPI upload
+and use PyPI-safe absolute public links, and `release.yml` must install and
+exercise the exact wheel it will upload from outside the source tree. This
+patch may update only README/changelog/release notes, the release workflow,
+their contract tests, and development records. It must not change the runtime
+API, implementation, compatibility range, accepted evidence, feature scope,
+repository visibility, tag/release state, or execute publication.
+
+Required verification is Ruff, strict Mypy, the full test suite,
+`make release-check`, Twine checks on the rebuilt wheel and sdist, the Gate 7I
+verifier, `git diff --check`, and a dedicated dry-run proof that the release
+workflow installs the just-built wheel, changes out of the repository, runs
+all three quickstarts, and leaves the same `dist/` payload for publication.

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/intelland/TrainParity/actions/workflows/ci.yml/badge.svg)](https://github.com/intelland/TrainParity/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/intelland/TrainParity/blob/main/LICENSE)
 
 TrainParity checks user-declared equivalence across PyTorch resume, gradient-accumulation, and finite sample-ID executions. It returns `PASS`, `FAIL`, `ABSTAIN`, or `ERROR` and locates the first observed divergence; it is not a universal bug detector and does not invoke an LLM at runtime.
 
@@ -10,7 +10,7 @@ TrainParity checks user-declared equivalence across PyTorch resume, gradient-acc
 
 This 30-logical-line pytest case audits stable IDs emitted by a real PyTorch
 `DataLoader`. The clean loader passes; the faulty loader repeats ID `1` and
-omits ID `2`. The file is [`examples/test_readme_case.py`](examples/test_readme_case.py),
+omits ID `2`. The file is [`examples/test_readme_case.py`](https://github.com/intelland/TrainParity/blob/main/examples/test_readme_case.py),
 and CI executes the command shown below.
 
 ```python
@@ -99,12 +99,16 @@ This matrix summarizes the project's pinned, reproducible validation suite. It i
 | Accumulation equivalence | 3 CPU + 1 GPU PASS | 8/8 detected | Fresh processes; explicit phases; same-device L40S |
 | Sample coverage | 17/17 expected outcomes | world sizes 1/2/3/4 and finite sampler edge cases | CPU; finite declared windows |
 
-Exact commits, environments, outcomes, and limitations are in [validation](docs/validation.md). The external-project results used tiny fixtures; they are evidence about those cases, not a framework-compatibility promise.
+Exact commits, environments, outcomes, and limitations are in [validation](https://github.com/intelland/TrainParity/blob/main/docs/validation.md). The external-project results used tiny fixtures; they are evidence about those cases, not a framework-compatibility promise.
 
 ## Install and run
 
-The project is an unpublished release candidate. Build the wheel from this
-checkout and install that artifact; no PyPI distribution is claimed or linked.
+TrainParity 0.1.0rc1 is an alpha prerelease. Install the exact release
+candidate with:
+
+```bash
+pip install trainparity==0.1.0rc1
+```
 
 CI executes the pytest integration and all three quickstart commands. The
 quickstarts run against the built wheel from outside the repository directory.
@@ -126,7 +130,7 @@ The four outcomes are intentionally distinct:
 
 ## User contract
 
-Resume and accumulation checks require a small importable case that states project semantics: how to execute, locate/load a checkpoint or construct one optimizer-update boundary, and expose the required state. TrainParity owns generic fresh-process orchestration and deterministic reporting; it does not rewrite a training loop or provide framework-specific adapters. See the [public API](docs/api.md), [design](docs/design.md), and shipped quickstart modules.
+Resume and accumulation checks require a small importable case that states project semantics: how to execute, locate/load a checkpoint or construct one optimizer-update boundary, and expose the required state. TrainParity owns generic fresh-process orchestration and deterministic reporting; it does not rewrite a training loop or provide framework-specific adapters. See the [public API](https://github.com/intelland/TrainParity/blob/main/docs/api.md), [design](https://github.com/intelland/TrainParity/blob/main/docs/design.md), and shipped quickstart modules.
 
 Coverage users provide stable sample IDs. An ID must be semantically unique within the declared expected universe: two different semantic samples must not share it. TrainParity validates ID trajectories, not sample contents. Worker provenance is optional and unavailable worker information is represented by `None` / JSON `null`, never worker 0. One audit proves only one finite observation window—the declared window; it does not prove sample contents, infinite-stream exactly-once behavior, or general shuffle quality.
 
@@ -135,17 +139,17 @@ Coverage users provide stable sample IDs. An ID must be semantically unique with
 TrainParity does not diagnose arbitrary scripts, infer root causes, judge model quality, launch distributed jobs, manage checkpoints, or provide Lightning, Transformers, DeepSpeed, DDP, FSDP, dashboard, service, registry, or runtime agent integration. It does not claim that all full-batch and microbatch executions should be equivalent; the user declares the relation and any tolerance.
 
 Implementation provenance and the separation between assisted development and
-deterministic runtime behavior are documented in [development provenance](docs/development-provenance.md).
+deterministic runtime behavior are documented in [development provenance](https://github.com/intelland/TrainParity/blob/main/docs/development-provenance.md).
 
-[TrainCheck](https://github.com/OrderLab/TrainCheck) infers and checks training invariants using reference and target traces. TrainParity performs explicit A/B differential tests over user-declared equivalence relations and fresh-process boundaries. Neither structural approach makes the other a universal detector. The scoped comparison and cited upstream material are in [comparison with TrainCheck](docs/comparison-with-traincheck.md).
+[TrainCheck](https://github.com/OrderLab/TrainCheck) infers and checks training invariants using reference and target traces. TrainParity performs explicit A/B differential tests over user-declared equivalence relations and fresh-process boundaries. Neither structural approach makes the other a universal detector. The scoped comparison and cited upstream material are in [comparison with TrainCheck](https://github.com/intelland/TrainParity/blob/main/docs/comparison-with-traincheck.md).
 
 ## Compatibility and security
 
 The release candidate's installed CPU wheel passed on CPython 3.11 with
 PyTorch 2.7.0, 2.10.0, and 2.13.0. Same-device GPU evidence uses PyTorch 2.7.0
-on the exact CUDA/GPU fixtures listed in [validation](docs/validation.md). No
+on the exact CUDA/GPU fixtures listed in [validation](https://github.com/intelland/TrainParity/blob/main/docs/validation.md). No
 support is implied for other Python, PyTorch, CUDA, or GPU versions.
 
-TrainParity is not a sandbox. User training code runs with the caller's permissions; load only trusted checkpoints and do not execute untrusted repositories. Explicit child environment values are propagated when requested but are not recorded in reports by default. See [SECURITY.md](SECURITY.md).
+TrainParity is not a sandbox. User training code runs with the caller's permissions; load only trusted checkpoints and do not execute untrusted repositories. Explicit child environment values are propagated when requested but are not recorded in reports by default. See [SECURITY.md](https://github.com/intelland/TrainParity/blob/main/SECURITY.md).
 
-Known constraints and non-claims are collected in [limitations](docs/limitations.md). Contributions should follow [CONTRIBUTING.md](CONTRIBUTING.md). This project is MIT licensed.
+Known constraints and non-claims are collected in [limitations](https://github.com/intelland/TrainParity/blob/main/docs/limitations.md). Contributions should follow [CONTRIBUTING.md](https://github.com/intelland/TrainParity/blob/main/CONTRIBUTING.md). This project is MIT licensed.

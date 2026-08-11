@@ -510,3 +510,18 @@
   installed-wheel examples, Twine, security/archive checks, unchanged evidence
   hashes, and the exact user-document hash. The release workflow remains
   deliberately unexecuted until explicit human publication approval.
+
+## D-0046: Activate release truthfulness and same-artifact smoke testing only
+
+- **Status:** Authorized after Gate 7I acceptance
+- **Date:** 2026-08-11
+- **Decision:** Before publication, replace held/unpublished wording in shipped
+  documents with accurate alpha-prerelease installation guidance and absolute
+  GitHub links. Make the manual release job build once, install that exact
+  wheel into a clean environment, leave the source tree, verify its version
+  and three quickstarts, and then pass the unchanged `dist/` directory to the
+  pinned Trusted Publishing action. Add serialization concurrency protection.
+- **Reason:** PyPI descriptions are immutable for an uploaded file, and a
+  release job must test artifact B if artifact B is what it uploads. These are
+  bounded release blockers, not authorization for a new Gate, feature work, or
+  publication.
