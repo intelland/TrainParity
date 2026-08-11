@@ -8,13 +8,14 @@ from trainparity import LossAccounting, TrainingState
 
 
 class Case:
-    equivalence = "same ordered token windows; dropout disabled; global token cross-entropy mean"
+    equivalence = "same ordered token windows; dropout disabled; untied optimizer subset; global token mean"
 
     def build(self, seed: int, device: str) -> TrainingState:
         torch.manual_seed(seed)
         config = GPTConfig(block_size=8, vocab_size=32, n_layer=1, n_head=1, n_embd=8, dropout=0.0, bias=False)
         model = GPT(config).to(device)
-        optimizer = torch.optim.AdamW(model.parameters(), lr=0.001)
+        tied_weight = id(model.transformer.wte.weight)
+        optimizer = torch.optim.AdamW((value for value in model.parameters() if id(value) != tied_weight), lr=0.001)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.9)
         return TrainingState(model, optimizer, scheduler)
 
