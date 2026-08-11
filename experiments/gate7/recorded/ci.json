@@ -1,0 +1,18 @@
+{
+  "base_branch": "gate-6",
+  "conclusion": "pending",
+  "event": "pull_request",
+  "head_sha": "2cb54639ffd18aaa64aee4f3d49d75c734f48d74",
+  "job_id": null,
+  "pull_request": 4,
+  "published": false,
+  "released": false,
+  "repository_visibility": "PRIVATE",
+  "run_id": null,
+  "schema_version": 1,
+  "tagged": false,
+  "trainparity_version": "0.1.0rc1",
+  "url": null,
+  "visibility_changed": false,
+  "workflow": "CI"
+}
