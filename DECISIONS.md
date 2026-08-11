@@ -399,3 +399,26 @@
   logical LOC with zero upstream edits. Compared with the 11-line flat
   `Counter` baseline, the module demonstrates seven structural benefits while
   all 17 formal CPU rows, 134 tests, historical verifiers, and hosted CI pass.
+
+## D-0037: Accept Gate 6 and freeze the v0.1 feature set
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** Include the bounded sample-coverage module and authorize only
+  Gate 7 release-candidate preparation. Freeze v0.1 to resume equivalence,
+  gradient-accumulation equivalence, and sample-coverage policies.
+- **Reason:** Sample coverage adds explicit distributed provenance and policy
+  semantics beyond a flat `Counter` while retaining a small user surface. The
+  next task is honest packaging and documentation, not feature expansion.
+
+## D-0038: Define stable IDs and finite audit claims conservatively
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+- **Decision:** A stable sample ID must be semantically unique within the
+  declared expected universe. Unavailable worker provenance is `None`/JSON
+  `null`, never rank-local worker 0. An audit proves only its declared finite
+  observation window and validates ID trajectories rather than sample content.
+- **Reason:** These boundaries prevent IDs, unavailable provenance, finite
+  streams, and shuffle observations from being interpreted as stronger claims
+  than the recorded evidence supports.

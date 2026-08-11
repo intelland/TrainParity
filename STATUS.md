@@ -219,3 +219,27 @@ Draft PR `#3` targets `gate-5`. Hosted GitHub Actions run `31456866444` for
 commit `b219358dbccfc17c235ef272c66bfadd2d28b7ed` completed successfully,
 including all prior verifiers and the Gate 6 matrix, product surface, and
 dedicated verifier. Gate 7 has not been started and remains unauthorized.
+
+Gate 6 was accepted with `INCLUDE_MODULE` by the human reviewer on 2026-08-11.
+Gate 7 is now the only authorized scope and is release-candidate preparation
+for the frozen v0.1 feature set: resume equivalence, gradient-accumulation
+equivalence, and sample-coverage policies. No new check, framework adapter, or
+later expansion is authorized.
+
+The Gate 7 documentation must define a stable sample ID as semantically unique
+within the user-declared expected universe. TrainParity validates ID
+trajectories, never sample contents. Missing worker provenance is represented
+as unavailable (`None`/JSON `null`), never worker 0. One audit establishes only
+the declared finite observation window and does not establish sample contents,
+infinite-stream exactly-once behavior, or general shuffle quality.
+
+Gate 7 must freeze a documented stable public API, add schema/package versions
+to production JSON, ship three minimal CPU PASS/FAIL examples, prepare an
+evidence-first README and release/security/contribution documentation, recheck
+name availability, validate a built wheel outside the repository, publish only
+tested compatibility claims, audit source/distributions for sensitive or
+unintended content, and preserve accepted evidence plus the user's uncommitted
+`CODEX_REMOTE_DEVELOPMENT.md`. Verification is `make release-check`, every
+accepted Gate verifier, `python scripts/verify_gate.py 7`, and hosted CPU CI.
+PyPI publication, tags/releases, visibility changes, automatic renaming, and
+all irreversible remote release actions remain prohibited.
