@@ -8,7 +8,6 @@ from torch.utils.data import SequentialSampler
 
 from trainparity import ExactlyOnce, audit_rank_iterables
 
-
 dataset = list(range(11))
 sampler = SequentialSampler(dataset)
 result = audit_rank_iterables(

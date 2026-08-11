@@ -8,7 +8,6 @@ from torch.utils.data import DistributedSampler
 
 from trainparity import ExpectedPadding, audit_rank_iterables
 
-
 dataset = list(range(10))
 ranks = {}
 for rank in range(3):
