@@ -1,6 +1,8 @@
 """TrainParity v0.1 public API and compatibility imports."""
 
-from trainparity.api import (
+from trainparity.api import (  # noqa: F401
+    MACHINE_REPORT_SCHEMA_VERSION,
+    PACKAGE_VERSION,
     AccumulationCase,
     AccumulationExecutionPlan,
     AccumulationResult,
@@ -12,10 +14,8 @@ from trainparity.api import (
     ExpectedPadding,
     ExternalProcessEvidence,
     LossAccounting,
-    MACHINE_REPORT_SCHEMA_VERSION,
     NoCrossRankOverlap,
     Outcome,
-    PACKAGE_VERSION,
     ProcessExecutionPlan,
     ProcessResumeCase,
     ProcessResumeResult,
@@ -38,25 +38,25 @@ __all__ = [*_PUBLIC_API, "__version__"]
 
 # Compatibility imports retained so accepted Gate evidence remains replayable.
 # They are intentionally absent from ``__all__`` and the frozen v0.1 API.
-from trainparity.accumulation import (  # noqa: E402
+from trainparity.accumulation import (  # noqa: F401
     AccumulationRunner,
     UnsafeBatchSplit,
     split_tensor_tree,
 )
-from trainparity.assertions import assert_resume_equivalent  # noqa: E402
-from trainparity.comparison import ComparisonResult  # noqa: E402
-from trainparity.importing import (  # noqa: E402
+from trainparity.assertions import assert_resume_equivalent  # noqa: F401
+from trainparity.comparison import ComparisonResult  # noqa: F401
+from trainparity.importing import (  # noqa: F401
     CaseImportError,
     load_accumulation_case,
     load_case,
     load_process_case,
 )
-from trainparity.process_resume import ProcessResumeRunner  # noqa: E402
-from trainparity.protocols import (  # noqa: E402
+from trainparity.process_resume import ProcessResumeRunner  # noqa: F401
+from trainparity.protocols import (  # noqa: F401
     ResumeCase,
     ResumeExecutionCase,
     StepObservation,
 )
-from trainparity.results import ProcessEvidence, ResumeResult  # noqa: E402
-from trainparity.runner import ResumeRunner  # noqa: E402
-from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot  # noqa: E402
+from trainparity.results import ProcessEvidence, ResumeResult  # noqa: F401
+from trainparity.runner import ResumeRunner  # noqa: F401
+from trainparity.snapshot import CaptureResult, Snapshot, capture_snapshot  # noqa: F401
