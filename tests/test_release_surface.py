@@ -29,6 +29,7 @@ def test_top_level_and_advanced_api_boundaries() -> None:
     for removed in ("PACKAGE_VERSION", "ExternalProcessEvidence", "SampleCoverageAuditor"):
         assert removed not in trainparity.__all__
         assert removed not in api.__all__
+        assert not hasattr(trainparity, removed)
     assert {
         "ProcessExecutionPlan",
         "ProcessResumeCase",

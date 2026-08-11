@@ -12,9 +12,9 @@ from trainparity.api import (
     check_accumulation,
     check_resume,
 )
-from trainparity.version import PACKAGE_VERSION
+from trainparity.version import PACKAGE_VERSION as _PACKAGE_VERSION
 
-__version__ = PACKAGE_VERSION
+__version__ = _PACKAGE_VERSION
 __all__ = [
     "AtLeastOnce",
     "ExactComparison",
