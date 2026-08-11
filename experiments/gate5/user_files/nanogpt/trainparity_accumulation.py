@@ -25,8 +25,8 @@ class Case:
 
     def loss(self, state: TrainingState, batch: object) -> LossAccounting:
         assert isinstance(batch, dict)
-        logits, _ = state.model(batch["tokens"])
         targets = batch["targets"]
+        logits, _ = state.model(batch["tokens"], targets)
         numerator = F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1), reduction="sum")
         count = int(targets.numel())
         return LossAccounting(numerator / count, numerator, count)
