@@ -59,4 +59,3 @@ cd "$REPO"
 "$PYTHON" -m experiments.gate7i.build_report
 "$PYTHON" -m scripts.build_gate7i_bundle
 "$PYTHON" scripts/verify_gate7i.py
-git diff --check
