@@ -8,7 +8,7 @@ TrainParity checks user-declared equivalence across PyTorch resume, gradient-acc
 
 ## A complete integration
 
-This 28-logical-line pytest case audits stable IDs emitted by a real PyTorch
+This 30-logical-line pytest case audits stable IDs emitted by a real PyTorch
 `DataLoader`. The clean loader passes; the faulty loader repeats ID `1` and
 omits ID `2`. The file is [`examples/test_readme_case.py`](examples/test_readme_case.py),
 and CI executes the command shown below.
