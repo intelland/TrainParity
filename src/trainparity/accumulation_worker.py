@@ -45,7 +45,11 @@ def _gradient_state(state: TrainingState) -> dict[str, object]:
 
 
 def _scheduler_state(state: TrainingState) -> dict[str, object]:
-    scheduler = None if state.scheduler is None else dict(state.scheduler.state_dict())
+    scheduler_method = cast(
+        Callable[[], Mapping[str, object]] | None,
+        None if state.scheduler is None else state.scheduler.state_dict,
+    )
+    scheduler = None if scheduler_method is None else dict(scheduler_method())
     scaler_method = cast(
         Callable[[], Mapping[str, object]] | None,
         getattr(state.scaler, "state_dict", None),
