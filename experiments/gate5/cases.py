@@ -42,6 +42,16 @@ class MLPCase(LinearCase):
         return TrainingState(model, optimizer, scheduler)
 
 
+class ClipCase(LinearCase):
+    equivalence = "same ordered opposing gradients; clipping occurs once after accumulation"
+
+    def batch(self, device: str) -> object:
+        return {
+            "x": torch.ones((4, 1), device=device),
+            "y": torch.tensor([[-10.0], [-10.0], [10.0], [10.0]], device=device),
+        }
+
+
 class TokenCase:
     equivalence = "same ordered masked tokens; token loss uses global numerator/denominator"
 

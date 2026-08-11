@@ -29,7 +29,7 @@ def _cases(device: str) -> list[tuple[str, str, AccumulationExecutionPlan, str]]
         ("optimizer_step_per_microbatch", "experiments.gate5.cases:LinearCase", AccumulationExecutionPlan(2, optimizer_step_per_microbatch=True), "FAIL"),
         ("scheduler_step_per_microbatch", "experiments.gate5.cases:LinearCase", AccumulationExecutionPlan(2, scheduler_step_per_microbatch=True), "FAIL"),
         ("zero_grad_wrong_time", "experiments.gate5.cases:LinearCase", AccumulationExecutionPlan(2, zero_grad_before_gradient_observation=True), "FAIL"),
-        ("gradient_clip_wrong_time", "experiments.gate5.cases:LinearCase", AccumulationExecutionPlan(2, clip_grad_norm=0.25, clip_per_microbatch=True), "FAIL"),
+        ("gradient_clip_wrong_time", "experiments.gate5.cases:ClipCase", AccumulationExecutionPlan(2, clip_grad_norm=1.0, clip_per_microbatch=True), "FAIL"),
         ("incomplete_final_window", "experiments.gate5.cases:LinearCase", AccumulationExecutionPlan(2, omit_final_microbatch=True), "FAIL"),
     ]
     if device.startswith("cuda"):
