@@ -513,7 +513,7 @@
 
 ## D-0046: Activate release truthfulness and same-artifact smoke testing only
 
-- **Status:** Authorized after Gate 7I acceptance
+- **Status:** Verified for final publication review
 - **Date:** 2026-08-11
 - **Decision:** Before publication, replace held/unpublished wording in shipped
   documents with accurate alpha-prerelease installation guidance and absolute

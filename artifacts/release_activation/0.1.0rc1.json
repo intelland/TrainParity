@@ -1,0 +1,57 @@
+{
+  "activation_scope": "two_bounded_release_blockers",
+  "artifacts": {
+    "sdist": {
+      "bytes": 102660,
+      "file": "dist/trainparity-0.1.0rc1.tar.gz",
+      "sha256": "cefa5ccacea52ee8f01206d693878c63b6627c24b8eb057c205a8eacff3cfbf0"
+    },
+    "wheel": {
+      "bytes": 47773,
+      "file": "dist/trainparity-0.1.0rc1-py3-none-any.whl",
+      "sha256": "c3e2e30f50848b8a81403a9c01cf5990b0a5aabad347239f806f73b64b3a5529"
+    }
+  },
+  "documentation": {
+    "absolute_github_links_in_readme": true,
+    "exact_install_command": "pip install trainparity==0.1.0rc1",
+    "publication_stale_phrases": 0,
+    "wheel_metadata_checked": true,
+    "sdist_readme_checked": true
+  },
+  "gate7i_accepted_bundle_sha256": "22a2a788ae1a90ab9ac1d33f797ef48ecdafe7ad18b7e6e1df2714f21c2b8879",
+  "m3": {
+    "coverage_percent": 90.31,
+    "elapsed": "00:16:31",
+    "exit_code": "0:0",
+    "job_id": "59014365",
+    "status": "COMPLETED",
+    "tests_passed": 147
+  },
+  "publication": {
+    "github_release_created": false,
+    "pypi_upload_executed": false,
+    "repository_visibility_changed": false,
+    "tag_created": false
+  },
+  "release_workflow": {
+    "build_count": 1,
+    "concurrency_serialized": true,
+    "fresh_venv": true,
+    "outside_source_tree": true,
+    "publish_payload": "dist/",
+    "quickstarts": [
+      "resume",
+      "accumulation",
+      "sample_coverage"
+    ],
+    "smoke_before_publish": true,
+    "version_match_checked": true,
+    "wheel_source": "dist/*.whl"
+  },
+  "schema_version": 1,
+  "source_commit": "0203e9d3dc81c9a5fd199806ab020ca0065e0b83",
+  "status": "PASS",
+  "trainparity_version": "0.1.0rc1",
+  "user_document_sha256": "6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300"
+}

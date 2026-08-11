@@ -342,3 +342,18 @@ Required verification is Ruff, strict Mypy, the full test suite,
 verifier, `git diff --check`, and a dedicated dry-run proof that the release
 workflow installs the just-built wheel, changes out of the repository, runs
 all three quickstarts, and leaves the same `dist/` payload for publication.
+
+The two release-activation blockers are corrected at source commit
+`0203e9d3dc81c9a5fd199806ab020ca0065e0b83`. M3 job `59014365` completed with
+exit `0:0`: Ruff and strict Mypy passed; both required test executions passed
+147 tests at 90.31% coverage; wheel/sdist build, installed-wheel smoke outside
+the repository, all three quickstarts, repository/archive audit, Twine, every
+accepted Gate verifier, and the enhanced Gate 7I verifier passed. The rebuilt
+wheel and sdist hashes are recorded under `artifacts/release_activation/`.
+
+The accepted Gate 7I bundle remains unchanged at SHA-256
+`22a2a788ae1a90ab9ac1d33f797ef48ecdafe7ad18b7e6e1df2714f21c2b8879`, and
+the user document remains byte-identical. Publication, tagging, release
+creation, merging, and visibility changes remain unexecuted. Hosted PR CI for
+the activation commit is the remaining verification step before returning to
+human publication review.
