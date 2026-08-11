@@ -74,7 +74,7 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
         "matrix outcomes",
     )
     exercised = {item for row in matrix["rows"] for item in row["requirements"]}
-    _require(REQUIRED <= exercised, f"required fixture coverage: {sorted(REQUIRED - exercised)}")
+    _require(exercised >= REQUIRED, f"required fixture coverage: {sorted(REQUIRED - exercised)}")
     rows = {row["name"]: row["result"] for row in matrix["rows"]}
     _require(rows["unknown_universe"]["outcome"] == "ABSTAIN", "unknown universe")
     _require(
