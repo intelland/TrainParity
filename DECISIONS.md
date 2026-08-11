@@ -352,3 +352,15 @@
   scheduler/scaler state in separate fresh processes.
 - **Reason:** This detects the specified accumulation faults without claiming
   universal equivalence or creating a general event-tracing platform.
+
+## D-0033: Recommend GO after Gate 5 and stop for review
+
+- **Status:** Proposed for human review
+- **Date:** 2026-08-11
+- **Decision:** Recommend `GO` based on zero clean false positives, detection of
+  all eight required faults, verified-equal fresh-process starts, the same-device
+  L40S result, two sub-50-LOC pinned project checks, and explicit BatchNorm and
+  ambiguous-optimizer controls. Do not start Gate 6.
+- **Reason:** The bounded observations distinguish loss accounting, gradient,
+  optimizer, parameter, and scheduler state without asserting universal
+  accumulation equivalence or expanding into general tracing.

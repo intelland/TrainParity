@@ -1,11 +1,14 @@
 {
-  "build": "PENDING",
+  "build": "PASS",
   "coverage_percent": 92.54,
-  "lint": "PENDING",
+  "gate_0_through_4_isolated_verifier_replay": "PASS (Gate 1 requires built dist copied into isolated tree)",
+  "gate_4_friction_verifier_replay": "PASS",
+  "gate_4b_verifier_replay": "PASS",
+  "lint": "PASS",
   "m3_python": "/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
   "outcome": "PASS",
   "test_command": "make test PYTHON=/scratch/mp25/jwuu0254/zxh/TrainParity/envs/gate3/bin/python",
   "tests_failed": 0,
   "tests_passed": 107,
-  "typecheck": "PENDING"
+  "typecheck": "PASS"
 }

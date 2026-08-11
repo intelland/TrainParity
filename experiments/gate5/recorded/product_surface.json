@@ -20,12 +20,12 @@
         "message": "declared executions are equivalent for one optimizer-update boundary",
         "outcome": "PASS",
         "peak_temporary_directory_bytes": 23237352,
-        "persisted_artifact_bytes": 0,
+        "persisted_artifact_bytes": 603,
         "primary_difference": null,
         "process_ids": [
-          1730092,
-          1736005,
-          1742905
+          2761714,
+          2768273,
+          2775410
         ],
         "verified_equal_initial_state": true
       },
@@ -53,12 +53,12 @@
         "message": "declared executions are equivalent for one optimizer-update boundary",
         "outcome": "PASS",
         "peak_temporary_directory_bytes": 317736,
-        "persisted_artifact_bytes": 0,
+        "persisted_artifact_bytes": 613,
         "primary_difference": null,
         "process_ids": [
-          1759753,
-          1762915,
-          1765384
+          2791879,
+          2794988,
+          2797923
         ],
         "verified_equal_initial_state": true
       },
