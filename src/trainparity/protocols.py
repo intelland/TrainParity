@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Protocol, runtime_checkable
 
 import torch
-
 from torch import nn
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler

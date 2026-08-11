@@ -21,7 +21,6 @@ from trainparity import (
 
 def _cases(device: str) -> list[tuple[str, str, AccumulationExecutionPlan, str]]:
     clean = AccumulationExecutionPlan(2)
-    clipped = AccumulationExecutionPlan(2, clip_grad_norm=0.25)
     cases = [
         ("clean_linear", "experiments.gate5.cases:LinearCase", clean, "PASS"),
         ("clean_mlp", "experiments.gate5.cases:MLPCase", clean, "PASS"),
