@@ -316,5 +316,13 @@ complete 30-logical-line case run by CI, and validation counts are explicitly
 described as the reproducible suite rather than universal detection rates.
 All 57 accepted-evidence hashes and the user's byte-exact document hash remain
 unchanged. Publication is still held: no PyPI upload, tag, release, rename, or
-visibility change has occurred. Hosted pull-request CI remains the last
-non-release verification step before final human review.
+visibility change has occurred.
+
+The final framework-neutral workflow hardening moved `actions/checkout` to
+the official v6.0.2 commit SHA to avoid its deprecated Node.js 20 runtime.
+Draft PR `#5` targets `gate-7`; hosted read-only PR CI run `31480892365` at
+commit `00704b58652a9c589cf37942725c72f8a6e276f1` passed every configured step
+with zero annotations. This included lint, strict type checking, the complete
+test suite, the 30-line README integration, all three quickstarts, build,
+Twine validation, and the fast Gate 7I verifier. The PR remains draft and
+unmerged, and no release workflow or publication action was executed.
