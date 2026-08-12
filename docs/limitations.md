@@ -10,6 +10,14 @@
 - Resume and accumulation execution is single-process. DDP, FSDP, DeepSpeed,
   Lightning, Transformers, elastic execution, and cross-device comparison are
   outside the 0.1 contract.
+- Fresh-process resume validation needs project-specific command, checkpoint,
+  and observation integration. Its cost depends on the upstream checkpoint
+  interface; implicit or timestamped checkpoint locations can require a
+  deterministic launcher or wrapper. Retaining that integration as a
+  regression or CI test usually provides more value than a one-off diff.
+- A command-oriented resume check normally runs two uninterrupted baselines
+  plus the split and resumed portions of a candidate. Baseline self-consistency
+  and separate process boundaries intentionally cost more than one normal run.
 - The exact full-value snapshot reference favors semantic clarity over storage
   and runtime efficiency.
 - Exact comparison can reject benign floating-point differences. Tolerances

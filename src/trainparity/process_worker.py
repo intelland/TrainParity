@@ -51,9 +51,22 @@ def _stable_state(value: object) -> object:
 def execute(case_spec: str, checkpoint: Path, step: int) -> dict[str, Any]:
     """Load, freeze, and serialize one external checkpoint without mutable aliases."""
     try:
-        capture_started = time.perf_counter()
         case = load_process_case(case_spec)
-        frozen = FullValueBackend().freeze(_stable_state(case.observe_checkpoint(checkpoint)))
+    except Exception as error:
+        return {
+            "outcome": Outcome.ERROR.value,
+            "message": f"process case loading failed: {type(error).__name__}",
+        }
+    try:
+        capture_started = time.perf_counter()
+        observed = case.observe_checkpoint(checkpoint)
+    except Exception as error:
+        return {
+            "outcome": Outcome.ERROR.value,
+            "message": f"observe_checkpoint callback failed: {type(error).__name__}",
+        }
+    try:
+        frozen = FullValueBackend().freeze(_stable_state(observed))
         if not isinstance(frozen, FrozenMapping):
             raise StableStateError("observed checkpoint root must be a mapping")
         capture_seconds = time.perf_counter() - capture_started

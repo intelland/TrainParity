@@ -102,6 +102,33 @@ class SlowProcessCase(DeterministicProcessCase):
     mode = "slow"
 
 
+class CommandCallbackErrorCase(DeterministicProcessCase):
+    def command(self, plan: ProcessExecutionPlan) -> list[str]:
+        raise RuntimeError("intentional command callback failure")
+
+
+class SystemExitCommandCase(DeterministicProcessCase):
+    def command(self, plan: ProcessExecutionPlan) -> list[str]:
+        raise SystemExit(7)
+
+
+class PostRunCheckpointPathErrorCase(DeterministicProcessCase):
+    def checkpoint_path(self, run_dir: Path) -> Path:
+        raise FileNotFoundError("intentional post-run checkpoint lookup failure")
+
+
+class CandidateResumeCheckpointPathErrorCase(DeterministicProcessCase):
+    def checkpoint_path(self, run_dir: Path) -> Path:
+        if run_dir.name == "candidate_resume":
+            raise FileNotFoundError("intentional staging location failure")
+        return super().checkpoint_path(run_dir)
+
+
+class ObservationCallbackErrorCase(DeterministicProcessCase):
+    def observe_checkpoint(self, path: Path) -> dict[str, object]:
+        raise RuntimeError("intentional observation callback failure")
+
+
 class UnsupportedProcessCase(DeterministicProcessCase):
     def observe_checkpoint(self, path: Path) -> dict[str, object]:
         observed = super().observe_checkpoint(path)
