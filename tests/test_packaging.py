@@ -28,3 +28,9 @@ def test_release_candidate_metadata_is_conservative() -> None:
     assert project["version"] == "0.1.0rc2"
     assert project["requires-python"] == ">=3.11,<3.12"
     assert "Programming Language :: Python :: 3.12" not in project["classifiers"]
+
+
+def test_external_resume_guide_is_included_in_source_distributions() -> None:
+    root = Path(__file__).resolve().parents[1]
+    manifest = (root / "MANIFEST.in").read_text(encoding="utf-8")
+    assert "include docs/external-resume-integration.md" in manifest.splitlines()

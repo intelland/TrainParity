@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from trainparity.comparison import ExactComparison
-from trainparity.importing import CaseImportError, load_process_case
+from trainparity.importing import load_process_case
 from trainparity.outcomes import Outcome
 from trainparity.protocols import ProcessExecutionPlan, ProcessResumeCase
 from trainparity.results import ExternalProcessEvidence, ProcessResumeResult
@@ -72,7 +72,7 @@ class ProcessResumeRunner:
             child_environment, propagated_keys = self._child_environment(
                 case, environment_updates
             )
-        except (CaseImportError, OSError, ValueError) as error:
+        except Exception as error:
             result = ProcessResumeResult(
                 Outcome.ERROR,
                 f"process case setup failed: {type(error).__name__}",
@@ -89,6 +89,7 @@ class ProcessResumeRunner:
                 child_environment,
                 propagated_keys,
                 staged_checkpoint_hook,
+                True,
             )
             return self._finish(result, started, report_path)
         if self.temporary_root is not None:
@@ -105,6 +106,7 @@ class ProcessResumeRunner:
                 child_environment,
                 propagated_keys,
                 staged_checkpoint_hook,
+                False,
             )
             return self._finish(result, started, report_path)
 
@@ -117,6 +119,7 @@ class ProcessResumeRunner:
         environment: dict[str, str],
         propagated_keys: tuple[str, ...],
         staged_checkpoint_hook: Callable[[Path], None] | None,
+        preserve_child_logs: bool,
     ) -> ProcessResumeResult:
         timings: dict[str, float] = {}
         processes: list[ExternalProcessEvidence] = []
@@ -129,6 +132,7 @@ class ProcessResumeRunner:
                 case,
                 ProcessExecutionPlan(phase, cwd, root / phase, case.total_step),
                 environment,
+                preserve_child_logs,
             )
             early = self._execution_problem(
                 case_spec, execution, processes, propagated_keys, timings
@@ -143,6 +147,7 @@ class ProcessResumeRunner:
                 case_spec,
                 execution.checkpoint,
                 case.total_step,
+                phase,
                 root / "snapshots" / f"{phase}.json",
                 cwd,
                 environment,
@@ -189,6 +194,7 @@ class ProcessResumeRunner:
                 "candidate_split", cwd, root / "candidate_split", case.split_step
             ),
             environment,
+            preserve_child_logs,
         )
         early = self._execution_problem(case_spec, split, processes, propagated_keys, timings)
         if early is not None:
@@ -200,17 +206,32 @@ class ProcessResumeRunner:
 
         resume_dir = root / "candidate_resume"
         resume_dir.mkdir(parents=True, exist_ok=True)
-        staged = case.checkpoint_path(resume_dir)
-        staged.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            staged = case.checkpoint_path(resume_dir)
+            if not isinstance(staged, Path):
+                raise TypeError("checkpoint_path must return pathlib.Path")
+        except Exception as error:
+            return ProcessResumeResult(
+                Outcome.ERROR,
+                "candidate_resume checkpoint path resolution before child launch "
+                f"failed: {type(error).__name__}",
+                case_spec,
+                processes=tuple(processes),
+                propagated_environment_keys=propagated_keys,
+                timing_seconds=timings,
+                snapshot_ipc_bytes=ipc_bytes,
+                checkpoint_max_bytes=self._max_size(checkpoints),
+            )
         stage_started = time.perf_counter()
         try:
+            staged.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(split.checkpoint, staged)
             if staged_checkpoint_hook is not None:
                 staged_checkpoint_hook(staged)
-        except (OSError, ValueError, TypeError):
+        except Exception as error:
             return ProcessResumeResult(
                 Outcome.ERROR,
-                "checkpoint staging or staged hook failed",
+                f"candidate_resume checkpoint staging failed: {type(error).__name__}",
                 case_spec,
                 processes=tuple(processes),
                 propagated_environment_keys=propagated_keys,
@@ -226,6 +247,7 @@ class ProcessResumeRunner:
                 "candidate_resume", cwd, resume_dir, case.total_step, staged
             ),
             environment,
+            preserve_child_logs,
         )
         early = self._execution_problem(case_spec, resumed, processes, propagated_keys, timings)
         if early is not None:
@@ -251,6 +273,7 @@ class ProcessResumeRunner:
             case_spec,
             resumed.checkpoint,
             case.total_step,
+            "candidate_resume",
             root / "snapshots" / "candidate_resume.json",
             cwd,
             environment,
@@ -316,6 +339,7 @@ class ProcessResumeRunner:
         case: ProcessResumeCase,
         plan: ProcessExecutionPlan,
         environment: dict[str, str],
+        preserve_logs: bool,
     ) -> _ExecutionResult:
         plan.run_dir.mkdir(parents=True, exist_ok=True)
         stdout_path = plan.run_dir / "stdout.log"
@@ -323,6 +347,13 @@ class ProcessResumeRunner:
         try:
             raw_command = case.command(plan)
             command = self._validated_command(raw_command)
+        except Exception as error:
+            return _ExecutionResult(
+                Outcome.ERROR,
+                f"{plan.phase} command callback or validation failed: "
+                f"{type(error).__name__}",
+            )
+        try:
             started = time.perf_counter()
             with stdout_path.open("w", encoding="utf-8") as stdout, stderr_path.open(
                 "w", encoding="utf-8"
@@ -342,23 +373,51 @@ class ProcessResumeRunner:
                     process.wait()
                     return _ExecutionResult(
                         Outcome.ERROR,
-                        f"{plan.phase} child exceeded timeout",
+                        self._with_log_hint(
+                            f"{plan.phase} child exceeded timeout",
+                            plan.phase,
+                            preserve_logs,
+                        ),
                     )
             elapsed = time.perf_counter() - started
         except (OSError, TypeError, ValueError):
-            return _ExecutionResult(Outcome.ERROR, f"{plan.phase} child launch failed")
+            return _ExecutionResult(
+                Outcome.ERROR,
+                self._with_log_hint(
+                    f"{plan.phase} child launch failed", plan.phase, preserve_logs
+                ),
+            )
         evidence = ExternalProcessEvidence(plan.phase, process.pid, elapsed, returncode)
         if returncode != 0:
             return _ExecutionResult(
                 Outcome.ERROR,
-                f"{plan.phase} child exited with status {returncode}",
+                self._with_log_hint(
+                    f"{plan.phase} child exited with status {returncode}",
+                    plan.phase,
+                    preserve_logs,
+                ),
                 evidence,
             )
-        checkpoint = case.checkpoint_path(plan.run_dir)
-        if not checkpoint.is_file():
+        try:
+            checkpoint = case.checkpoint_path(plan.run_dir)
+            if not isinstance(checkpoint, Path):
+                raise TypeError("checkpoint_path must return pathlib.Path")
+            checkpoint_exists = checkpoint.is_file()
+        except Exception as error:
             return _ExecutionResult(
                 Outcome.ERROR,
-                f"{plan.phase} did not create its declared checkpoint",
+                f"{plan.phase} checkpoint path resolution after child completion "
+                f"failed: {type(error).__name__}",
+                evidence,
+            )
+        if not checkpoint_exists:
+            return _ExecutionResult(
+                Outcome.ERROR,
+                self._with_log_hint(
+                    f"{plan.phase} did not create its declared checkpoint",
+                    plan.phase,
+                    preserve_logs,
+                ),
                 evidence,
             )
         return _ExecutionResult(Outcome.PASS, "child completed", evidence, checkpoint)
@@ -368,6 +427,7 @@ class ProcessResumeRunner:
         case: str,
         checkpoint: Path,
         step: int,
+        phase: str,
         result_path: Path,
         cwd: Path,
         environment: dict[str, str],
@@ -398,15 +458,25 @@ class ProcessResumeRunner:
                 check=False,
             )
         except (OSError, subprocess.TimeoutExpired):
-            return _SnapshotResult(Outcome.ERROR, "snapshot worker launch or timeout failed")
+            return _SnapshotResult(
+                Outcome.ERROR,
+                f"{phase} checkpoint observation worker launch or timeout failed",
+            )
         elapsed = time.perf_counter() - started
         if completed.returncode != 0 or not result_path.is_file():
-            return _SnapshotResult(Outcome.ERROR, "snapshot worker did not publish a result")
+            return _SnapshotResult(
+                Outcome.ERROR,
+                f"{phase} checkpoint observation worker did not publish a result",
+            )
         try:
             payload: dict[str, Any] = json.loads(result_path.read_text(encoding="utf-8"))
             outcome = Outcome(payload["outcome"])
             if outcome is not Outcome.PASS:
-                return _SnapshotResult(outcome, str(payload["message"]), elapsed_seconds=elapsed)
+                return _SnapshotResult(
+                    outcome,
+                    f"{phase} checkpoint observation failed: {payload['message']}",
+                    elapsed_seconds=elapsed,
+                )
             snapshot = decode_snapshot(payload["snapshot"])
             worker_timings = payload["timing_seconds"]
             return _SnapshotResult(
@@ -419,7 +489,10 @@ class ProcessResumeRunner:
                 float(worker_timings["serialization"]),
             )
         except (OSError, ValueError, KeyError, TypeError):
-            return _SnapshotResult(Outcome.ERROR, "snapshot worker result was corrupt")
+            return _SnapshotResult(
+                Outcome.ERROR,
+                f"{phase} checkpoint observation worker result was corrupt",
+            )
 
     @staticmethod
     def _validate_case(case: ProcessResumeCase) -> None:
@@ -495,6 +568,12 @@ class ProcessResumeRunner:
     @staticmethod
     def _max_size(paths: Sequence[Path]) -> int:
         return max((path.stat().st_size for path in paths if path.is_file()), default=0)
+
+    @staticmethod
+    def _with_log_hint(message: str, phase: str, preserve_logs: bool) -> str:
+        if not preserve_logs:
+            return message
+        return f"{message}; see {phase}/stderr.log under the preserved work_dir"
 
     @staticmethod
     def _finish(

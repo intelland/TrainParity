@@ -71,10 +71,38 @@ class ProcessResumeCase(Protocol):
 ```
 
 `ProcessExecutionPlan` has `phase`, `cwd`, `run_dir`, `end_step`, and optional
-`resume_from` fields. The adapter owns project semantics and original
-checkpoint commands; TrainParity owns baseline self-consistency, continuous
-and interrupted plans, process exit, fresh-process load, snapshots, comparison,
-timeouts, and reporting.
+`resume_from` fields. `phase` is one of these four stable values:
+
+| Phase | Meaning |
+| --- | --- |
+| `baseline_a` | First uninterrupted execution through `total_step`. |
+| `baseline_b` | Independent uninterrupted repeat used to establish baseline self-consistency. |
+| `candidate_split` | Interrupted execution through `split_step`; its checkpoint is saved and the process exits. |
+| `candidate_resume` | Fresh execution that loads the staged split checkpoint and continues through `total_step`. |
+
+`checkpoint_path(run_dir)` must return one deterministic checkpoint location
+for every phase directory. After a child finishes, TrainParity uses it to find
+the output checkpoint. For `candidate_resume`, TrainParity also calls it
+*before* launching the resumed child, copies the `candidate_split` checkpoint
+to that location, and supplies the location as `plan.resume_from`. It is
+therefore a location contract, not a callback that searches only for an
+already-existing file.
+
+The adapter owns project semantics and original checkpoint commands;
+TrainParity owns baseline self-consistency, continuous and interrupted plans,
+process exit, fresh-process load, snapshots, comparison, timeouts, and
+reporting. In-process callback boundaries catch `Exception`, not
+`BaseException`: `KeyboardInterrupt` and `SystemExit` from `command()` or
+`checkpoint_path()` propagate. `observe_checkpoint()` runs in a snapshot
+child; its ordinary exceptions are returned as `ERROR`, while abnormal child
+termination is reported as a worker `ERROR`. When `work_dir` is provided, each
+phase retains `stdout.log` and `stderr.log` beneath its run directory, and
+child-process error messages identify the relevant stderr path. Managed
+temporary runs are cleaned and are not promised to remain available.
+
+See the [external resume integration guide](external-resume-integration.md)
+for a complete command-oriented PyTorch example, checkpoint staging diagrams,
+timestamped-checkpoint wrappers, and observation recommendations.
 
 `ProcessResumeResult` exposes `outcome`, `message`, `case`,
 `first_divergent_step`, `primary_difference`, `all_differences`, process

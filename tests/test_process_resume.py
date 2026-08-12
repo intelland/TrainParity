@@ -102,3 +102,75 @@ def test_process_runner_rejects_invalid_inputs(tmp_path: Path) -> None:
         environment={"BAD=KEY": "value"},
     )
     assert result.outcome is Outcome.ERROR
+
+
+def test_post_run_checkpoint_lookup_exception_is_error(tmp_path: Path) -> None:
+    result = ProcessResumeRunner(temporary_root=tmp_path).run(
+        PREFIX + "PostRunCheckpointPathErrorCase"
+    )
+    assert result.outcome is Outcome.ERROR
+    assert result.processes[0].phase == "baseline_a"
+    assert result.processes[0].returncode == 0
+    assert result.message == (
+        "baseline_a checkpoint path resolution after child completion failed: "
+        "FileNotFoundError"
+    )
+
+
+def test_candidate_resume_staging_path_exception_is_error(tmp_path: Path) -> None:
+    result = ProcessResumeRunner(temporary_root=tmp_path).run(
+        PREFIX + "CandidateResumeCheckpointPathErrorCase"
+    )
+    assert result.outcome is Outcome.ERROR
+    assert [process.phase for process in result.processes] == [
+        "baseline_a",
+        "baseline_b",
+        "candidate_split",
+    ]
+    assert result.message == (
+        "candidate_resume checkpoint path resolution before child launch failed: "
+        "FileNotFoundError"
+    )
+
+
+def test_command_and_observation_callback_exceptions_are_errors(tmp_path: Path) -> None:
+    command = ProcessResumeRunner(temporary_root=tmp_path / "command").run(
+        PREFIX + "CommandCallbackErrorCase"
+    )
+    observation = ProcessResumeRunner(temporary_root=tmp_path / "observation").run(
+        PREFIX + "ObservationCallbackErrorCase"
+    )
+    assert command.outcome is Outcome.ERROR
+    assert command.message == "baseline_a command callback or validation failed: RuntimeError"
+    assert observation.outcome is Outcome.ERROR
+    assert observation.message == (
+        "baseline_a checkpoint observation failed: "
+        "observe_checkpoint callback failed: RuntimeError"
+    )
+
+
+def test_callback_base_exception_is_not_converted(tmp_path: Path) -> None:
+    with pytest.raises(SystemExit, match="7"):
+        ProcessResumeRunner(temporary_root=tmp_path).run(PREFIX + "SystemExitCommandCase")
+
+
+def test_staging_copy_failure_remains_error(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    def fail_copy(source: Path, destination: Path) -> None:
+        raise OSError("intentional copy failure")
+
+    monkeypatch.setattr("trainparity.process_resume.shutil.copy2", fail_copy)
+    result = ProcessResumeRunner(temporary_root=tmp_path).run(
+        PREFIX + "DeterministicProcessCase"
+    )
+    assert result.outcome is Outcome.ERROR
+    assert result.message == "candidate_resume checkpoint staging failed: OSError"
+
+
+def test_preserved_work_dir_makes_child_stderr_discoverable(tmp_path: Path) -> None:
+    work_dir = tmp_path / "preserved"
+    result = ProcessResumeRunner().run(PREFIX + "ErrorProcessCase", work_dir=work_dir)
+    assert result.outcome is Outcome.ERROR
+    assert "baseline_a/stderr.log under the preserved work_dir" in result.message
+    stderr = work_dir / "baseline_a" / "stderr.log"
+    assert stderr.is_file()
+    assert "intentional child failure" in stderr.read_text(encoding="utf-8")
