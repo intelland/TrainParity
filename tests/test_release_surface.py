@@ -72,6 +72,11 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
     assert "coverage.same_rank_duplicate" in first
     assert not re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
     assert "python -m pytest -q --no-cov examples/test_readme_case.py" in first
+    assert (
+        "python -m pip install torch==2.7.0 --index-url "
+        "https://download.pytorch.org/whl/cpu"
+    ) in readme
+    assert 'python -m pip install -e ".[dev]"' in first
     assert "pip install trainparity==0.1.0rc1" in readme
     assert "unpublished release candidate" not in readme
     relative_public_links = re.findall(
