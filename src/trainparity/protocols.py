@@ -19,7 +19,7 @@ class TrainingState:
 
     model: nn.Module
     optimizer: Optimizer
-    scheduler: LRScheduler | None
+    scheduler: LRScheduler | None = None
     step: int = 0
     scaler: object | None = None
 

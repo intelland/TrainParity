@@ -13,6 +13,16 @@ from trainparity.accumulation import (
     UnsafeBatchSplit,
     split_tensor_tree,
 )
+from trainparity.api import TrainingState
+
+
+def test_training_state_defaults_to_no_scheduler() -> None:
+    model = torch.nn.Linear(2, 1)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+
+    state = TrainingState(model=model, optimizer=optimizer)
+
+    assert state.scheduler is None
 
 
 def test_tensor_tree_split_preserves_structure_and_order() -> None:

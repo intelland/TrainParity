@@ -16,6 +16,17 @@ prerelease of 0.1.0. Install the exact release candidate with:
 pip install trainparity==0.1.0rc1
 ```
 
+CPU-only users should install a validated PyTorch CPU wheel first so that pip
+does not resolve the default CUDA wheel and its runtime packages:
+
+```bash
+python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
+python -m pip install trainparity==0.1.0rc1
+```
+
+Package metadata still permits `torch>=2.7,<2.14`; the explicitly validated
+versions are listed under [Compatibility and security](#compatibility-and-security).
+
 CI executes the pytest integration and all three quickstart commands. The
 quickstarts run against the built wheel from outside the repository directory.
 
@@ -66,7 +77,12 @@ def test_duplicate_loader_reports_first_observed_path() -> None:
     assert result.first_violation.path == "coverage.same_rank_duplicate"
 ```
 
+From a fresh source checkout, install the development extra before running the
+example. It includes `pytest-cov`, which supplies the coverage options used by
+the repository-wide pytest configuration:
+
 ```bash
+python -m pip install -e ".[dev]"
 python -m pytest -q --no-cov examples/test_readme_case.py
 ```
 
