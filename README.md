@@ -1,14 +1,27 @@
 # TrainParity
 
 [![CI](https://github.com/intelland/TrainParity/actions/workflows/ci.yml/badge.svg)](https://github.com/intelland/TrainParity/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/trainparity.svg)](https://pypi.org/project/trainparity/)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/intelland/TrainParity/blob/main/LICENSE)
 
 TrainParity checks user-declared equivalence across PyTorch resume, gradient-accumulation, and finite sample-ID executions. It returns `PASS`, `FAIL`, `ABSTAIN`, or `ERROR` and locates the first observed divergence; it is not a universal bug detector and does not invoke an LLM at runtime.
 
+## Install and run
+
+TrainParity is currently alpha-quality software. Version 0.1.0rc1 is a
+prerelease of 0.1.0. Install the exact release candidate with:
+
+```bash
+pip install trainparity==0.1.0rc1
+```
+
+CI executes the pytest integration and all three quickstart commands. The
+quickstarts run against the built wheel from outside the repository directory.
+
 ## A complete integration
 
-This 30-logical-line pytest case audits stable IDs emitted by a real PyTorch
+The following compact pytest case audits stable IDs emitted by a real PyTorch
 `DataLoader`. The clean loader passes; the faulty loader repeats ID `1` and
 omits ID `2`. The file is [`examples/test_readme_case.py`](https://github.com/intelland/TrainParity/blob/main/examples/test_readme_case.py),
 and CI executes the command shown below.
@@ -101,18 +114,6 @@ This matrix summarizes the project's pinned, reproducible validation suite. It i
 
 Exact commits, environments, outcomes, and limitations are in [validation](https://github.com/intelland/TrainParity/blob/main/docs/validation.md). The external-project results used tiny fixtures; they are evidence about those cases, not a framework-compatibility promise.
 
-## Install and run
-
-TrainParity 0.1.0rc1 is an alpha prerelease. Install the exact release
-candidate with:
-
-```bash
-pip install trainparity==0.1.0rc1
-```
-
-CI executes the pytest integration and all three quickstart commands. The
-quickstarts run against the built wheel from outside the repository directory.
-
 ## What it checks
 
 - Resume equivalence compares a continuous execution with save, real exit, fresh-process load, and resumed execution through the project's checkpoint semantics.
@@ -145,10 +146,12 @@ deterministic runtime behavior are documented in [development provenance](https:
 
 ## Compatibility and security
 
-The release candidate's installed CPU wheel passed on CPython 3.11 with
-PyTorch 2.7.0, 2.10.0, and 2.13.0. Same-device GPU evidence uses PyTorch 2.7.0
-on the exact CUDA/GPU fixtures listed in [validation](https://github.com/intelland/TrainParity/blob/main/docs/validation.md). No
-support is implied for other Python, PyTorch, CUDA, or GPU versions.
+Package metadata permits `torch>=2.7,<2.14`. The release validation matrix
+explicitly tested the installed CPU wheel on CPython 3.11 with
+PyTorch 2.7.0, 2.10.0, and 2.13.0. Intermediate PyTorch versions in the
+declared range are installable but were not independently validated. Same-device GPU evidence uses
+PyTorch 2.7.0 on the exact CUDA/GPU fixtures listed in
+[validation](https://github.com/intelland/TrainParity/blob/main/docs/validation.md). No support is implied outside this declared and tested scope.
 
 TrainParity is not a sandbox. User training code runs with the caller's permissions; load only trusted checkpoints and do not execute untrusted repositories. Explicit child environment values are propagated when requested but are not recorded in reports by default. See [SECURITY.md](https://github.com/intelland/TrainParity/blob/main/SECURITY.md).
 

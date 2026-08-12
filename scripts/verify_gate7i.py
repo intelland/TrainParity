@@ -142,7 +142,11 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
     _require(not (root / "src/trainparity/__main__.py").exists(), "module CLI removal")
     readme = (root / "README.md").read_text(encoding="utf-8")
     first = readme.split("## Installed quickstarts", 1)[0]
-    _require("img.shields.io/pypi" not in readme, "unpublished PyPI badge")
+    _require("img.shields.io/pypi/v/trainparity.svg" in readme, "published PyPI badge")
+    _require(
+        readme.index("## Install and run") < readme.index("## A complete integration"),
+        "README install placement",
+    )
     _require("Asking Codex" not in readme, "Codex paragraph")
     placeholder = re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
     _require("class CoverageCase:" in first and placeholder is None, "complete first-screen case")

@@ -63,8 +63,9 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
     )
     first = readme.split("## Installed quickstarts", 1)[0]
     assert 20 <= logical_lines <= 30
-    assert f"{logical_lines}-logical-line pytest case" in first
-    assert "img.shields.io/pypi" not in readme
+    assert "The following compact pytest case audits stable IDs" in first
+    assert "img.shields.io/pypi/v/trainparity.svg" in readme
+    assert readme.index("## Install and run") < readme.index("## A complete integration")
     assert "Asking Codex" not in readme
     assert "does not invoke an LLM at runtime" in first
     assert "class CoverageCase:" in first
