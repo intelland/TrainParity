@@ -77,7 +77,7 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
         "https://download.pytorch.org/whl/cpu"
     ) in readme
     assert 'python -m pip install -e ".[dev]"' in first
-    assert "pip install trainparity==0.1.0rc2" in readme
+    assert "pip install trainparity==0.1.0rc3" in readme
     assert "unpublished release candidate" not in readme
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
@@ -135,6 +135,7 @@ def test_shipped_release_documents_remain_true_after_publication() -> None:
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     rc1_notes = (ROOT / "docs/release-notes/0.1.0rc1.md").read_text(encoding="utf-8")
     rc2_notes = (ROOT / "docs/release-notes/0.1.0rc2.md").read_text(encoding="utf-8")
+    rc3_notes = (ROOT / "docs/release-notes/0.1.0rc3.md").read_text(encoding="utf-8")
     held_phrases = (
         "Publication remains held",
         "not published to PyPI",
@@ -144,10 +145,22 @@ def test_shipped_release_documents_remain_true_after_publication() -> None:
     assert all(phrase not in changelog for phrase in held_phrases)
     assert all(phrase not in rc1_notes for phrase in held_phrases)
     assert all(phrase not in rc2_notes for phrase in held_phrases)
+    assert all(phrase not in rc3_notes for phrase in held_phrases)
     assert "alpha prerelease" in rc1_notes
     assert "pip install trainparity==0.1.0rc1" in rc1_notes
     assert "small prerelease polish" in rc2_notes
     assert "pip install trainparity==0.1.0rc2" in rc2_notes
+    assert "bounded bug-fix and onboarding prerelease" in rc3_notes
+    assert "pip install trainparity==0.1.0rc3" in rc3_notes
+
+
+def test_current_release_validation_does_not_rewrite_gate7i_records() -> None:
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    release_check = (ROOT / "scripts/release_check.py").read_text(encoding="utf-8")
+    assert "dist/.release-validation/release-audit.json" in makefile
+    assert 'default=Path("dist/.release-validation/wheel-smoke.json")' in release_check
+    assert "experiments/gate7i/recorded/release_audit.json" not in makefile
+    assert "experiments/gate7i/recorded/wheel_smoke.json" not in release_check
 
 
 def test_validation_and_coverage_boundary_are_documented() -> None:

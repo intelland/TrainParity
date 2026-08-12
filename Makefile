@@ -17,7 +17,7 @@ build:
 
 release-check: lint typecheck test build
 	$(PYTHON) scripts/release_check.py
-	$(PYTHON) scripts/release_audit.py --output experiments/gate7i/recorded/release_audit.json
+	$(PYTHON) scripts/release_audit.py --output dist/.release-validation/release-audit.json
 	$(PYTHON) -m twine check dist/*
 
 verify-gate-1:
