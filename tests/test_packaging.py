@@ -25,6 +25,6 @@ def test_release_candidate_metadata_is_conservative() -> None:
     project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))[
         "project"
     ]
-    assert project["version"] == "0.1.0rc1"
+    assert project["version"] == "0.1.0rc2"
     assert project["requires-python"] == ">=3.11,<3.12"
     assert "Programming Language :: Python :: 3.12" not in project["classifiers"]

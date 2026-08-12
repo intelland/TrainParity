@@ -77,7 +77,7 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
         "https://download.pytorch.org/whl/cpu"
     ) in readme
     assert 'python -m pip install -e ".[dev]"' in first
-    assert "pip install trainparity==0.1.0rc1" in readme
+    assert "pip install trainparity==0.1.0rc2" in readme
     assert "unpublished release candidate" not in readme
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
@@ -133,7 +133,8 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
 
 def test_shipped_release_documents_remain_true_after_publication() -> None:
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    notes = (ROOT / "docs/release-notes/0.1.0rc1.md").read_text(encoding="utf-8")
+    rc1_notes = (ROOT / "docs/release-notes/0.1.0rc1.md").read_text(encoding="utf-8")
+    rc2_notes = (ROOT / "docs/release-notes/0.1.0rc2.md").read_text(encoding="utf-8")
     held_phrases = (
         "Publication remains held",
         "not published to PyPI",
@@ -141,9 +142,12 @@ def test_shipped_release_documents_remain_true_after_publication() -> None:
         "unpublished release candidate",
     )
     assert all(phrase not in changelog for phrase in held_phrases)
-    assert all(phrase not in notes for phrase in held_phrases)
-    assert "alpha prerelease" in notes
-    assert "pip install trainparity==0.1.0rc1" in notes
+    assert all(phrase not in rc1_notes for phrase in held_phrases)
+    assert all(phrase not in rc2_notes for phrase in held_phrases)
+    assert "alpha prerelease" in rc1_notes
+    assert "pip install trainparity==0.1.0rc1" in rc1_notes
+    assert "small prerelease polish" in rc2_notes
+    assert "pip install trainparity==0.1.0rc2" in rc2_notes
 
 
 def test_validation_and_coverage_boundary_are_documented() -> None:

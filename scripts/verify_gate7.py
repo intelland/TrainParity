@@ -10,6 +10,9 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
+from release_audit import VERSION as CURRENT_VERSION
+from release_audit import run as run_release_audit
+
 BANNED_README_WORDS = (
     "robust",
     "seamless",
@@ -102,19 +105,14 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
         and _hash(sdist) == historical_audit["distributions"]["sdist"]["sha256"]
     )
     if not historical_artifacts_match:
-        # Gate 7I deliberately rebuilds distributions after hardening release-facing
-        # metadata. Keep the accepted Gate 7 audit immutable, but require the current
-        # artifacts to pass the same archive audit before replaying this verifier.
-        current_audit_path = (
-            root / "experiments" / "gate7i" / "recorded" / "release_audit.json"
-        )
-        _require(current_audit_path.is_file(), "current release audit after Gate 7I rebuild")
-        audit = _load(current_audit_path)
+        # Keep the accepted Gate 7 audit immutable while validating the artifacts
+        # for the package version currently being released.
+        audit = run_release_audit(root)
         _require(
             audit["status"] == "PASS"
             and not audit["blockers"]
-            and audit["trainparity_version"] == report["trainparity_version"],
-            "current release audit after Gate 7I rebuild",
+            and audit["trainparity_version"] == CURRENT_VERSION,
+            "current release audit",
         )
         wheel = root / "dist" / audit["distributions"]["wheel"]["file"]
         sdist = root / "dist" / audit["distributions"]["sdist"]["file"]
