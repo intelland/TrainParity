@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.0rc2 - 2026-08-12
+
+- Allow scheduler-free accumulation cases to construct `TrainingState` without
+  explicitly passing `scheduler=None`.
+- Document an explicit CPU-only PyTorch installation path before installing
+  TrainParity.
+- Document the development dependencies required by the source-checkout pytest
+  example.
+- Preserve the existing checks, public API, four-state outcomes, comparison
+  semantics, declared PyTorch dependency range, and validated support claims.
+
 ## 0.1.0rc1 - 2026-08-11
 
 - Freeze the public 0.1 API for resume equivalence, accumulation equivalence,

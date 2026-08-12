@@ -10,7 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-VERSION = "0.1.0rc1"
+VERSION = "0.1.0rc2"
 
 
 def _run(
