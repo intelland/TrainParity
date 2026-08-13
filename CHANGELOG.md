@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.0rc4 - 2026-08-13
 
 - Add an explicit `comparison=` policy to command-oriented resume checks while
   preserving exact comparison as the default.

@@ -33,7 +33,7 @@ TOP_LEVEL_API = {
 
 def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
     assert set(trainparity.__all__) == TOP_LEVEL_API
-    assert trainparity.__version__ == PACKAGE_VERSION == "0.1.0rc3"
+    assert trainparity.__version__ == PACKAGE_VERSION == "0.1.0rc4"
     assert MACHINE_REPORT_SCHEMA_VERSION == 2
     for internal in (
         "AccumulationRunner",

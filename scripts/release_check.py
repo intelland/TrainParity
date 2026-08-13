@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import shutil
 import subprocess
@@ -10,7 +11,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-VERSION = "0.1.0rc3"
+VERSION = "0.1.0rc4"
 
 
 def _run(
@@ -91,6 +92,11 @@ def main() -> None:
             cwd=work,
             environment=clean_environment,
         )
+        report = json.loads((root / arguments.output).read_text(encoding="utf-8"))
+        if report["trainparity_version"] != VERSION:
+            raise RuntimeError("installed wheel reported the wrong package version")
+        if report["schema_version"] != 2:
+            raise RuntimeError("installed wheel reported the wrong machine-report schema")
     finally:
         if arguments.keep_environment:
             print(f"kept release environment: {environment}")

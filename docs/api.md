@@ -1,6 +1,6 @@
 # API reference
 
-This page describes the supported Python API for TrainParity `0.1.0rc3`.
+This page describes the supported Python API for TrainParity `0.1.0rc4`.
 Signatures are verified by the release-surface tests. Names not listed here are
 internal and may change without compatibility notice.
 
