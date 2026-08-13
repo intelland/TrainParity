@@ -14,7 +14,9 @@ import torch
 from trainparity.protocols import ProcessExecutionPlan
 
 
-def _train(run_dir: Path, end_step: int, resume: Path | None, mode: str) -> None:
+def _train(
+    run_dir: Path, end_step: int, resume: Path | None, mode: str, nudge: float
+) -> None:
     if mode == "error":
         raise RuntimeError("intentional child failure")
     if mode == "slow":
@@ -41,6 +43,8 @@ def _train(run_dir: Path, end_step: int, resume: Path | None, mode: str) -> None
         state["model"]["weight"] += state["optimizer"]["momentum"]
         state["scheduler"]["last_epoch"] += 1
         state["step"] += 1
+    if nudge:
+        state["model"]["weight"] += nudge
     state["rng"] = {"torch_cpu": torch.get_rng_state()}
     if mode == "nondeterministic":
         state["process_nonce"] = os.getpid()
@@ -94,6 +98,24 @@ class NondeterministicProcessCase(DeterministicProcessCase):
         return observed
 
 
+class BaselineToleranceProcessCase(DeterministicProcessCase):
+    """Baseline B differs by a declared small floating-point perturbation."""
+
+    baseline_nudge = 1e-5
+
+    def command(self, plan: ProcessExecutionPlan) -> list[str]:
+        command = super().command(plan)
+        if plan.phase == "baseline_b":
+            command.extend(("--nudge", str(self.baseline_nudge)))
+        return command
+
+
+class BaselineOutsideToleranceProcessCase(BaselineToleranceProcessCase):
+    """Baseline B differs beyond the tolerance used by the regression test."""
+
+    baseline_nudge = 1e-2
+
+
 class ErrorProcessCase(DeterministicProcessCase):
     mode = "error"
 
@@ -143,8 +165,9 @@ def main() -> None:
     parser.add_argument("--end-step", type=int, required=True)
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--mode", required=True)
+    parser.add_argument("--nudge", type=float, default=0.0)
     args = parser.parse_args()
-    _train(args.run_dir, args.end_step, args.resume, args.mode)
+    _train(args.run_dir, args.end_step, args.resume, args.mode, args.nudge)
 
 
 if __name__ == "__main__":

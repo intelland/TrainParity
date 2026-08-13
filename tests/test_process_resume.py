@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 import torch
 
+from trainparity import ExactComparison, ToleranceComparison, check_resume
 from trainparity.outcomes import Outcome
 from trainparity.process_resume import ProcessResumeRunner
 
@@ -68,6 +69,91 @@ def test_staged_checkpoint_fault_reports_first_observed_path(tmp_path: Path) -> 
     assert result.primary_difference is not None
     assert result.primary_difference.path == "scheduler.last_epoch"
     assert result.fresh_resume_processes_distinct
+
+
+def _small_staged_model_nudge(path: Path) -> None:
+    checkpoint = torch.load(path, map_location="cpu", weights_only=True)
+    checkpoint["model"]["weight"] += 1e-5
+    torch.save(checkpoint, path)
+
+
+def test_resume_default_none_and_explicit_exact_preserve_exact_semantics(
+    tmp_path: Path,
+) -> None:
+    case = PREFIX + "DeterministicProcessCase"
+    for index, comparison in enumerate(("default", None, ExactComparison())):
+        kwargs: dict[str, object] = {"temporary_root": tmp_path / str(index)}
+        if comparison != "default":
+            kwargs["comparison"] = comparison
+        result = check_resume(case, **kwargs)  # type: ignore[arg-type]
+        assert result.outcome is Outcome.PASS
+        assert result.comparison_policy == "exact"
+        assert result.comparison_rtol is None
+        assert result.comparison_atol is None
+        assert result.comparison_equal_nan is None
+
+    exact = ProcessResumeRunner(
+        comparison=ExactComparison(), temporary_root=tmp_path / "exact"
+    ).run(case, staged_checkpoint_hook=_small_staged_model_nudge)
+    assert exact.outcome is Outcome.FAIL
+
+    for index, comparison in enumerate(("default", None, ExactComparison())):
+        kwargs: dict[str, object] = {"temporary_root": tmp_path / f"fault-{index}"}
+        if comparison != "default":
+            kwargs["comparison"] = comparison
+        fault = check_resume("trainparity.quickstarts.resume:FaultyCase", **kwargs)  # type: ignore[arg-type]
+        abstain = check_resume(PREFIX + "NondeterministicProcessCase", **kwargs)  # type: ignore[arg-type]
+        assert fault.outcome is Outcome.FAIL
+        assert abstain.outcome is Outcome.ABSTAIN
+
+
+def test_resume_explicit_tolerance_controls_candidate_and_report(tmp_path: Path) -> None:
+    result = ProcessResumeRunner(
+        comparison=ToleranceComparison(rtol=1e-5, atol=1e-8),
+        temporary_root=tmp_path,
+    ).run(PREFIX + "DeterministicProcessCase", staged_checkpoint_hook=_small_staged_model_nudge)
+    assert result.outcome is Outcome.PASS
+    assert "declared tolerance" in result.message
+    assert result.comparison_policy == "explicit_tolerance"
+    assert result.comparison_rtol == 1e-5
+    assert result.comparison_atol == 1e-8
+    assert result.comparison_equal_nan is False
+    assert result.to_dict()["comparison_policy"] == "explicit_tolerance"
+    json.dumps(result.to_dict(), sort_keys=True)
+
+
+def test_resume_tolerance_fail_reports_numeric_error(tmp_path: Path) -> None:
+    result = ProcessResumeRunner(
+        comparison=ToleranceComparison(rtol=0.0, atol=1e-9),
+        temporary_root=tmp_path,
+    ).run(PREFIX + "DeterministicProcessCase", staged_checkpoint_hook=_small_staged_model_nudge)
+    assert result.outcome is Outcome.FAIL
+    assert result.primary_difference is not None
+    assert result.primary_difference.max_abs_error is not None
+    assert result.primary_difference.max_rel_error is not None
+
+
+def test_resume_uses_the_same_policy_for_baseline_self_consistency(tmp_path: Path) -> None:
+    exact = ProcessResumeRunner(temporary_root=tmp_path / "exact").run(
+        PREFIX + "BaselineToleranceProcessCase"
+    )
+    tolerant = ProcessResumeRunner(
+        comparison=ToleranceComparison(rtol=1e-5, atol=1e-8),
+        temporary_root=tmp_path / "tolerant",
+    ).run(PREFIX + "BaselineToleranceProcessCase")
+    outside = ProcessResumeRunner(
+        comparison=ToleranceComparison(rtol=1e-5, atol=1e-8),
+        temporary_root=tmp_path / "outside",
+    ).run(PREFIX + "BaselineOutsideToleranceProcessCase")
+    assert exact.outcome is Outcome.ABSTAIN
+    assert tolerant.outcome is Outcome.PASS
+    assert outside.outcome is Outcome.ABSTAIN
+
+
+@pytest.mark.parametrize("comparison", ("tolerance", {}, lambda: None, 1.0))
+def test_resume_rejects_non_policy_comparisons(comparison: object) -> None:
+    with pytest.raises(TypeError, match="comparison must be ExactComparison or ToleranceComparison"):
+        check_resume(PREFIX + "DeterministicProcessCase", comparison=comparison)  # type: ignore[arg-type]
 
 
 def test_baseline_nondeterminism_abstains(tmp_path: Path) -> None:

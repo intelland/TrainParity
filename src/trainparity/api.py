@@ -40,6 +40,7 @@ ComparisonPolicy = ExactComparison | ToleranceComparison
 def check_resume(
     case: str,
     *,
+    comparison: ComparisonPolicy | None = None,
     cwd: Path | None = None,
     work_dir: Path | None = None,
     report_path: Path | None = None,
@@ -47,8 +48,17 @@ def check_resume(
     timeout: float = 300.0,
     temporary_root: Path | None = None,
 ) -> ProcessResumeResult:
-    """Check one importable command-oriented resume case in fresh processes."""
-    return ProcessResumeRunner(timeout=timeout, temporary_root=temporary_root).run(
+    """Check one importable command-oriented resume case in fresh processes.
+
+    ``comparison=None`` preserves the default bitwise-exact relation. A
+    tolerance is used only when the caller explicitly supplies one.
+    """
+    policy = comparison if comparison is not None else ExactComparison()
+    return ProcessResumeRunner(
+        comparison=policy,
+        timeout=timeout,
+        temporary_root=temporary_root,
+    ).run(
         case,
         cwd=cwd,
         work_dir=work_dir,

@@ -71,6 +71,10 @@ class ProcessResumeResult:
     timing_seconds: dict[str, float] | None = None
     snapshot_ipc_bytes: int = 0
     checkpoint_max_bytes: int = 0
+    comparison_policy: str = "exact"
+    comparison_rtol: float | None = None
+    comparison_atol: float | None = None
+    comparison_equal_nan: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Return a stable JSON-compatible representation without environment values."""
@@ -102,4 +106,3 @@ class AccumulationResult:
         payload = asdict(self)
         payload["outcome"] = self.outcome.value
         return add_report_metadata(payload)
-

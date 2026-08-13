@@ -1,7 +1,7 @@
 """Package and machine-report versions for the v0.1 release candidate."""
 
 PACKAGE_VERSION = "0.1.0rc3"
-MACHINE_REPORT_SCHEMA_VERSION = 1
+MACHINE_REPORT_SCHEMA_VERSION = 2
 
 
 def add_report_metadata(payload: dict[str, object]) -> dict[str, object]:

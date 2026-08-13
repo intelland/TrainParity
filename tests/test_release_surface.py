@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import re
 import tomllib
 from pathlib import Path
@@ -38,6 +39,23 @@ def test_top_level_and_advanced_api_boundaries() -> None:
         "LossAccounting",
         "SampleObservation",
     } <= set(api.__all__)
+
+
+def test_resume_comparison_policy_is_a_keyword_only_public_contract() -> None:
+    signature = inspect.signature(api.check_resume)
+    parameters = signature.parameters
+    assert list(parameters) == [
+        "case",
+        "comparison",
+        "cwd",
+        "work_dir",
+        "report_path",
+        "environment",
+        "timeout",
+        "temporary_root",
+    ]
+    assert parameters["comparison"].kind is inspect.Parameter.KEYWORD_ONLY
+    assert parameters["comparison"].default is None
 
 
 def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:

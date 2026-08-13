@@ -130,6 +130,13 @@ def test_tolerance_reports_numerical_error() -> None:
     assert observed.max_rel_error == 0.5
 
 
+def test_exact_floating_tensor_mismatch_reports_error_without_relaxing_semantics() -> None:
+    observed = difference(torch.tensor([1.0]), torch.tensor([1.0 + 1e-7]))
+    assert observed.reason == "tensor_value"
+    assert observed.max_abs_error is not None
+    assert observed.max_rel_error is not None
+
+
 def test_integral_tensor_tolerance_remains_exact() -> None:
     observed = difference(torch.tensor([1]), torch.tensor([2]), tolerance=True)
     assert observed.reason == "tensor_value"

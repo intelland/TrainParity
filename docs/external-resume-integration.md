@@ -152,6 +152,24 @@ With the three files in place:
 python run_trainparity.py
 ```
 
+The default resume relation is exact. If the project intentionally defines a
+bounded floating-point relation instead, declare the policy in the caller;
+TrainParity applies it to both baseline self-consistency and the resumed
+candidate, then records it in the JSON report:
+
+```python
+from trainparity import ToleranceComparison, check_resume
+
+result = check_resume(
+    "trainparity_case:Case",
+    cwd=ROOT,
+    comparison=ToleranceComparison(rtol=1e-5, atol=1e-8),
+)
+```
+
+The tolerance is a user-owned semantic declaration. TrainParity does not infer
+one from a candidate mismatch or diagnose its root cause.
+
 ## Execution phases and checkpoint staging
 
 `ProcessExecutionPlan.phase` is exactly one of:

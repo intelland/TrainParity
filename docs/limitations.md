@@ -20,8 +20,13 @@
   and separate process boundaries intentionally cost more than one normal run.
 - The exact full-value snapshot reference favors semantic clarity over storage
   and runtime efficiency.
-- Exact comparison can reject benign floating-point differences. Tolerances
-  must be supplied by the user and are never inferred.
+- Exact comparison can reject benign floating-point differences. Resume and
+  accumulation both use exact comparison by default; a `ToleranceComparison`
+  must be supplied explicitly and is applied consistently to the declared
+  relation. Tolerances are never inferred or adjusted from observed results.
+- For an exact floating-point or complex tensor mismatch, `max_abs` and
+  `max_rel` are diagnostic magnitudes only. They do not change the exact
+  outcome and do not establish a root cause.
 - Optimizer parameter-name mapping can be ambiguous for tied parameters; the
   honest result is `ABSTAIN` unless the user's declared observation excludes
   that ambiguous optimizer state.

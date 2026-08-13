@@ -99,7 +99,7 @@ Representative first-observed-divergence output:
     "epoch": 0,
     "position": 2
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "trainparity_version": "0.1.0rc3"
 }
 ```
@@ -143,7 +143,24 @@ The four outcomes are intentionally distinct:
 - `ABSTAIN`: required evidence was unavailable or ambiguous, such as an unknown expected universe for exactly-once coverage.
 - `ERROR`: execution or observation could not complete.
 
-`ExactComparison` and user-configured `ToleranceComparison` remain separate. TrainParity does not infer or tune a tolerance from observed results.
+`ExactComparison` and user-configured `ToleranceComparison` remain separate.
+Resume and accumulation both default to exact comparison; a tolerance is used
+only when the caller explicitly supplies one. TrainParity does not infer or
+tune a tolerance from observed results.
+
+For a resume relation with an intentional numerical budget, declare it at the
+call site. The same policy is used to establish baseline self-consistency and
+to compare the resumed candidate, and the machine report records the declared
+policy and tolerance values:
+
+```python
+from trainparity import ToleranceComparison, check_resume
+
+result = check_resume(
+    "my_project.trainparity_case:Case",
+    comparison=ToleranceComparison(rtol=1e-5, atol=1e-8),
+)
+```
 
 ## User contract
 

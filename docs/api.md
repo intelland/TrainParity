@@ -40,6 +40,7 @@ Every `to_dict()` machine report contains integer `schema_version` and string
 def check_resume(
     case: str,
     *,
+    comparison: ExactComparison | ToleranceComparison | None = None,
     cwd: Path | None = None,
     work_dir: Path | None = None,
     report_path: Path | None = None,
@@ -49,7 +50,11 @@ def check_resume(
 ) -> ProcessResumeResult
 ```
 
-`case` is an import string such as `package.module:Case`. `cwd` selects the
+`case` is an import string such as `package.module:Case`. `comparison=None`
+selects exact comparison. A numerical policy must be explicitly constructed as
+`ToleranceComparison(rtol=..., atol=..., equal_nan=...)`; other values are
+rejected at setup. The selected policy is used for both the two baseline
+executions and the baseline-versus-resumed-candidate comparison. `cwd` selects the
 project command directory. `work_dir` preserves run files at a caller-selected
 location; otherwise an isolated temporary directory is cleaned automatically.
 `report_path` receives deterministic JSON. `environment` explicitly adds or
@@ -107,7 +112,10 @@ timestamped-checkpoint wrappers, and observation recommendations.
 `ProcessResumeResult` exposes `outcome`, `message`, `case`,
 `first_divergent_step`, `primary_difference`, `all_differences`, process
 evidence, fresh-process confirmation, propagated environment key names,
-timings, snapshot IPC bytes, and maximum checkpoint bytes.
+timings, snapshot IPC bytes, and maximum checkpoint bytes. Its machine report
+also records `comparison_policy`, `comparison_rtol`, `comparison_atol`, and
+`comparison_equal_nan`; exact reports use `null` for the three tolerance
+parameters.
 
 Runnable installed example:
 
@@ -118,6 +126,19 @@ result = check_resume("trainparity.quickstarts.resume:CleanCase")
 assert result.outcome is Outcome.PASS
 assert result.fresh_resume_processes_distinct
 ```
+
+For a resume relation that deliberately permits small floating-point error:
+
+```python
+from trainparity import ToleranceComparison, check_resume
+
+result = check_resume(
+    "my_project.trainparity_case:Case",
+    comparison=ToleranceComparison(rtol=1e-5, atol=1e-8),
+)
+```
+
+TrainParity never infers this policy from an observed mismatch.
 
 Run the complete clean/fault pair with:
 

@@ -15,7 +15,7 @@ from importlib import import_module
 from pathlib import Path
 from typing import Any
 
-from trainparity.comparison import ExactComparison
+from trainparity.comparison import ExactComparison, ToleranceComparison
 from trainparity.importing import load_process_case
 from trainparity.outcomes import Outcome
 from trainparity.protocols import ProcessExecutionPlan, ProcessResumeCase
@@ -46,9 +46,20 @@ class _SnapshotResult:
 class ProcessResumeRunner:
     """Run external continuous/resume commands with generic four-state semantics."""
 
-    def __init__(self, *, timeout: float = 300.0, temporary_root: Path | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        comparison: ExactComparison | ToleranceComparison | None = None,
+        timeout: float = 300.0,
+        temporary_root: Path | None = None,
+    ) -> None:
+        if comparison is not None and not isinstance(
+            comparison, (ExactComparison, ToleranceComparison)
+        ):
+            raise TypeError("comparison must be ExactComparison or ToleranceComparison")
         if timeout <= 0:
             raise ValueError("timeout must be positive")
+        self.comparison = comparison if comparison is not None else ExactComparison()
         self.timeout = timeout
         self.temporary_root = temporary_root
 
@@ -169,7 +180,7 @@ class ProcessResumeRunner:
             )
 
         comparison_started = time.perf_counter()
-        baseline_differences = ExactComparison().compare_all(
+        baseline_differences = self.comparison.compare_all(
             snapshots["baseline_a"], snapshots["baseline_b"]
         )
         timings["baseline_comparison"] = time.perf_counter() - comparison_started
@@ -287,7 +298,7 @@ class ProcessResumeRunner:
         timings["snapshot_capture"] += captured.capture_seconds
         timings["serialization"] += captured.serialization_seconds
         comparison_started = time.perf_counter()
-        differences = ExactComparison().compare_all(
+        differences = self.comparison.compare_all(
             snapshots["baseline_a"], captured.snapshot
         )
         timings["candidate_comparison"] = time.perf_counter() - comparison_started
@@ -324,7 +335,7 @@ class ProcessResumeRunner:
             )
         return ProcessResumeResult(
             Outcome.PASS,
-            f"final states are exactly equivalent at step {case.total_step}",
+            self._pass_message(case.total_step),
             case_spec,
             processes=tuple(processes),
             fresh_resume_processes_distinct=True,
@@ -575,18 +586,25 @@ class ProcessResumeRunner:
             return message
         return f"{message}; see {phase}/stderr.log under the preserved work_dir"
 
-    @staticmethod
     def _finish(
+        self,
         result: ProcessResumeResult,
         started: float,
         report_path: Path | None,
     ) -> ProcessResumeResult:
-        timings = dict(result.timing_seconds or {})
+        completed = replace(
+            result,
+            comparison_policy=self._policy_name(),
+            comparison_rtol=self._comparison_rtol(),
+            comparison_atol=self._comparison_atol(),
+            comparison_equal_nan=self._comparison_equal_nan(),
+        )
+        timings = dict(completed.timing_seconds or {})
         timings["total_wall"] = time.perf_counter() - started
         normal = timings.get("single_normal_run")
         if normal is not None and normal > 0:
             timings["end_to_end_multiplier"] = timings["total_wall"] / normal
-        completed = replace(result, timing_seconds=timings)
+        completed = replace(completed, timing_seconds=timings)
         if report_path is not None:
             report_path.parent.mkdir(parents=True, exist_ok=True)
             temporary = report_path.with_suffix(report_path.suffix + ".tmp")
@@ -596,3 +614,20 @@ class ProcessResumeRunner:
             )
             temporary.replace(report_path)
         return completed
+
+    def _policy_name(self) -> str:
+        return "exact" if isinstance(self.comparison, ExactComparison) else "explicit_tolerance"
+
+    def _comparison_rtol(self) -> float | None:
+        return None if isinstance(self.comparison, ExactComparison) else self.comparison.rtol
+
+    def _comparison_atol(self) -> float | None:
+        return None if isinstance(self.comparison, ExactComparison) else self.comparison.atol
+
+    def _comparison_equal_nan(self) -> bool | None:
+        return None if isinstance(self.comparison, ExactComparison) else self.comparison.equal_nan
+
+    def _pass_message(self, step: int) -> str:
+        if isinstance(self.comparison, ExactComparison):
+            return f"final states are exactly equivalent at step {step}"
+        return f"final states are equivalent under the declared tolerance at step {step}"

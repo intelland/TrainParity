@@ -34,7 +34,7 @@ TOP_LEVEL_API = {
 def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
     assert set(trainparity.__all__) == TOP_LEVEL_API
     assert trainparity.__version__ == PACKAGE_VERSION == "0.1.0rc3"
-    assert MACHINE_REPORT_SCHEMA_VERSION == 1
+    assert MACHINE_REPORT_SCHEMA_VERSION == 2
     for internal in (
         "AccumulationRunner",
         "ProcessResumeRunner",
@@ -59,6 +59,7 @@ def test_public_machine_report_has_schema_and_package_versions(tmp_path: Path) -
     )
     assert result.to_dict()["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
     assert result.to_dict()["trainparity_version"] == PACKAGE_VERSION
+    assert result.to_dict()["schema_version"] == 2
     payload = json.loads(evidence.read_text(encoding="utf-8"))
     assert payload["schema_version"] == MACHINE_REPORT_SCHEMA_VERSION
     assert payload["trainparity_version"] == PACKAGE_VERSION
