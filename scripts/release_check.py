@@ -10,7 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-VERSION = "0.1.0rc2"
+VERSION = "0.1.0rc3"
 
 
 def _run(
@@ -29,7 +29,7 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("experiments/gate7i/recorded/wheel_smoke.json"),
+        default=Path("dist/.release-validation/wheel-smoke.json"),
     )
     arguments = parser.parse_args()
     root = Path(__file__).resolve().parents[1]

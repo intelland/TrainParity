@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0rc3 - 2026-08-13
+
+- Convert ordinary command-oriented resume adapter failures from `command()`,
+  `checkpoint_path()`, and `observe_checkpoint()` into phase-specific
+  `Outcome.ERROR` results while preserving `KeyboardInterrupt` and
+  `SystemExit` propagation.
+- Document the four stable external resume phases, pre-launch checkpoint
+  staging, deterministic and timestamped checkpoint locations, preserved child
+  logs, recommended observations, and expected orchestration cost.
+- Add a complete external PyTorch resume integration guide and verify that its
+  copyable example runs and the guide enters the source distribution.
+- Preserve public API signatures, comparison semantics, four-state meanings,
+  compatibility claims, baseline self-consistency, and fresh-process behavior.
+
 ## 0.1.0rc2 - 2026-08-12
 
 - Allow scheduler-free accumulation cases to construct `TrainingState` without
