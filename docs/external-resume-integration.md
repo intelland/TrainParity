@@ -152,6 +152,26 @@ With the three files in place:
 python run_trainparity.py
 ```
 
+The default comparison is exact. If the project's equivalence contract permits
+declared numeric differences, pass the existing public tolerance policy:
+
+```python
+from trainparity import ToleranceComparison, check_resume
+
+result = check_resume(
+    "trainparity_case:Case",
+    cwd=ROOT,
+    work_dir=ROOT / ".trainparity-runs",
+    comparison=ToleranceComparison(rtol=1e-6, atol=1e-8),
+)
+```
+
+The same policy governs baseline self-consistency and the resumed candidate.
+If the baselines disagree outside that policy, the result is `ABSTAIN`; if the
+baselines agree but the candidate exceeds it, the result is `FAIL`. TrainParity
+does not infer or tune tolerances from observed differences. The report records
+the policy name, `rtol`, `atol`, and `equal_nan` values.
+
 ## Execution phases and checkpoint staging
 
 `ProcessExecutionPlan.phase` is exactly one of:

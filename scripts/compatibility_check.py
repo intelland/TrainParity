@@ -14,6 +14,7 @@ from typing import Any
 import torch
 
 import trainparity
+from trainparity import api
 
 MODULES = (
     "trainparity.quickstarts.resume",
@@ -82,7 +83,7 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix="trainparity-compat-") as directory:
         examples = [_run(module, Path(directory)) for module in MODULES]
     report = {
-        "schema_version": 1,
+        "schema_version": api.MACHINE_REPORT_SCHEMA_VERSION,
         "trainparity_version": trainparity.__version__,
         "status": "PASS",
         "python": sys.version.split()[0],

@@ -525,3 +525,28 @@
   release job must test artifact B if artifact B is what it uploads. These are
   bounded release blockers, not authorization for a new Gate, feature work, or
   publication.
+
+## D-0047: Complete resume comparison-policy symmetry
+
+- **Status:** Authorized for implementation and draft review
+- **Date:** 2026-08-13
+- **Decision:** Add the existing exact/explicit-tolerance comparison union as a
+  keyword-only `check_resume` parameter. `None` retains exact behavior, and one
+  strictly validated policy governs baseline self-consistency and candidate
+  resume comparison. Do not infer or tune tolerance.
+- **Reason:** Independent timm adoption completed the command-oriented
+  integration but exposed a public API asymmetry: accumulation already accepts
+  the shared comparison abstraction while resume was hard-coded exact.
+
+## D-0048: Advance machine-report schema for resume policy metadata
+
+- **Status:** Authorized for implementation and draft review
+- **Date:** 2026-08-13
+- **Decision:** Advance the global machine-report schema from 1 to 2 and add
+  stable resume fields for policy, `rtol`, `atol`, and `equal_nan`. Update
+  current public docs/tests/quickstart output metadata, but preserve historical
+  Gate and release artifacts byte-for-byte.
+- **Reason:** Adding stable fields to `ProcessResumeResult.to_dict()` silently
+  under schema 1 would violate the documented consumer contract. The global
+  version change is explicit even though accumulation and coverage payload
+  shapes otherwise remain unchanged.

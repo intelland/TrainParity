@@ -130,6 +130,19 @@ def test_tolerance_reports_numerical_error() -> None:
     assert observed.max_rel_error == 0.5
 
 
+def test_exact_float_tensor_mismatch_reports_error_without_weakening_exactness() -> None:
+    result = ExactComparison().compare(
+        snapshot({"x": torch.tensor([1.0, 2.0])}),
+        snapshot({"x": torch.tensor([1.0, 2.000001])}),
+    )
+    assert result.outcome is Outcome.FAIL
+    assert result.first_difference is not None
+    assert result.first_difference.path == "x"
+    assert result.first_difference.reason == "tensor_value"
+    assert result.first_difference.max_abs_error is not None
+    assert result.first_difference.max_rel_error is not None
+
+
 def test_integral_tensor_tolerance_remains_exact() -> None:
     observed = difference(torch.tensor([1]), torch.tensor([2]), tolerance=True)
     assert observed.reason == "tensor_value"

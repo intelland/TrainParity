@@ -14,7 +14,13 @@ import torch
 from trainparity.protocols import ProcessExecutionPlan
 
 
-def _train(run_dir: Path, end_step: int, resume: Path | None, mode: str) -> None:
+def _train(
+    run_dir: Path,
+    end_step: int,
+    resume: Path | None,
+    mode: str,
+    perturbation: float,
+) -> None:
     if mode == "error":
         raise RuntimeError("intentional child failure")
     if mode == "slow":
@@ -42,6 +48,9 @@ def _train(run_dir: Path, end_step: int, resume: Path | None, mode: str) -> None
         state["scheduler"]["last_epoch"] += 1
         state["step"] += 1
     state["rng"] = {"torch_cpu": torch.get_rng_state()}
+    if perturbation:
+        state["model"]["weight"] += perturbation
+        state["optimizer"]["momentum"] += perturbation
     if mode == "nondeterministic":
         state["process_nonce"] = os.getpid()
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -71,7 +80,14 @@ class DeterministicProcessCase:
         ]
         if plan.resume_from is not None:
             command.extend(("--resume", str(plan.resume_from)))
+        perturbation = self.perturbation(plan)
+        if perturbation:
+            command.extend(("--perturbation", str(perturbation)))
         return command
+
+    def perturbation(self, plan: ProcessExecutionPlan) -> float:
+        """Return a deterministic phase-specific diagnostic perturbation."""
+        return 0.0
 
     def checkpoint_path(self, run_dir: Path) -> Path:
         return run_dir / "checkpoint.pt"
@@ -92,6 +108,34 @@ class NondeterministicProcessCase(DeterministicProcessCase):
         observed = super().observe_checkpoint(path)
         observed["process_nonce"] = state["process_nonce"]
         return observed
+
+
+class CandidateTinyDifferenceProcessCase(DeterministicProcessCase):
+    """Add a stable small candidate-only floating-point difference."""
+
+    def perturbation(self, plan: ProcessExecutionPlan) -> float:
+        return 1e-6 if plan.phase == "candidate_resume" else 0.0
+
+
+class CandidateLargeDifferenceProcessCase(DeterministicProcessCase):
+    """Add a stable candidate difference outside the contract-test tolerance."""
+
+    def perturbation(self, plan: ProcessExecutionPlan) -> float:
+        return 0.25 if plan.phase == "candidate_resume" else 0.0
+
+
+class BaselineTinyDifferenceProcessCase(DeterministicProcessCase):
+    """Make baseline B exact-unequal but tolerance-equivalent."""
+
+    def perturbation(self, plan: ProcessExecutionPlan) -> float:
+        return 1e-6 if plan.phase == "baseline_b" else 0.0
+
+
+class BaselineLargeDifferenceProcessCase(DeterministicProcessCase):
+    """Make baseline B differ beyond the contract-test tolerance."""
+
+    def perturbation(self, plan: ProcessExecutionPlan) -> float:
+        return 0.25 if plan.phase == "baseline_b" else 0.0
 
 
 class ErrorProcessCase(DeterministicProcessCase):
@@ -143,8 +187,9 @@ def main() -> None:
     parser.add_argument("--end-step", type=int, required=True)
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--mode", required=True)
+    parser.add_argument("--perturbation", type=float, default=0.0)
     args = parser.parse_args()
-    _train(args.run_dir, args.end_step, args.resume, args.mode)
+    _train(args.run_dir, args.end_step, args.resume, args.mode, args.perturbation)
 
 
 if __name__ == "__main__":
