@@ -184,9 +184,13 @@ class AccumulationRunner:
             if not selected.equivalence.strip():
                 raise ValueError("case must declare a non-empty equivalence relation")
         except (CaseImportError, ValueError) as error:
-            return AccumulationResult(
-                Outcome.ERROR, f"case setup failed: {type(error).__name__}", case, ""
+            result = AccumulationResult(
+                Outcome.ERROR,
+                f"case setup failed: {type(error).__name__}: {error}",
+                case,
+                "",
             )
+            return self._finish(result, report_path)
         root_parent = self.temporary_root
         if root_parent is not None:
             root_parent.mkdir(parents=True, exist_ok=True)
