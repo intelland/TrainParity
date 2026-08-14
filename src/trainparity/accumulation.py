@@ -343,17 +343,24 @@ class AccumulationRunner:
             return result
         report_path.parent.mkdir(parents=True, exist_ok=True)
         finished = result
-        payload = ""
-        for _ in range(3):
-            payload = json.dumps(finished.to_dict(), indent=2, sort_keys=True) + "\n"
-            observed_size = len(payload.encode("utf-8"))
+        for _ in range(8):
+            payload = (json.dumps(finished.to_dict(), indent=2, sort_keys=True) + "\n").encode(
+                "utf-8"
+            )
+            observed_size = len(payload)
             if observed_size == finished.persisted_artifact_bytes:
                 break
             finished = replace(finished, persisted_artifact_bytes=observed_size)
+        else:
+            raise RuntimeError("accumulation report byte size did not stabilize")
         temporary = report_path.with_suffix(report_path.suffix + ".tmp")
-        temporary.write_text(payload, encoding="utf-8")
+        temporary.write_bytes(payload)
+        if temporary.stat().st_size != len(payload):
+            raise OSError("temporary accumulation report byte size changed")
         temporary.replace(report_path)
-        return replace(finished, persisted_artifact_bytes=report_path.stat().st_size)
+        if report_path.stat().st_size != len(payload):
+            raise OSError("published accumulation report byte size changed")
+        return finished
 
 
 def _tree_size(root: Path) -> int:

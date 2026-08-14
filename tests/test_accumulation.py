@@ -15,6 +15,18 @@ from trainparity.accumulation import (
     split_tensor_tree,
 )
 from trainparity.api import TrainingState
+from trainparity.results import AccumulationResult
+
+
+def _assert_report_matches_result(path: Path, result: AccumulationResult) -> None:
+    expected = (json.dumps(result.to_dict(), indent=2, sort_keys=True) + "\n").encode("utf-8")
+    stored = json.loads(path.read_bytes())
+
+    assert path.read_bytes() == expected
+    assert result.persisted_artifact_bytes == len(expected)
+    assert stored["persisted_artifact_bytes"] == len(expected)
+    assert path.stat().st_size == len(expected)
+    assert stored == json.loads(json.dumps(result.to_dict()))
 
 
 def test_training_state_defaults_to_no_scheduler() -> None:
@@ -73,24 +85,36 @@ def test_clean_and_fault_run_in_three_fresh_processes(tmp_path: Path) -> None:
     assert clean.loss_normalization_captured
     assert clean.peak_temporary_directory_bytes > 0
     assert clean.persisted_artifact_bytes > 0
-    stored = json.loads((tmp_path / "clean.json").read_text(encoding="utf-8"))
-    assert stored["persisted_artifact_bytes"] == (tmp_path / "clean.json").stat().st_size
+    _assert_report_matches_result(tmp_path / "clean.json", clean)
 
+    fault_path = tmp_path / "fault.json"
     fault = runner.run(
         "experiments.gate5.cases:LinearCase",
         candidate=AccumulationExecutionPlan(
             2, scale_accumulated_loss=False, use_explicit_loss_accounting=False
         ),
+        report_path=fault_path,
     )
     assert fault.outcome == "FAIL"
     assert fault.first_observed_phase == "loss_accounting"
     assert "not a root-cause claim" in fault.message
+    _assert_report_matches_result(fault_path, fault)
 
 
-def test_setup_error_reports_actionable_cause_deterministically(tmp_path: Path) -> None:
+def test_setup_error_reports_actionable_cause_deterministically(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     case = "experiments.gate5.cases:MissingAccumulationCase"
     first_path = tmp_path / "first.json"
     second_path = tmp_path / "second.json"
+    replacements: list[tuple[Path, Path]] = []
+    original_replace = Path.replace
+
+    def track_atomic_replace(source: Path, target: Path) -> Path:
+        replacements.append((source, target))
+        return original_replace(source, target)
+
+    monkeypatch.setattr(Path, "replace", track_atomic_replace)
 
     first = check_accumulation(
         case,
@@ -109,10 +133,33 @@ def test_setup_error_reports_actionable_cause_deterministically(tmp_path: Path) 
     assert "MissingAccumulationCase" in first.message
     assert "Traceback" not in first.message
     assert first_path.is_file()
-    serialized = json.loads(json.dumps(first.to_dict()))
-    assert json.loads(first_path.read_text(encoding="utf-8")) == serialized
+    _assert_report_matches_result(first_path, first)
     assert first.to_dict() == second.to_dict()
     assert first_path.read_bytes() == second_path.read_bytes()
+    assert replacements == [
+        (first_path.with_suffix(".json.tmp"), first_path),
+        (second_path.with_suffix(".json.tmp"), second_path),
+    ]
+
+
+def test_report_bytes_ignore_platform_text_newline_translation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def translate_newlines(path: Path, text: str, **_: object) -> int:
+        return path.write_bytes(text.replace("\n", "\r\n").encode("utf-8"))
+
+    monkeypatch.setattr(Path, "write_text", translate_newlines)
+    report_path = tmp_path / "report.json"
+
+    result = check_accumulation(
+        "experiments.gate5.cases:MissingAccumulationCase",
+        candidate=AccumulationExecutionPlan(2),
+        report_path=report_path,
+    )
+
+    assert result.outcome is Outcome.ERROR
+    _assert_report_matches_result(report_path, result)
+    assert b"\r\n" not in report_path.read_bytes()
 
 
 def test_check_accumulation_signature_is_unchanged() -> None:
