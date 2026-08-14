@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0rc5 - 2026-08-14
+
+- Preserve actionable accumulation setup-error causes and publish requested
+  machine reports through the normal deterministic finalization path.
+- Publish accumulation reports as byte-stable UTF-8 artifacts whose embedded
+  size agrees with the returned result and actual file across platforms.
+- Distinguish sample-coverage rank-iterable failures from extractor callback
+  and output-consumption failures, including rank, attempted batch index, and
+  underlying exception details.
+- Preserve accumulation comparison semantics, sample-coverage policies,
+  public API signatures, and machine-report schema 2.
+
 ## 0.1.0rc4 - 2026-08-13
 
 - Add an explicit `comparison=` policy to command-oriented resume checks while

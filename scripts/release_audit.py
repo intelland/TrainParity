@@ -11,7 +11,7 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
-VERSION = "0.1.0rc4"
+VERSION = "0.1.0rc5"
 TEXT_SUFFIXES = {".json", ".md", ".py", ".ps1", ".sh", ".toml", ".txt", ".yaml", ".yml"}
 EXCLUDED_PARTS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "build", "dist", "__pycache__"}
 SECRET_PATTERNS = {
