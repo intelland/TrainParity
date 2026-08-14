@@ -9,11 +9,11 @@ TrainParity checks user-declared equivalence across PyTorch resume, gradient-acc
 
 ## Install and run
 
-TrainParity is currently alpha-quality software. Version 0.1.0rc3 is a
+TrainParity is currently alpha-quality software. Version 0.1.0rc4 is a
 prerelease of 0.1.0. Install the exact release candidate with:
 
 ```bash
-pip install trainparity==0.1.0rc3
+pip install trainparity==0.1.0rc4
 ```
 
 CPU-only users should install a validated PyTorch CPU wheel first so that pip
@@ -21,7 +21,7 @@ does not resolve the default CUDA wheel and its runtime packages:
 
 ```bash
 python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install trainparity==0.1.0rc3
+python -m pip install trainparity==0.1.0rc4
 ```
 
 Package metadata still permits `torch>=2.7,<2.14`; the explicitly validated
@@ -99,8 +99,8 @@ Representative first-observed-divergence output:
     "epoch": 0,
     "position": 2
   },
-  "schema_version": 1,
-  "trainparity_version": "0.1.0rc3"
+  "schema_version": 2,
+  "trainparity_version": "0.1.0rc4"
 }
 ```
 
@@ -143,7 +143,24 @@ The four outcomes are intentionally distinct:
 - `ABSTAIN`: required evidence was unavailable or ambiguous, such as an unknown expected universe for exactly-once coverage.
 - `ERROR`: execution or observation could not complete.
 
-`ExactComparison` and user-configured `ToleranceComparison` remain separate. TrainParity does not infer or tune a tolerance from observed results.
+Resume and accumulation checks default to `ExactComparison`. Both accept an
+explicit user-configured `ToleranceComparison`; TrainParity does not infer or
+tune a tolerance from observed results. Sample coverage instead uses its
+declared discrete coverage policy and is not a numeric comparison.
+
+For example, a resume check may declare its numeric relation explicitly:
+
+```python
+from trainparity import ToleranceComparison, check_resume
+
+result = check_resume(
+    "trainparity_case:Case",
+    comparison=ToleranceComparison(rtol=1e-6, atol=1e-8),
+)
+```
+
+This tolerance is user-declared semantics, not TrainParity deciding that an
+observed difference is small enough.
 
 ## User contract
 

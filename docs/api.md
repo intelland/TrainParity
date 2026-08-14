@@ -1,6 +1,6 @@
 # API reference
 
-This page describes the supported Python API for TrainParity `0.1.0rc3`.
+This page describes the supported Python API for TrainParity `0.1.0rc4`.
 Signatures are verified by the release-surface tests. Names not listed here are
 internal and may change without compatibility notice.
 
@@ -32,7 +32,10 @@ Every check returns one of four distinct `Outcome` values:
 
 `FAIL` identifies a first observed divergence; it does not assert root cause.
 Every `to_dict()` machine report contains integer `schema_version` and string
-`trainparity_version`. Schema consumers should reject unknown versions.
+`trainparity_version`. Schema consumers should reject unknown versions. The
+current machine-report schema is version 2; it adds the declared resume
+comparison metadata described below. Snapshot serialization has its own
+independent schema and is not changed by this report-schema revision.
 
 ## Resume equivalence
 
@@ -40,6 +43,7 @@ Every `to_dict()` machine report contains integer `schema_version` and string
 def check_resume(
     case: str,
     *,
+    comparison: ExactComparison | ToleranceComparison | None = None,
     cwd: Path | None = None,
     work_dir: Path | None = None,
     report_path: Path | None = None,
@@ -49,7 +53,12 @@ def check_resume(
 ) -> ProcessResumeResult
 ```
 
-`case` is an import string such as `package.module:Case`. `cwd` selects the
+`case` is an import string such as `package.module:Case`. `comparison=None`
+selects `ExactComparison`, preserving the original exact behavior. An explicit
+`ToleranceComparison(rtol=..., atol=..., equal_nan=...)` applies the same
+user-declared relation to both `baseline_a` versus `baseline_b` and
+`baseline_a` versus `candidate_resume`. Arbitrary callables, mappings, strings,
+and implicit numeric tolerances are rejected. `cwd` selects the
 project command directory. `work_dir` preserves run files at a caller-selected
 location; otherwise an isolated temporary directory is cleaned automatically.
 `report_path` receives deterministic JSON. `environment` explicitly adds or
@@ -107,7 +116,15 @@ timestamped-checkpoint wrappers, and observation recommendations.
 `ProcessResumeResult` exposes `outcome`, `message`, `case`,
 `first_divergent_step`, `primary_difference`, `all_differences`, process
 evidence, fresh-process confirmation, propagated environment key names,
-timings, snapshot IPC bytes, and maximum checkpoint bytes.
+timings, snapshot IPC bytes, maximum checkpoint bytes, and reproducible
+comparison metadata: `comparison_policy`, `comparison_rtol`,
+`comparison_atol`, and `comparison_equal_nan`. Exact reports use policy
+`"exact"` with the three tolerance fields set to `None`; tolerance reports use
+`"explicit_tolerance"` and retain the declared values. A tolerance is
+user-declared semantics, not TrainParity deciding that a difference is small
+enough. Exact floating-point and complex tensor mismatches remain `FAIL`, but
+their `Difference` also records `max_abs_error` and `max_rel_error` as
+diagnostic magnitude; these values never relax exact semantics.
 
 Runnable installed example:
 
@@ -117,6 +134,17 @@ from trainparity import Outcome, check_resume
 result = check_resume("trainparity.quickstarts.resume:CleanCase")
 assert result.outcome is Outcome.PASS
 assert result.fresh_resume_processes_distinct
+```
+
+Explicit tolerance example:
+
+```python
+from trainparity import ToleranceComparison, check_resume
+
+result = check_resume(
+    "trainparity.quickstarts.resume:CleanCase",
+    comparison=ToleranceComparison(rtol=1e-6, atol=1e-8),
+)
 ```
 
 Run the complete clean/fault pair with:

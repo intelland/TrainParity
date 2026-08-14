@@ -1,15 +1,138 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
 import torch
 
+from trainparity import ExactComparison, ToleranceComparison, check_resume
+from trainparity.api import ProcessResumeResult
 from trainparity.outcomes import Outcome
 from trainparity.process_resume import ProcessResumeRunner
 
 PREFIX = "trainparity.examples.process_cases:"
+
+
+def _resume_semantics(result: ProcessResumeResult) -> tuple[object, ...]:
+    difference = result.primary_difference
+    return (
+        result.outcome,
+        result.message,
+        result.first_divergent_step,
+        None if difference is None else difference.path,
+        result.comparison_policy,
+        result.comparison_rtol,
+        result.comparison_atol,
+        result.comparison_equal_nan,
+    )
+
+
+@pytest.mark.parametrize(
+    ("case", "expected"),
+    [
+        ("DeterministicProcessCase", Outcome.PASS),
+        ("CandidateLargeDifferenceProcessCase", Outcome.FAIL),
+        ("NondeterministicProcessCase", Outcome.ABSTAIN),
+    ],
+)
+def test_default_none_and_explicit_exact_are_backward_compatible(
+    case: str, expected: Outcome, tmp_path: Path
+) -> None:
+    calls: tuple[Callable[[], ProcessResumeResult], ...] = (
+        lambda: check_resume(PREFIX + case, temporary_root=tmp_path / "default"),
+        lambda: check_resume(
+            PREFIX + case,
+            comparison=None,
+            temporary_root=tmp_path / "none",
+        ),
+        lambda: check_resume(
+            PREFIX + case,
+            comparison=ExactComparison(),
+            temporary_root=tmp_path / "exact",
+        ),
+    )
+    results = tuple(call() for call in calls)
+    assert all(result.outcome is expected for result in results)
+    assert _resume_semantics(results[0]) == _resume_semantics(results[1])
+    assert _resume_semantics(results[1]) == _resume_semantics(results[2])
+    payload = results[0].to_dict()
+    assert payload["schema_version"] == 2
+    assert payload["comparison_policy"] == "exact"
+    assert payload["comparison_rtol"] is None
+    assert payload["comparison_atol"] is None
+    assert payload["comparison_equal_nan"] is None
+    assert json.dumps(payload, sort_keys=True) == json.dumps(
+        results[0].to_dict(), sort_keys=True
+    )
+
+
+def test_explicit_tolerance_controls_candidate_comparison_and_report(
+    tmp_path: Path,
+) -> None:
+    case = PREFIX + "CandidateTinyDifferenceProcessCase"
+    exact = check_resume(case, temporary_root=tmp_path / "exact")
+    report_path = tmp_path / "tolerance.json"
+    tolerant = check_resume(
+        case,
+        comparison=ToleranceComparison(rtol=1e-5, atol=1e-7, equal_nan=False),
+        temporary_root=tmp_path / "tolerance",
+        report_path=report_path,
+    )
+    assert exact.outcome is Outcome.FAIL
+    assert tolerant.outcome is Outcome.PASS
+    assert "declared tolerance" in tolerant.message
+    payload = json.loads(report_path.read_text(encoding="utf-8"))
+    assert payload["schema_version"] == 2
+    assert payload["comparison_policy"] == "explicit_tolerance"
+    assert payload["comparison_rtol"] == 1e-5
+    assert payload["comparison_atol"] == 1e-7
+    assert payload["comparison_equal_nan"] is False
+    assert json.dumps(payload, sort_keys=True) == json.dumps(
+        tolerant.to_dict(), sort_keys=True
+    )
+
+
+def test_tolerance_failure_reports_numeric_error_magnitude(tmp_path: Path) -> None:
+    result = check_resume(
+        PREFIX + "CandidateLargeDifferenceProcessCase",
+        comparison=ToleranceComparison(rtol=1e-6, atol=1e-8),
+        temporary_root=tmp_path,
+    )
+    assert result.outcome is Outcome.FAIL
+    assert result.primary_difference is not None
+    assert result.primary_difference.max_abs_error is not None
+    assert result.primary_difference.max_rel_error is not None
+
+
+def test_baseline_self_consistency_uses_the_declared_policy(tmp_path: Path) -> None:
+    small = PREFIX + "BaselineTinyDifferenceProcessCase"
+    exact = check_resume(small, temporary_root=tmp_path / "exact")
+    tolerant = check_resume(
+        small,
+        comparison=ToleranceComparison(rtol=1e-5, atol=1e-7),
+        temporary_root=tmp_path / "tolerance",
+    )
+    outside = check_resume(
+        PREFIX + "BaselineLargeDifferenceProcessCase",
+        comparison=ToleranceComparison(rtol=1e-6, atol=1e-8),
+        temporary_root=tmp_path / "outside",
+    )
+    assert exact.outcome is Outcome.ABSTAIN
+    assert tolerant.outcome is Outcome.PASS
+    assert outside.outcome is Outcome.ABSTAIN
+
+
+@pytest.mark.parametrize("invalid", ["tolerance", {}, 1e-6, lambda: None])
+def test_resume_comparison_rejects_implicit_or_duck_typed_policies(
+    invalid: object,
+) -> None:
+    with pytest.raises(
+        TypeError,
+        match="comparison must be explicit ExactComparison or ToleranceComparison",
+    ):
+        check_resume(PREFIX + "DeterministicProcessCase", comparison=invalid)  # type: ignore[arg-type]
 
 
 def test_process_runner_propagates_explicit_environment_without_reporting_values(

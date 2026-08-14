@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0rc4 - 2026-08-13
+
+- Add an explicit `comparison=` policy to command-oriented resume checks while
+  preserving exact comparison as the default.
+- Record the resume comparison policy and declared tolerance values in machine
+  reports, whose global schema is now version 2.
+- Report numerical error magnitudes for exact floating-point and complex
+  tensor mismatches without weakening exact semantics.
+
 ## 0.1.0rc3 - 2026-08-13
 
 - Convert ordinary command-oriented resume adapter failures from `command()`,

@@ -40,6 +40,7 @@ ComparisonPolicy = ExactComparison | ToleranceComparison
 def check_resume(
     case: str,
     *,
+    comparison: ComparisonPolicy | None = None,
     cwd: Path | None = None,
     work_dir: Path | None = None,
     report_path: Path | None = None,
@@ -48,7 +49,11 @@ def check_resume(
     temporary_root: Path | None = None,
 ) -> ProcessResumeResult:
     """Check one importable command-oriented resume case in fresh processes."""
-    return ProcessResumeRunner(timeout=timeout, temporary_root=temporary_root).run(
+    return ProcessResumeRunner(
+        comparison=comparison,
+        timeout=timeout,
+        temporary_root=temporary_root,
+    ).run(
         case,
         cwd=cwd,
         work_dir=work_dir,

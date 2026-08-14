@@ -20,8 +20,11 @@
   and separate process boundaries intentionally cost more than one normal run.
 - The exact full-value snapshot reference favors semantic clarity over storage
   and runtime efficiency.
-- Exact comparison can reject benign floating-point differences. Tolerances
-  must be supplied by the user and are never inferred.
+- Resume and accumulation comparisons default to exact semantics, which can
+  reject benign floating-point differences. Tolerances must be explicitly
+  supplied by the user, apply to the declared numeric relation only, and are
+  never inferred or tuned from observations. Sample coverage uses discrete
+  policies rather than numeric tolerance.
 - Optimizer parameter-name mapping can be ambiguous for tied parameters; the
   honest result is `ABSTAIN` unless the user's declared observation excludes
   that ambiguous optimizer state.

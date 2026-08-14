@@ -11,7 +11,8 @@ execution and an interrupted execution, stages the checkpoint, exits the first
 process, loads in a fresh process, captures immutable snapshots, and compares
 aligned completed-step observations. Baseline self-consistency is checked
 first. Ambiguous or unavailable state produces `ABSTAIN`; execution failure is
-`ERROR`.
+`ERROR`. The same user-declared exact or explicit-tolerance policy governs both
+baseline self-consistency and the resumed-candidate comparison.
 
 ## Accumulation
 
@@ -35,8 +36,10 @@ padding. Unknown finite universes cause the policies that require them to
 Stable paths and deterministic traversal select the first observed difference.
 All differences at that boundary remain machine-readable. Exact comparison and
 explicit tolerance comparison are separate policies; a tolerance is never
-learned from the data. Reports have four outcomes and carry both schema and
-package versions.
+learned from the data. Exact floating/complex tensor differences retain exact
+outcomes while also reporting absolute and relative error magnitude. Reports
+have four outcomes and carry both schema and package versions; report schema 2
+records resume comparison policy and tolerance values.
 
 `FullValueBackend` is the correctness reference. It freezes tensors rather than
 retaining mutable aliases and represents missing, `None`, empty, zero, NaN, and

@@ -342,3 +342,20 @@ Required verification is Ruff, strict Mypy, the full test suite,
 verifier, `git diff --check`, and a dedicated dry-run proof that the release
 workflow installs the just-built wheel, changes out of the repository, runs
 all three quickstarts, and leaves the same `dist/` payload for publication.
+
+After the independent `0.1.0rc3` timm adoption review, the active bounded patch
+adds one keyword-only `comparison` policy to `check_resume`. The default remains
+exact; one validated `ExactComparison` or `ToleranceComparison` instance must
+govern both baseline self-consistency and candidate resume comparison. Stable
+resume result fields record the selected policy and tolerance values, so the
+global machine-report schema advances from 1 to 2 without changing historical
+reports. Exact floating/complex tensor mismatches additionally report absolute
+and relative error magnitude without changing their `FAIL` semantics.
+
+The scope excludes framework adapters, inferred/tuned tolerances, runtime
+optimization, version bump, tag, release, publication, and any new Gate.
+Verification commands are Ruff, strict Mypy, focused and full pytest, the
+README example, build, Twine, three quickstarts, release/security checks, all
+accepted Gate verifiers, a Python 3.11/PyTorch 2.7/2.10/2.13 installed-wheel
+matrix, and the pinned external timm case at commit
+`899aa9420c60223cdd30ad345badec40c9021b0f` with zero upstream modifications.

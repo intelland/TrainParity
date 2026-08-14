@@ -248,6 +248,12 @@ def _tensor_difference(
             return _difference(path, f"tensor_{field}", left, right)
     if tolerance is None:
         if baseline.data != candidate.data:
+            left_tensor = baseline.to_tensor()
+            if left_tensor.is_floating_point() or left_tensor.is_complex():
+                max_abs, max_rel = _errors(left_tensor, candidate.to_tensor())
+                return _difference(
+                    path, "tensor_value", baseline, candidate, max_abs, max_rel
+                )
             return _difference(path, "tensor_value", baseline, candidate)
         return None
     left_tensor = baseline.to_tensor()

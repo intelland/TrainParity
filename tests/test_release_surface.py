@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import re
 import tomllib
 from pathlib import Path
@@ -40,6 +41,23 @@ def test_top_level_and_advanced_api_boundaries() -> None:
     } <= set(api.__all__)
 
 
+def test_resume_signature_adds_only_keyword_comparison_policy() -> None:
+    signature = inspect.signature(trainparity.check_resume)
+    assert list(signature.parameters) == [
+        "case",
+        "comparison",
+        "cwd",
+        "work_dir",
+        "report_path",
+        "environment",
+        "timeout",
+        "temporary_root",
+    ]
+    comparison = signature.parameters["comparison"]
+    assert comparison.kind is inspect.Parameter.KEYWORD_ONLY
+    assert comparison.default is None
+
+
 def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))[
         "project"
@@ -77,7 +95,7 @@ def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
         "https://download.pytorch.org/whl/cpu"
     ) in readme
     assert 'python -m pip install -e ".[dev]"' in first
-    assert "pip install trainparity==0.1.0rc3" in readme
+    assert "pip install trainparity==0.1.0rc4" in readme
     assert "unpublished release candidate" not in readme
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
@@ -119,6 +137,7 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert "group: trainparity-pypi-release" in release
     assert "cancel-in-progress: false" in release
     assert release.count("python -m build") == 1
+    assert 'sha256sum dist/* > "${RUNNER_TEMP}/trainparity-dist.sha256"' in release
     smoke = "- name: Smoke-test the exact wheel from outside the source tree"
     publish = "- name: Publish with PyPI Trusted Publishing"
     assert release.index(smoke) < release.index(publish)
@@ -126,6 +145,8 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert 'cd "${RUNNER_TEMP}"' in release
     assert 'pip install --no-deps "${wheels[0]}"' in release
     assert "trainparity.__version__" in release
+    assert "MACHINE_REPORT_SCHEMA_VERSION == 2" in release
+    assert 'sha256sum --check "${RUNNER_TEMP}/trainparity-dist.sha256"' in release
     for module in ("resume", "accumulation", "sample_coverage"):
         assert f'python" -m trainparity.quickstarts.{module}' in release
     assert "packages-dir: dist/" in release
@@ -136,6 +157,7 @@ def test_shipped_release_documents_remain_true_after_publication() -> None:
     rc1_notes = (ROOT / "docs/release-notes/0.1.0rc1.md").read_text(encoding="utf-8")
     rc2_notes = (ROOT / "docs/release-notes/0.1.0rc2.md").read_text(encoding="utf-8")
     rc3_notes = (ROOT / "docs/release-notes/0.1.0rc3.md").read_text(encoding="utf-8")
+    rc4_notes = (ROOT / "docs/release-notes/0.1.0rc4.md").read_text(encoding="utf-8")
     held_phrases = (
         "Publication remains held",
         "not published to PyPI",
@@ -146,12 +168,16 @@ def test_shipped_release_documents_remain_true_after_publication() -> None:
     assert all(phrase not in rc1_notes for phrase in held_phrases)
     assert all(phrase not in rc2_notes for phrase in held_phrases)
     assert all(phrase not in rc3_notes for phrase in held_phrases)
+    assert all(phrase not in rc4_notes for phrase in held_phrases)
     assert "alpha prerelease" in rc1_notes
     assert "pip install trainparity==0.1.0rc1" in rc1_notes
     assert "small prerelease polish" in rc2_notes
     assert "pip install trainparity==0.1.0rc2" in rc2_notes
     assert "bounded bug-fix and onboarding prerelease" in rc3_notes
     assert "pip install trainparity==0.1.0rc3" in rc3_notes
+    assert "explicit comparison policy" in rc4_notes
+    assert "schema 1 to schema 2" in rc4_notes
+    assert "pip install trainparity==0.1.0rc4" in rc4_notes
 
 
 def test_current_release_validation_does_not_rewrite_gate7i_records() -> None:

@@ -34,6 +34,7 @@ jobs:
           python -m pip install build twine
           python -m build
           python -m twine check dist/*
+          sha256sum dist/* > "${RUNNER_TEMP}/trainparity-dist.sha256"
       - name: Smoke-test the exact wheel from outside the source tree
         shell: bash
         run: |
@@ -44,17 +45,19 @@ jobs:
             exit 1
           fi
           expected_version="$(python -c "import pathlib, tomllib; print(tomllib.loads(pathlib.Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version'])")"
-          test "${expected_version}" = "0.1.0rc3"
+          test "${expected_version}" = "0.1.0rc4"
           smoke_env="${RUNNER_TEMP}/trainparity-release-smoke"
           python -m venv "${smoke_env}"
           "${smoke_env}/bin/python" -m pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cpu
           "${smoke_env}/bin/python" -m pip install --no-deps "${wheels[0]}"
           export EXPECTED_TRAINPARITY_VERSION="${expected_version}"
           cd "${RUNNER_TEMP}"
-          "${smoke_env}/bin/python" -c "import os, trainparity; assert trainparity.__version__ == os.environ['EXPECTED_TRAINPARITY_VERSION']"
+          "${smoke_env}/bin/python" -c "import os, trainparity; from trainparity.api import MACHINE_REPORT_SCHEMA_VERSION; assert trainparity.__version__ == os.environ['EXPECTED_TRAINPARITY_VERSION']; assert MACHINE_REPORT_SCHEMA_VERSION == 2"
           "${smoke_env}/bin/python" -m trainparity.quickstarts.resume
           "${smoke_env}/bin/python" -m trainparity.quickstarts.accumulation
           "${smoke_env}/bin/python" -m trainparity.quickstarts.sample_coverage
+          cd "${GITHUB_WORKSPACE}"
+          sha256sum --check "${RUNNER_TEMP}/trainparity-dist.sha256"
       - name: Publish with PyPI Trusted Publishing
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
         with:
