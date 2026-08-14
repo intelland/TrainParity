@@ -154,7 +154,7 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
         "python -m pytest -q --no-cov examples/test_readme_case.py" in first,
         "README pytest command",
     )
-    _require("pip install trainparity==0.1.0rc4" in readme, "README PyPI install")
+    _require("pip install trainparity==0.1.0rc5" in readme, "README PyPI install")
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
     )
