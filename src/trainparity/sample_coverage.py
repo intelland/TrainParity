@@ -465,19 +465,80 @@ def audit_rank_iterables(
     """Collect stable IDs from rank-labelled iterables and audit the declared policy."""
     observations: list[SampleObservation] = []
     try:
-        for rank, iterable in sorted(rank_iterables.items()):
-            if isinstance(rank, bool) or rank < 0:
-                return SampleCoverageResult(Outcome.ERROR, _policy_name(policy), "rank must be a non-negative integer")
-            position = 0
-            for batch in iterable:
-                extracted = sample_id_extractor(batch)
-                if isinstance(extracted, (str, bytes)):
-                    return SampleCoverageResult(Outcome.ERROR, _policy_name(policy), "sample_id_extractor must return an iterable of IDs")
-                for sample_id in extracted:
-                    observations.append(SampleObservation(sample_id, rank, epoch, position))
-                    position += 1
+        ranked = list(rank_iterables.items())
     except Exception as error:
-        return SampleCoverageResult(Outcome.ERROR, _policy_name(policy), f"sample ID extraction failed: {type(error).__name__}")
+        return SampleCoverageResult(
+            Outcome.ERROR,
+            _policy_name(policy),
+            f"rank iterables could not be read: {type(error).__name__}: {error}",
+        )
+    for rank, _iterable in ranked:
+        if not isinstance(rank, int) or isinstance(rank, bool) or rank < 0:
+            return SampleCoverageResult(Outcome.ERROR, _policy_name(policy), "rank must be a non-negative integer")
+    for rank, iterable in sorted(ranked):
+        position = 0
+        batch_index = 0
+        try:
+            batches = iter(iterable)
+        except Exception as error:
+            return SampleCoverageResult(
+                Outcome.ERROR,
+                _policy_name(policy),
+                f"rank {rank} batch {batch_index} iteration failed: "
+                f"{type(error).__name__}: {error}",
+            )
+        while True:
+            try:
+                batch = next(batches)
+            except StopIteration:
+                break
+            except Exception as error:
+                return SampleCoverageResult(
+                    Outcome.ERROR,
+                    _policy_name(policy),
+                    f"rank {rank} batch {batch_index} iteration failed: "
+                    f"{type(error).__name__}: {error}",
+                )
+            try:
+                extracted = sample_id_extractor(batch)
+            except Exception as error:
+                return SampleCoverageResult(
+                    Outcome.ERROR,
+                    _policy_name(policy),
+                    f"sample ID extraction failed at rank {rank} batch {batch_index}: "
+                    f"{type(error).__name__}: {error}",
+                )
+            if isinstance(extracted, (str, bytes)):
+                return SampleCoverageResult(
+                    Outcome.ERROR,
+                    _policy_name(policy),
+                    f"sample_id_extractor must return an iterable of IDs at rank {rank} "
+                    f"batch {batch_index}",
+                )
+            try:
+                sample_ids = iter(extracted)
+            except Exception as error:
+                return SampleCoverageResult(
+                    Outcome.ERROR,
+                    _policy_name(policy),
+                    f"sample ID extraction output failed at rank {rank} batch {batch_index}: "
+                    f"{type(error).__name__}: {error}",
+                )
+            while True:
+                try:
+                    sample_id = next(sample_ids)
+                except StopIteration:
+                    break
+                except Exception as error:
+                    return SampleCoverageResult(
+                        Outcome.ERROR,
+                        _policy_name(policy),
+                        f"sample ID extraction output failed at rank {rank} batch {batch_index}: "
+                        f"{type(error).__name__}: {error}",
+                    )
+                observations.append(SampleObservation(sample_id, rank, epoch, position))
+                position += 1
+            batch_index += 1
     return audit_sample_coverage(
         observations,
         policy,

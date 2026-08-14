@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import json
 from collections.abc import Iterator
 from pathlib import Path
@@ -251,9 +252,130 @@ def test_extractor_failure_and_string_return_are_errors() -> None:
 
     failed = audit_rank_iterables({0: [object()]}, sample_id_extractor=broken, policy=ExactlyOnce((0,)))
     string = audit_rank_iterables({0: [object()]}, sample_id_extractor=lambda _batch: "secret", policy=ExactlyOnce((0,)))
+    non_iterable = audit_rank_iterables(
+        {0: [object()]},
+        sample_id_extractor=lambda _batch: 7,  # type: ignore[return-value]
+        policy=ExactlyOnce((0,)),
+    )
     assert failed.outcome is Outcome.ERROR
-    assert "private failure details" not in failed.message
+    assert failed.message == (
+        "sample ID extraction failed at rank 0 batch 0: "
+        "RuntimeError: private failure details"
+    )
     assert string.outcome is Outcome.ERROR
+    assert string.message == (
+        "sample_id_extractor must return an iterable of IDs at rank 0 batch 0"
+    )
+    assert non_iterable.outcome is Outcome.ERROR
+    assert non_iterable.message.startswith(
+        "sample ID extraction output failed at rank 0 batch 0: TypeError:"
+    )
+
+
+@pytest.mark.parametrize("rank", [True, -1, "0"])
+def test_invalid_rank_still_returns_error(rank: object) -> None:
+    result = audit_rank_iterables(
+        {rank: [[0]]},  # type: ignore[dict-item]
+        sample_id_extractor=lambda batch: batch,
+        policy=ExactlyOnce((0,)),
+    )
+
+    assert result.outcome is Outcome.ERROR
+    assert result.message == "rank must be a non-negative integer"
+
+
+def test_rank_iteration_failure_identifies_first_attempted_batch() -> None:
+    def broken_batches() -> Iterator[list[int]]:
+        raise TypeError("batch transform is missing")
+        yield []
+
+    first = audit_rank_iterables(
+        {0: broken_batches()},
+        sample_id_extractor=lambda batch: batch,
+        policy=ExactlyOnce((0,)),
+    )
+    second = audit_rank_iterables(
+        {0: broken_batches()},
+        sample_id_extractor=lambda batch: batch,
+        policy=ExactlyOnce((0,)),
+    )
+
+    assert first.outcome is Outcome.ERROR
+    assert first.message == (
+        "rank 0 batch 0 iteration failed: TypeError: batch transform is missing"
+    )
+    assert "Traceback" not in first.message
+    assert first.to_dict() == second.to_dict()
+
+
+def test_rank_iteration_failure_counts_successful_batches_not_sample_positions() -> None:
+    def broken_after_two_batches() -> Iterator[list[int]]:
+        yield [10, 11]
+        yield [12]
+        raise RuntimeError("third batch failed")
+
+    result = audit_rank_iterables(
+        {3: broken_after_two_batches()},
+        sample_id_extractor=lambda batch: batch,
+        policy=AtLeastOnce((10, 11, 12)),
+    )
+
+    assert result.outcome is Outcome.ERROR
+    assert result.message == (
+        "rank 3 batch 2 iteration failed: RuntimeError: third batch failed"
+    )
+
+
+def test_extractor_callback_failure_has_rank_and_batch_context() -> None:
+    def broken_extractor(_batch: list[int]) -> Iterator[int]:
+        raise ValueError("cannot decode sample IDs")
+
+    result = audit_rank_iterables(
+        {2: [[0], [1]]},
+        sample_id_extractor=broken_extractor,
+        policy=ExactlyOnce((0, 1)),
+    )
+
+    assert result.outcome is Outcome.ERROR
+    assert result.message == (
+        "sample ID extraction failed at rank 2 batch 0: "
+        "ValueError: cannot decode sample IDs"
+    )
+
+
+def test_extractor_output_iteration_failure_is_distinct() -> None:
+    def broken_output(_batch: object) -> Iterator[int]:
+        yield 0
+        raise LookupError("sample ID stream failed")
+
+    result = audit_rank_iterables(
+        {4: [object()]},
+        sample_id_extractor=broken_output,
+        policy=ExactlyOnce((0,)),
+    )
+
+    assert result.outcome is Outcome.ERROR
+    assert result.message == (
+        "sample ID extraction output failed at rank 4 batch 0: "
+        "LookupError: sample ID stream failed"
+    )
+
+
+def test_sample_coverage_public_signatures_are_unchanged() -> None:
+    assert list(inspect.signature(audit_sample_coverage).parameters) == [
+        "observations",
+        "policy",
+        "max_examples",
+        "evidence_path",
+    ]
+    assert list(inspect.signature(audit_rank_iterables).parameters) == [
+        "rank_iterables",
+        "sample_id_extractor",
+        "policy",
+        "epoch",
+        "max_examples",
+        "evidence_path",
+    ]
 
 
 def test_zero_examples_and_mixed_stable_id_types() -> None:
