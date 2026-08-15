@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.0 - 2026-08-16
+
+- Promote the behavior, public API, and machine-report schema verified through
+  `0.1.0rc5` to the first non-prerelease release.
+- Retain machine-report schema 2, the 11-name recommended top-level API, and
+  the documented advanced API without adding comparison semantics.
+- Retain exact-by-default comparison, explicit user-selected tolerance,
+  four-state outcomes, and first-observed-divergence reporting.
+- Preserve the validated Python/PyTorch range and framework-neutral scope.
+
 ## 0.1.0rc5 - 2026-08-14
 
 - Preserve actionable accumulation setup-error causes and publish requested
