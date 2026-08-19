@@ -1,6 +1,6 @@
-"""Package and machine-report versions for the v0.1 release candidate."""
+"""Package and machine-report versions for the v0.1 stable release."""
 
-PACKAGE_VERSION = "0.1.0rc5"
+PACKAGE_VERSION = "0.1.0"
 MACHINE_REPORT_SCHEMA_VERSION = 2
 
 

@@ -1,43 +1,38 @@
 # TrainParity Status
 
-## Active gate
+## Active release work
 
-Gate 7 release-candidate preparation is complete with status `PASS` and
-recommendation `READY_FOR_HUMAN_REVIEW`. No release, tag, publication,
-repository visibility change, or later Gate is authorized.
+TrainParity `0.1.0rc1` through `0.1.0rc5` have been published. The current
+authorized scope is a bounded `0.1.0` stable activation from remote
+`main@213e5e948335255463f17543bda9c1e49a943e15`. It may update only active
+release identity, release-facing documentation, matching release tooling and
+tests, and this status record. Stable publication, tag creation, GitHub
+Release creation, and merge remain unauthorized in this branch.
 
 ## Objective
 
-Freeze and document the v0.1 public surface for resume equivalence,
-gradient-accumulation equivalence, and sample-coverage policies; prepare and
-audit an honest installable release candidate without publishing it.
+Prepare the first non-prerelease `0.1.0` identity while preserving the
+accepted rc5 behavior, public API, machine-report schema 2, dependency range,
+framework-neutral scope, and historical evidence.
 
 ## Constraints
 
-- Implement Gate 7 only and stop for final human acceptance.
-- Run Python, PyTorch, competitor, and experiment workloads on M3, not locally.
-- Keep every environment, cache, checkout, log, and output under
-  `/scratch/mp25/jwuu0254/zxh/TrainParity`.
-- Preserve all accepted Gate 0-6 evidence unchanged.
-- Freeze the feature set; add no check, framework adapter, service, dashboard,
-  registry, distributed launcher, or general event tracer.
-- Keep stable public objects distinct from internal runners, backends,
-  experiments, and Gate tooling.
-- Put machine-schema and package versions in JSON reports.
-- Ship three tiny CPU examples, each with a clean `PASS` and intentional `FAIL`.
-- Test the built wheel from outside the repository in a clean environment.
-- Audit source and distributions for secrets, local metadata, large data, and
-  unintended runtime contents without deleting accepted evidence.
-- Report name availability but do not infer reservation or rename the project.
-- Do not publish to PyPI, create a tag/release, or change repository visibility.
-- Do not add runtime LLM/agent dependencies, distributed support, a web UI,
-  service, registry, or platform functionality.
-- Continue to describe outputs as first observed divergence, never root cause.
-- Preserve the user's uncommitted `CODEX_REMOTE_DEVELOPMENT.md` changes exactly.
+- Change no resume, accumulation, sample-coverage, comparison, or four-state
+  semantics.
+- Keep the 11-name top-level API, documented advanced API, and every public
+  signature unchanged.
+- Keep `MACHINE_REPORT_SCHEMA_VERSION == 2`, Python `>=3.11,<3.12`, and
+  `torch>=2.7,<2.14`.
+- Keep `Development Status :: 3 - Alpha`; a non-prerelease version does not by
+  itself change the project's maturity classification.
+- Preserve all accepted evidence and historical rc1-rc5 identities.
+- Preserve build-once, exact-wheel smoke, hash recheck, protected-environment
+  Trusted Publishing, and framework-neutral release boundaries.
+- Do not merge, publish, tag, create a GitHub Release, or begin another release.
 
 ## Verification commands
 
-Run from the M3 repository checkout unless noted otherwise:
+Run from an isolated release checkout:
 
 ```bash
 make lint
@@ -45,22 +40,33 @@ make typecheck
 make test
 make build
 make release-check
-python scripts/verify_gate.py 0
-python scripts/verify_gate.py 1
-python scripts/verify_gate.py 2
-python scripts/verify_gate.py 3
-python scripts/verify_gate.py 4
-python scripts/verify_gate4b.py
-python scripts/verify_gate5.py
-python scripts/verify_gate.py 6
-python scripts/verify_gate.py 7
+python -m pytest -q --no-cov examples/test_readme_case.py
+python -m trainparity.quickstarts.resume
+python -m trainparity.quickstarts.accumulation
+python -m trainparity.quickstarts.sample_coverage
+python -m twine check dist/*
+python scripts/verify_gate7i.py
 git diff --check
 ```
 
-The final Gate 7 report records the frozen API, example outcomes, exact
-compatibility evidence, source/distribution audit, clean-environment wheel
-test, package/repository-name check, historical verifier results, hosted CI,
-and remaining limitations. No criterion is blocked.
+The built wheel must also pass outside-repository smoke tests and the Python
+3.11/PyTorch 2.7.0, 2.10.0, and 2.13.0 CPU matrix before review.
+
+## Release history and current activation
+
+- `0.1.0rc1` was published on 2026-08-11.
+- `0.1.0rc2` was published on 2026-08-12.
+- `0.1.0rc3` and `0.1.0rc4` were published on 2026-08-13 and 2026-08-14.
+- `0.1.0rc5` was published on 2026-08-14 from
+  `main@213e5e948335255463f17543bda9c1e49a943e15`; its main CI and protected
+  Trusted Publishing runs passed, its annotated tag resolves to that commit,
+  and its public PyPI wheel passed fresh-install identity/schema/quickstart
+  verification.
+- `0.1.0` stable activation began on 2026-08-16 as an identity/documentation
+  patch. No stable package, tag, GitHub Release, merge, or publication has
+  occurred. The chronological Gate entries below are preserved as historical
+  records; statements about publication being held describe their recorded
+  time rather than the current repository state.
 
 ## Current state
 

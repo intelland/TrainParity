@@ -62,11 +62,21 @@ window.
 ## Test and environment boundary
 
 Gate 6 concluded with 134 passing tests and 92.46% measured source coverage.
-Gate 7 reruns the complete suite, every accepted Gate verifier, archive audits,
-and all three examples from a built wheel outside the repository. The Gate 7
-report records the final counts and hosted CI run.
+The accepted `0.1.0rc5` main commit later passed Ruff, strict Mypy, 182 tests
+at 90.73% measured source coverage, the complete README integration, all three
+quickstarts, wheel/sdist build, Twine validation, and release-surface checks in
+GitHub Actions run `31798915064`.
 
-Tested compatibility for this release candidate is deliberately narrow:
+Release workflow run `31816180948` built the `0.1.0rc5` distributions once,
+smoke-tested the exact wheel outside the source tree, rechecked artifact
+hashes, and published the same files through Trusted Publishing. A subsequent
+fresh Python 3.11 environment installed the public PyPI wheel and verified
+package version `0.1.0rc5`, machine-report schema 2, and all three clean/fault
+quickstarts. The stable activation changes release identity and documentation,
+not the accepted comparison implementation; the final `0.1.0` wheel must
+repeat these release checks before publication.
+
+Tested compatibility for this stable release is deliberately narrow:
 
 | Component | Tested |
 | --- | --- |

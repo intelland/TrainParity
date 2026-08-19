@@ -154,14 +154,19 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
         "python -m pytest -q --no-cov examples/test_readme_case.py" in first,
         "README pytest command",
     )
-    _require("pip install trainparity==0.1.0rc5" in readme, "README PyPI install")
+    _require("pip install trainparity==0.1.0" in readme, "README PyPI install")
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
     )
     _require(not relative_public_links, "PyPI-safe README links")
     shipped_release_text = "\n".join(
         (root / relative).read_text(encoding="utf-8")
-        for relative in ("README.md", "CHANGELOG.md", "docs/release-notes/0.1.0rc1.md")
+        for relative in (
+            "README.md",
+            "CHANGELOG.md",
+            "docs/release-notes/0.1.0rc1.md",
+            "docs/release-notes/0.1.0.md",
+        )
     )
     for phrase in (
         "Publication remains held",

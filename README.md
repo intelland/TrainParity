@@ -9,11 +9,11 @@ TrainParity checks user-declared equivalence across PyTorch resume, gradient-acc
 
 ## Install and run
 
-TrainParity is currently alpha-quality software. Version 0.1.0rc5 is a
-prerelease of 0.1.0. Install the exact release candidate with:
+TrainParity is currently alpha-quality software. Version 0.1.0 is its first
+non-prerelease release. Install the exact release with:
 
 ```bash
-pip install trainparity==0.1.0rc5
+pip install trainparity==0.1.0
 ```
 
 CPU-only users should install a validated PyTorch CPU wheel first so that pip
@@ -21,7 +21,7 @@ does not resolve the default CUDA wheel and its runtime packages:
 
 ```bash
 python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install trainparity==0.1.0rc5
+python -m pip install trainparity==0.1.0
 ```
 
 Package metadata still permits `torch>=2.7,<2.14`; the explicitly validated
@@ -100,7 +100,7 @@ Representative first-observed-divergence output:
     "position": 2
   },
   "schema_version": 2,
-  "trainparity_version": "0.1.0rc5"
+  "trainparity_version": "0.1.0"
 }
 ```
 
