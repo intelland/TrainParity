@@ -72,9 +72,44 @@ smoke-tested the exact wheel outside the source tree, rechecked artifact
 hashes, and published the same files through Trusted Publishing. A subsequent
 fresh Python 3.11 environment installed the public PyPI wheel and verified
 package version `0.1.0rc5`, machine-report schema 2, and all three clean/fault
-quickstarts. The stable activation changes release identity and documentation,
-not the accepted comparison implementation; the final `0.1.0` wheel must
-repeat these release checks before publication.
+quickstarts.
+
+### Stable 0.1.0 main CI
+
+GitHub Actions run `32237392040` completed successfully on
+`main@2c8fb257fa8b133578502361d29161851da1ff3a`.
+
+### Stable 0.1.0 release workflow
+
+Release workflow run `32238085358` completed successfully. It built the wheel
+and sdist once, validated them with Twine, smoke-tested the exact wheel outside
+the source tree, verified installed version `0.1.0` and machine-report schema
+2, ran all three quickstarts, rechecked the artifact hashes, and published the
+same `dist/` contents through protected-environment Trusted Publishing. This
+is release evidence, not a reproducible-build guarantee.
+
+### Official 0.1.0 artifacts
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `trainparity-0.1.0-py3-none-any.whl` | `2f3afa565da36406cdd39c70d8e2ea0bb8cad593f7685336dbed67bde628b952` |
+| `trainparity-0.1.0.tar.gz` | `6fb88e390c299c0aa98cbd25c704217a5694f2be8766275d9fe660ac6dc8d994` |
+
+### Public PyPI verification
+
+An outside-repository Python 3.11.15 environment installed PyTorch
+2.13.0+cpu and `trainparity==0.1.0` from public package indexes. The import
+resolved from that environment's `site-packages`, with package version `0.1.0`
+and machine-report schema 2. Installed quickstarts produced:
+
+- Resume: clean `PASS`; intentional `FAIL` at `scheduler.last_epoch`.
+- Accumulation: clean `PASS`; intentional `FAIL` at
+  `loss_accounting.denominator`.
+- Sample coverage: clean `PASS`; intentional `FAIL` at
+  `coverage.same_rank_duplicate`.
+
+The independently downloaded public PyPI wheel and sdist hashes matched the
+corresponding release-workflow hashes above.
 
 Tested compatibility for this stable release is deliberately narrow:
 

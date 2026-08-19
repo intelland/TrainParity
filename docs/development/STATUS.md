@@ -1,19 +1,18 @@
 # TrainParity Status
 
-## Active release work
+## Post-release status
 
-TrainParity `0.1.0rc1` through `0.1.0rc5` have been published. The current
-authorized scope is a bounded `0.1.0` stable activation from remote
-`main@213e5e948335255463f17543bda9c1e49a943e15`. It may update only active
-release identity, release-facing documentation, matching release tooling and
-tests, and this status record. Stable publication, tag creation, GitHub
-Release creation, and merge remain unauthorized in this branch.
+TrainParity `0.1.0` has been released and independently verified from the
+public PyPI package. The stable release identity is
+`main@2c8fb257fa8b133578502361d29161851da1ff3a`, tagged as `v0.1.0`.
+The package remains `Development Status :: 3 - Alpha`; the non-prerelease
+version and the project's maturity classifier are separate concepts.
 
 ## Objective
 
-Prepare the first non-prerelease `0.1.0` identity while preserving the
-accepted rc5 behavior, public API, machine-report schema 2, dependency range,
-framework-neutral scope, and historical evidence.
+The `0.1.0` stable release is complete. Current repository work is
+post-release maintenance while preserving the accepted `0.1.0` public
+contract; no `0.1.1` development has begun.
 
 ## Constraints
 
@@ -28,11 +27,15 @@ framework-neutral scope, and historical evidence.
 - Preserve all accepted evidence and historical rc1-rc5 identities.
 - Preserve build-once, exact-wheel smoke, hash recheck, protected-environment
   Trusted Publishing, and framework-neutral release boundaries.
-- Do not merge, publish, tag, create a GitHub Release, or begin another release.
+- Keep exact-by-default comparison, explicit user-selected tolerance,
+  four-state outcomes, and first-observed-divergence wording unchanged.
+- Do not imply a future version, framework adapter, broader compatibility, or
+  Beta/production maturity without separate evidence and authorization.
 
-## Verification commands
+## Recorded stable-release verification commands
 
-Run from an isolated release checkout:
+The completed stable activation was verified from an isolated release
+checkout with:
 
 ```bash
 make lint
@@ -49,10 +52,10 @@ python scripts/verify_gate7i.py
 git diff --check
 ```
 
-The built wheel must also pass outside-repository smoke tests and the Python
-3.11/PyTorch 2.7.0, 2.10.0, and 2.13.0 CPU matrix before review.
+The built wheel also passed outside-repository smoke tests and the Python
+3.11/PyTorch 2.7.0, 2.10.0, and 2.13.0 CPU matrix before publication.
 
-## Release history and current activation
+## Release history
 
 - `0.1.0rc1` was published on 2026-08-11.
 - `0.1.0rc2` was published on 2026-08-12.
@@ -62,11 +65,20 @@ The built wheel must also pass outside-repository smoke tests and the Python
   Trusted Publishing runs passed, its annotated tag resolves to that commit,
   and its public PyPI wheel passed fresh-install identity/schema/quickstart
   verification.
-- `0.1.0` stable activation began on 2026-08-16 as an identity/documentation
-  patch. No stable package, tag, GitHub Release, merge, or publication has
-  occurred. The chronological Gate entries below are preserved as historical
-  records; statements about publication being held describe their recorded
-  time rather than the current repository state.
+- `0.1.0` was released on 2026-08-19 from
+  `main@2c8fb257fa8b133578502361d29161851da1ff3a`. Main CI run `32237392040`
+  and protected Trusted Publishing run `32238085358` completed successfully.
+  Annotated tag `v0.1.0` dereferences to the same main commit. The official
+  wheel SHA-256 is
+  `2f3afa565da36406cdd39c70d8e2ea0bb8cad593f7685336dbed67bde628b952`;
+  the sdist SHA-256 is
+  `6fb88e390c299c0aa98cbd25c704217a5694f2be8766275d9fe660ac6dc8d994`.
+  A public-PyPI fresh install verified package version `0.1.0`, machine-report
+  schema 2, and all three clean/fault quickstarts. Independently downloaded
+  public artifacts matched the workflow artifact hashes. The chronological
+  Gate entries below are preserved as historical records; statements about
+  publication being held describe their recorded time rather than the current
+  repository state.
 
 ## Current state
 

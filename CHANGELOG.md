@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 - 2026-08-16
+## 0.1.0 - 2026-08-19
 
 - Promote the behavior, public API, and machine-report schema verified through
   `0.1.0rc5` to the first non-prerelease release.
