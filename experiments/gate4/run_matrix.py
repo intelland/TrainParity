@@ -6,7 +6,6 @@ import argparse
 import hashlib
 import json
 import os
-import resource
 import shutil
 import statistics
 import subprocess
@@ -170,6 +169,8 @@ def _project(
     environment: dict[str, str],
     timeout: float,
 ) -> dict[str, Any]:
+    import resource
+
     data_root = root / "data"
     executions: list[dict[str, Any]] = []
     executions.append(_run(adapter.prepare_command(checkout, data_root), run_dir=root / "prepare", environment=environment, timeout=timeout))
