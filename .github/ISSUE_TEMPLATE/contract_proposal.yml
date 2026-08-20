@@ -1,0 +1,69 @@
+name: Observable contract proposal
+description: Propose a bounded, testable change to TrainParity's observable contracts.
+title: "contract: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start from an observable user contract, not a framework integration or an
+        inferred root cause. Small documentation-only fixes do not require this form.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: What concrete training-equivalence problem cannot be expressed or audited today?
+    validations:
+      required: true
+  - type: textarea
+    id: limitation
+    attributes:
+      label: Current limitation
+      description: Explain why the existing resume, accumulation, and sample-coverage surfaces are insufficient.
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Proposed observable contract
+      description: Define the user-declared inputs, observable states, execution boundary, and result semantics.
+    validations:
+      required: true
+  - type: textarea
+    id: clean_control
+    attributes:
+      label: Clean PASS control
+      description: Describe a deterministic execution pair that should return PASS.
+    validations:
+      required: true
+  - type: textarea
+    id: deliberate_fault
+    attributes:
+      label: Deliberate FAIL control
+      description: Describe a small realistic fault that should return FAIL without specializing the contract to that fault.
+    validations:
+      required: true
+  - type: textarea
+    id: first_boundary
+    attributes:
+      label: Expected first observed boundary
+      description: Identify the earliest expected observable component or phase, without claiming root cause.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Explain how a focused test or existing public object falls short.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope acknowledgement
+      options:
+        - label: This proposal preserves deterministic four-state reporting and does not require an LLM, service, dashboard, or framework-specific production branch.
+          required: true
+        - label: I understand that acceptance requires clean controls, deliberate faults, and evidence proportional to the public-contract risk.
+          required: true
