@@ -1,0 +1,82 @@
+name: Bug report
+description: Report reproducible incorrect behavior in a TrainParity check or report.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a reproducible problem. TrainParity reports the first
+        observed divergence; that observation is not a root-cause claim.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      description: Which public surface produced the problem?
+      options:
+        - Resume equivalence
+        - Gradient-accumulation equivalence
+        - Sample coverage
+        - Machine report or serialization
+        - Packaging, installation, or documentation
+        - Other public API
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: TrainParity version
+      description: Include the installed package version or exact commit SHA.
+      placeholder: "Example: 0.1.0 or 6f611fe"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Python, PyTorch, operating system, and CPU/GPU details relevant to the failure.
+      placeholder: "Python 3.11.x; PyTorch 2.x; Linux/Windows; CPU or GPU model"
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: State the returned outcome and the first observed divergence or error boundary.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: State the user-declared contract and the expected outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide the smallest trusted case and exact commands that reproduce the behavior.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Relevant output
+      description: Remove credentials, tokens, private paths, private data, checkpoints, and other sensitive values before posting.
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues for this behavior.
+          required: true
+        - label: I used trusted code and removed credentials, private data, checkpoints, and machine-local paths from this report.
+          required: true
+        - label: I understand that a first observed divergence identifies an observation boundary, not a root cause.
+          required: true

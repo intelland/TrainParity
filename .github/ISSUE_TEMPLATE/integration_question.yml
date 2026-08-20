@@ -1,0 +1,54 @@
+name: Integration question
+description: Ask how to express a concrete training-equivalence check with the existing public API.
+title: "integration: "
+labels:
+  - question
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Integration goal
+      description: What equivalence or coverage property do you want to test?
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Relevant surface
+      options:
+        - Resume equivalence
+        - Gradient-accumulation equivalence
+        - Sample coverage
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Current approach
+      description: Describe the training flow, boundaries, and what you have tried.
+    validations:
+      required: true
+  - type: input
+    id: interface
+    attributes:
+      label: Relevant TrainParity interface
+      description: Name the function, protocol, policy, or result object involved, if known.
+      placeholder: "Example: check_resume or AccumulationCase"
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include TrainParity, Python, PyTorch, operating system, and relevant device versions.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Minimal code or output
+      description: Share only the smallest relevant excerpt. Remove credentials, tokens, private paths, private data, checkpoints, and other sensitive values.
+      render: python
+    validations:
+      required: false
