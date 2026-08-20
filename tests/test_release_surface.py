@@ -72,37 +72,43 @@ def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:
     assert not (ROOT / "src/trainparity/__main__.py").exists()
 
 
-def test_readme_uses_the_complete_ci_case_before_quickstarts() -> None:
+def test_readme_preserves_public_onboarding_contract() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    example = (ROOT / "examples/test_readme_case.py").read_text(encoding="utf-8")
-    logical_lines = sum(
-        bool(line.strip()) and not line.lstrip().startswith("#")
-        for line in example.splitlines()
-    )
-    first = readme.split("## Installed quickstarts", 1)[0]
-    assert 20 <= logical_lines <= 30
-    assert "The following compact pytest case audits stable IDs" in first
     assert "img.shields.io/pypi/v/trainparity.svg" in readme
-    assert readme.index("## Install and run") < readme.index("## A complete integration")
-    assert "Asking Codex" not in readme
-    assert "does not invoke an LLM at runtime" in first
-    assert "class CoverageCase:" in first
-    assert "coverage.same_rank_duplicate" in first
-    assert not re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
-    assert "python -m pytest -q --no-cov examples/test_readme_case.py" in first
-    assert (
-        "python -m pip install torch==2.7.0 --index-url "
-        "https://download.pytorch.org/whl/cpu"
-    ) in readme
-    assert 'python -m pip install -e ".[dev]"' in first
+    assert "pip install trainparity" in readme
     assert "pip install trainparity==0.1.0" in readme
-    assert "unpublished release candidate" not in readme
+    for outcome in ("PASS", "FAIL", "ABSTAIN", "ERROR"):
+        assert outcome in readme
+    assert "first observed" in readme
+    assert "root-cause" in readme
+    for target in (
+        "docs/api.md",
+        "docs/validation.md",
+        "docs/design.md",
+        "docs/limitations.md",
+        "SECURITY.md",
+        "CONTRIBUTING.md",
+    ):
+        assert f"https://github.com/intelland/TrainParity/blob/main/{target}" in readme
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
     )
     assert relative_public_links == []
+    for phrase in (
+        "unpublished release candidate",
+        "Publication remains held",
+        "not published to PyPI",
+        "No publication workflow has been executed",
+    ):
+        assert phrase not in readme
     for module in ("resume", "accumulation", "sample_coverage"):
         assert f"python -m trainparity.quickstarts.{module}" in readme
+    for phrase in (
+        "audit_rank_iterables",
+        "ExactlyOnce",
+        "coverage.same_rank_duplicate",
+    ):
+        assert phrase in readme
 
 
 def test_workflows_are_split_pinned_and_least_privilege() -> None:

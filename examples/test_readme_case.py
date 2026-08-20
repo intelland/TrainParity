@@ -1,4 +1,4 @@
-"""Complete PyTorch DataLoader coverage case shown in the README."""
+"""Complete PyTorch DataLoader coverage case referenced by the README."""
 
 from __future__ import annotations
 

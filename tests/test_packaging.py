@@ -9,7 +9,10 @@ def test_production_dependencies_are_minimal_and_documented() -> None:
     project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
     assert project["dependencies"] == ["torch>=2.7,<2.14"]
     readme = (root / "README.md").read_text(encoding="utf-8")
-    assert "PyTorch 2.7.0, 2.10.0, and 2.13.0" in readme
+    compatibility = readme.split("## Compatibility", 1)[1].split("\n---", 1)[0]
+    assert "PyTorch >=2.7,<2.14" in compatibility
+    for version in ("2.7.0", "2.10.0", "2.13.0"):
+        assert version in compatibility
 
 
 def test_forbidden_runtime_dependencies_are_absent() -> None:
