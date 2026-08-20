@@ -45,6 +45,26 @@ release boundary.
 
 Validation should match the risk introduced by the change. More evidence is not automatically better when it does not test the changed contract.
 
+## Repository automation
+
+- **PR and main CI** run the normal lint, type, test, build, and onboarding
+  verification for the current code.
+- **Weekly Validation** runs the declared CPU PyTorch compatibility smoke for
+  the currently supported versions.
+- **Manual deep validation** preserves historical Gate and pinned external-
+  integration replay. A maintainer dispatches it only when a relevant contract
+  or audit reason explicitly calls for that evidence.
+- **Release workflow** is reserved for protected publication.
+
+Ordinary documentation and community pull requests do not require manual deep
+validation. An ordinary CPU bug fix does not require Gate 0-7I replay merely
+because that historical audit capability exists. Historical replay is retained
+for targeted audits, not as an acceptance criterion for every pull request.
+
+GPU and M3 evidence remain driven by the changed contract. For public API,
+schema, dependency, compatibility, or release changes, the maintainer may
+request additional evidence proportional to the risk.
+
 ### 1. Community and repository metadata
 
 For Issue Forms, contribution templates, conduct documents, and similar metadata:

@@ -1,4 +1,4 @@
-name: Full validation
+name: Validation
 
 on:
   workflow_dispatch:
@@ -41,6 +41,8 @@ jobs:
             --output "$RUNNER_TEMP/compatibility-${{ matrix.torch }}.json"
 
   full-validation:
+    name: Manual deep validation
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:

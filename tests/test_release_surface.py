@@ -129,9 +129,20 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert "pull_request:" in contents["ci.yml"]
     assert "id-token: write" not in contents["ci.yml"]
     assert "secrets." not in contents["ci.yml"]
-    assert "workflow_dispatch:" in contents["validation.yml"]
-    assert "schedule:" in contents["validation.yml"]
-    assert "id-token: write" not in contents["validation.yml"]
+    validation = contents["validation.yml"]
+    assert "workflow_dispatch:" in validation
+    assert "schedule:" in validation
+    assert "id-token: write" not in validation
+    assert re.search(r"(?m)^  compatibility:$", validation)
+    full_validation = re.search(
+        r"(?ms)^  full-validation:\n(?P<body>.*?)(?=^  [a-z][a-z-]*:\n|\Z)",
+        validation,
+    )
+    assert full_validation is not None
+    assert re.search(
+        r"(?m)^    if: github\.event_name == 'workflow_dispatch'$",
+        full_validation.group("body"),
+    )
     release = contents["release.yml"]
     assert "workflow_dispatch:" in release
     assert "github.ref == 'refs/heads/main'" in release
