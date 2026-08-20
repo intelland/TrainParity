@@ -26,7 +26,7 @@ security-advisory reporting for `intelland/TrainParity` when available. Include
 the affected version, a minimal reproduction, impact, and any suggested
 mitigation. Do not include live credentials or private training data.
 
-No response-time or remediation-time guarantee is made for this pre-release
+No response-time or remediation-time guarantee is made for this alpha-quality
 project.
 
 ## Release permissions

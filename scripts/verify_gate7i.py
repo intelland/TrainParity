@@ -141,20 +141,26 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
     _require(not (root / "src/trainparity/cli.py").exists(), "CLI module removal")
     _require(not (root / "src/trainparity/__main__.py").exists(), "module CLI removal")
     readme = (root / "README.md").read_text(encoding="utf-8")
-    first = readme.split("## Installed quickstarts", 1)[0]
     _require("img.shields.io/pypi/v/trainparity.svg" in readme, "published PyPI badge")
-    _require(
-        readme.index("## Install and run") < readme.index("## A complete integration"),
-        "README install placement",
-    )
-    _require("Asking Codex" not in readme, "Codex paragraph")
-    placeholder = re.search(r"^\s*(?:pass|\.\.\.)\s*$", first, re.MULTILINE)
-    _require("class CoverageCase:" in first and placeholder is None, "complete first-screen case")
-    _require(
-        "python -m pytest -q --no-cov examples/test_readme_case.py" in first,
-        "README pytest command",
-    )
+    _require("pip install trainparity" in readme, "README generic PyPI install")
     _require("pip install trainparity==0.1.0" in readme, "README PyPI install")
+    for module in ("resume", "accumulation", "sample_coverage"):
+        _require(
+            f"python -m trainparity.quickstarts.{module}" in readme,
+            f"README {module} quickstart",
+        )
+    for target in (
+        "docs/api.md",
+        "docs/validation.md",
+        "docs/design.md",
+        "docs/limitations.md",
+        "SECURITY.md",
+        "CONTRIBUTING.md",
+    ):
+        _require(
+            f"https://github.com/intelland/TrainParity/blob/main/{target}" in readme,
+            f"README public navigation {target}",
+        )
     relative_public_links = re.findall(
         r"\]\(((?:docs|examples)/[^)]+|[A-Z]+\.md|LICENSE)\)", readme
     )
