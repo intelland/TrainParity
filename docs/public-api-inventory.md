@@ -1,6 +1,6 @@
 # Public API inventory
 
-This inventory records the Gate 7I release surface and defining modules. The
+This inventory records the TrainParity 0.1 public API surface and defining modules. The
 recommended top-level namespace contains 11 names; `trainparity.api` contains
 26 supported names including the overlapping top-level objects.
 

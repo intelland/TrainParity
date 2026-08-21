@@ -1,9 +1,9 @@
 # Validation evidence
 
-This is TrainParity's reproducible validation suite, not a universal detection
-rate. The fixtures are intentionally small and the external repositories are
-pinned. A passing row demonstrates only the declared relation on the recorded
-environment.
+This page records validation for the TrainParity 0.1.0 release. It is not a
+universal detection rate. The fixtures are intentionally small and the
+external repositories are pinned. A passing row demonstrates only the declared
+relation on the recorded environment.
 
 ## Resume equivalence
 
@@ -20,16 +20,14 @@ NVIDIA A100 80GB PCIe. Cross-GPU numerical comparison was not performed.
 Three external integrations exercised original checkpoint implementations at
 exact commits with zero upstream modified LOC:
 
-| Project structure | Upstream commit | License | Clean | Fault | User LOC after Gate 4B |
+| Project structure | Upstream commit | License | Clean | Fault | User LOC |
 | --- | --- | --- | --- | --- | ---: |
 | PyTorch examples ImageNet classifier | `acc295dc7b90714f1bf47f06004fc19a7fe235c4` | BSD-3-Clause | PASS | scheduler state detected | 30 |
 | nanoGPT sequence model | `3adf61e154c3fe3fca428ad6bc3818b27a3b8291` | MIT | PASS | training control state detected | 31 |
 | Ignite MNIST Engine recipe | `e08ff9257ed18d8d805304e32ba85a44553195fc` | BSD-3-Clause | PASS | scheduler state detected | 32 |
 
 These tiny L40S fixtures are product-surface checks, not claims about all uses
-of those projects. Detailed pins, license hashes, checkpoint paths, LOC, and
-timing are preserved in `artifacts/gate_reports/gate_4.json` and
-`gate_4b.json`.
+of those projects.
 
 ## Accumulation equivalence
 
@@ -59,34 +57,31 @@ The expected universe and ID extractor are user declarations. The auditor does
 not inspect sample contents or make claims beyond one finite observation
 window.
 
-## Test and environment boundary
+## Release and environment record
 
-Gate 6 concluded with 134 passing tests and 92.46% measured source coverage.
-The accepted `0.1.0rc5` main commit later passed Ruff, strict Mypy, 182 tests
-at 90.73% measured source coverage, the complete README integration, all three
+The accepted `0.1.0rc5` source passed Ruff, strict Mypy, 182 tests at 90.73%
+measured source coverage, the complete README integration, all three
 quickstarts, wheel/sdist build, Twine validation, and release-surface checks in
-GitHub Actions run `31798915064`.
-
-Release workflow run `31816180948` built the `0.1.0rc5` distributions once,
-smoke-tested the exact wheel outside the source tree, rechecked artifact
-hashes, and published the same files through Trusted Publishing. A subsequent
-fresh Python 3.11 environment installed the public PyPI wheel and verified
-package version `0.1.0rc5`, machine-report schema 2, and all three clean/fault
-quickstarts.
+GitHub Actions run `31798915064`. Release workflow run `31816180948` built
+the distributions once, smoke-tested the exact wheel outside the source tree,
+rechecked artifact hashes, and published those files through Trusted
+Publishing. A fresh Python 3.11 environment then installed the public wheel and
+verified package version `0.1.0rc5`, machine-report schema 2, and all three
+clean/fault quickstarts.
 
 ### Stable 0.1.0 main CI
 
-GitHub Actions run `32237392040` completed successfully on
-`main@2c8fb257fa8b133578502361d29161851da1ff3a`.
+GitHub Actions run `32237392040` completed successfully on the accepted stable
+source at `main@2c8fb257fa8b133578502361d29161851da1ff3a`.
 
 ### Stable 0.1.0 release workflow
 
 Release workflow run `32238085358` completed successfully. It built the wheel
 and sdist once, validated them with Twine, smoke-tested the exact wheel outside
 the source tree, verified installed version `0.1.0` and machine-report schema
-2, ran all three quickstarts, rechecked the artifact hashes, and published the
-same `dist/` contents through protected-environment Trusted Publishing. This
-is release evidence, not a reproducible-build guarantee.
+2, ran all three quickstarts, rechecked artifact hashes, and published the same
+`dist/` contents through protected-environment Trusted Publishing. This is
+release evidence, not a reproducible-build guarantee.
 
 ### Official 0.1.0 artifacts
 
@@ -111,6 +106,8 @@ and machine-report schema 2. Installed quickstarts produced:
 The independently downloaded public PyPI wheel and sdist hashes matched the
 corresponding release-workflow hashes above.
 
+## Compatibility boundary
+
 Tested compatibility for this stable release is deliberately narrow:
 
 | Component | Tested |
@@ -122,28 +119,24 @@ Tested compatibility for this stable release is deliberately narrow:
 | GPU | same-device A100 80GB PCIe and L40S fixtures, CUDA 12.6 |
 | Process model | single training process plus fresh child processes |
 
+Each CPU row built and installed a wheel with normal dependency resolution in
+a fresh Python 3.11 environment, then ran resume, accumulation, and
+sample-coverage clean/fault quickstarts outside the repository. All three rows
+passed without source-tree fallback. The declared runtime dependency is
+`torch>=2.7,<2.14`; the upper bound does not assert compatibility with an
+untested PyTorch 2.14.
+
 Untested Python, PyTorch, CUDA, operating-system, accelerator, distributed, and
 large-model combinations are not covered by this matrix.
 
-Gate 7I resolver-aware compatibility Slurm array job `59002633` built the wheel
-once per row, installed the selected PyTorch and then installed TrainParity
-with normal dependency resolution into a new Python 3.11 environment, and ran
-resume, accumulation, and sample-coverage clean/fault quickstarts from an
-outside-repository directory. All three rows passed without source-tree
-fallback. The declared runtime dependency is therefore `torch>=2.7,<2.14`;
-the upper bound does not assert compatibility with an untested PyTorch 2.14.
-
-An optional same-device replay on the configured M3 cluster is:
-`sbatch scripts/slurm_gpu_matrix.sbatch --gate 3`. It requires the documented
-cluster environment and is not a portable launcher.
-
-The Gate 7 CPU release check can be replayed on M3 with
-`sbatch scripts/slurm_gate7_release.sbatch --gate 7`; it builds both archives,
-creates a new wheel environment, and runs the three installed examples.
+Historical release validation is recorded evidence, while current CI
+continuously verifies the supported product and packaging surface. The
+scheduled and manually dispatched Validation workflow verifies the declared CPU
+compatibility matrix.
 
 ## Coverage measurement boundary
 
-The source-coverage configuration omits only modules whose execution is not
+The source-coverage configuration omits modules whose execution is not
 represented correctly by the parent pytest process:
 
 - `accumulation_worker.py`, `process_worker.py`, and `worker.py` run in real
@@ -154,11 +147,10 @@ represented correctly by the parent pytest process:
   would misstate the tested process boundary.
 - `protocols.py` contains structural protocols plus data carriers exercised by
   the runners; protocol placeholder bodies are not executable behavior.
-- `prototypes.py` and `trainparity/examples/` are Gate replay fixtures, not the
-  release API. Gate 1/3 verifiers and integration tests execute them, and the
-  examples package is excluded from the wheel.
+- `prototypes.py` and `trainparity/examples/` are development fixtures, not
+  the release API, and the examples package is excluded from the wheel.
 
 Public facade, importing, comparison, orchestration, serialization, reporting,
 and quickstart modules are included in measured source coverage. Subprocess
-coverage is therefore documented separately rather than silently presented as
+coverage is documented separately rather than silently presented as
 parent-process line coverage.

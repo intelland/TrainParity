@@ -37,9 +37,8 @@ Use this workflow:
 6. Verify hosted CI and respond to focused review feedback.
 7. Wait for maintainer review and a normal merge commit.
 
-Contributors are not expected to have access to M3. A maintainer may request
-additional evidence when a change reaches a contract, device, compatibility, or
-release boundary.
+A maintainer may request additional evidence when a change reaches a contract,
+device, compatibility, or release boundary.
 
 ## Risk-based validation
 
@@ -49,21 +48,13 @@ Validation should match the risk introduced by the change. More evidence is not 
 
 - **PR and main CI** run the normal lint, type, test, build, and onboarding
   verification for the current code.
-- **Weekly Validation** runs the declared CPU PyTorch compatibility smoke for
-  the currently supported versions.
-- **Manual deep validation** preserves historical Gate and pinned external-
-  integration replay. A maintainer dispatches it only when a relevant contract
-  or audit reason explicitly calls for that evidence.
+- **Validation** runs the declared CPU PyTorch compatibility matrix on its
+  schedule or when a maintainer dispatches it.
 - **Release workflow** is reserved for protected publication.
 
-Ordinary documentation and community pull requests do not require manual deep
-validation. An ordinary CPU bug fix does not require Gate 0-7I replay merely
-because that historical audit capability exists. Historical replay is retained
-for targeted audits, not as an acceptance criterion for every pull request.
-
-GPU and M3 evidence remain driven by the changed contract. For public API,
-schema, dependency, compatibility, or release changes, the maintainer may
-request additional evidence proportional to the risk.
+Specialized device evidence is required only when the changed contract calls
+for it. Public API, schema, dependency, compatibility, and release changes may
+require additional evidence proportional to their risk.
 
 ### 1. Community and repository metadata
 
@@ -73,7 +64,7 @@ For Issue Forms, contribution templates, conduct documents, and similar metadata
 - parse or syntax-check structured files and run focused checks when applicable;
 - require successful hosted CI.
 
-M3, GPU, compatibility matrices, release checks, PyPI checks, and artifact
+GPU evidence, compatibility matrices, release checks, PyPI checks, and artifact
 validation are not required by default.
 
 ### 2. README and package documentation
@@ -87,8 +78,8 @@ documentation:
 - build wheel and sdist and run Twine metadata checks;
 - require successful hosted CI.
 
-A GPU run or the M3 compatibility matrix is not required unless the documented
-claim itself concerns that evidence.
+A GPU run or compatibility matrix is not required unless the documented claim
+itself concerns that evidence.
 
 ### 3. Runtime fixes
 
