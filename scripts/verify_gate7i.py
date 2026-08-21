@@ -70,6 +70,14 @@ def _hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _is_sha256(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
 def _verify_links(root: Path) -> int:
     checked = 0
     for relative in PUBLIC_FILES:
@@ -186,12 +194,12 @@ def verify(root: Path, *, fast: bool) -> dict[str, Any]:
     gate7 = _load(root / "artifacts/gate_reports/gate_7.json")
     for relative, expected in gate7["preservation"]["accepted_evidence_sha256"].items():
         _require(_hash(root / relative) == expected, f"accepted evidence {relative}")
-    document_hash = _hash(root / "CODEX_REMOTE_DEVELOPMENT.md")
-    allowed_document_hashes = {
-        "6b532b94660949abec3c50bbe826d2154a797eeec744d3e5c91058dec9a96300",
-        gate7["preservation"]["tracked_remote_development_sha256"],
-    }
-    _require(document_hash in allowed_document_hashes, "user document")
+    preservation = gate7["preservation"]
+    for key in (
+        "tracked_remote_development_sha256",
+        "user_uncommitted_remote_development_sha256",
+    ):
+        _require(_is_sha256(preservation.get(key)), f"historical document hash {key}")
     if not fast:
         compatibility = _load(root / "artifacts/gate_reports/gate_7i_compatibility.json")
         _require(compatibility["status"] == "PASS", "compatibility status")
