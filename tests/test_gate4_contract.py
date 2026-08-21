@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import inspect
 import statistics
 from pathlib import Path
@@ -13,6 +14,21 @@ from experiments.gate4.handwritten import final_state_equal
 from experiments.gate4.run_matrix import DRIVER_FILES, _adapter_path, _logical_lines
 
 ADAPTERS = (ImageNetAdapter(), NanoGptAdapter(), IgniteMnistAdapter())
+
+
+def test_gate4_contract_helpers_do_not_require_unix_resource_at_import_time() -> None:
+    module_path = Path(__file__).resolve().parents[1] / "experiments/gate4/run_matrix.py"
+    tree = ast.parse(module_path.read_text(encoding="utf-8"))
+    top_level_resource_imports = [
+        node
+        for node in tree.body
+        if (
+            isinstance(node, ast.Import)
+            and any(alias.name == "resource" for alias in node.names)
+        )
+        or (isinstance(node, ast.ImportFrom) and node.module == "resource")
+    ]
+    assert top_level_resource_imports == []
 
 
 def test_gate4_uses_three_exact_external_commits_and_declared_licenses() -> None:
