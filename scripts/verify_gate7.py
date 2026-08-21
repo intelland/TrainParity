@@ -33,6 +33,14 @@ def _hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _is_sha256(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
 def _require(condition: bool, message: str) -> None:
     if not condition:
         raise SystemExit(f"Gate 7 verification failed: {message}")
@@ -127,15 +135,12 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     for relative, expected in report["preservation"]["accepted_evidence_sha256"].items():
         path = root / relative
         _require(path.is_file() and _hash(path) == expected, f"preservation {relative}")
-    document_hash = _hash(root / "CODEX_REMOTE_DEVELOPMENT.md")
-    allowed_document_hashes = {
-        report["preservation"]["user_uncommitted_remote_development_sha256"]
-    }
-    if allow_pending_ci:
-        allowed_document_hashes.add(
-            report["preservation"]["tracked_remote_development_sha256"]
-        )
-    _require(document_hash in allowed_document_hashes, "user document")
+    preservation = report["preservation"]
+    for key in (
+        "tracked_remote_development_sha256",
+        "user_uncommitted_remote_development_sha256",
+    ):
+        _require(_is_sha256(preservation.get(key)), f"historical document hash {key}")
     _require("Nothing was published, tagged" in markdown, "Markdown remote boundary")
     return {
         "status": "PASS",

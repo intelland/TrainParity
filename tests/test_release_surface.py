@@ -214,6 +214,32 @@ def test_current_release_validation_does_not_rewrite_gate7i_records() -> None:
     assert "experiments/gate7i/recorded/wheel_smoke.json" not in release_check
 
 
+def test_repository_hygiene_keeps_current_maintenance_metadata_public_safe() -> None:
+    assert not (ROOT / "CODEX_REMOTE_DEVELOPMENT.md").exists()
+
+    agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    assert "CONTRIBUTING.md" in agents
+    assert "risk-based validation" in agents
+    for obsolete_instruction in (
+        "For the active Gate",
+        "Do not proceed to the next Gate",
+        "artifacts/gate_reports/gate_<N>",
+        "Create Git checkpoints before and after each Gate",
+    ):
+        assert obsolete_instruction not in agents
+
+    for verifier in (
+        "scripts/verify_gate5.py",
+        "scripts/verify_gate6.py",
+        "scripts/verify_gate7.py",
+        "scripts/verify_gate7i.py",
+    ):
+        source = (ROOT / verifier).read_text(encoding="utf-8")
+        assert "CODEX_REMOTE_DEVELOPMENT.md" not in source
+        assert "tracked_remote_development_sha256" in source
+        assert "user_uncommitted_remote_development_sha256" in source
+
+
 def test_validation_and_coverage_boundary_are_documented() -> None:
     validation = (ROOT / "docs/validation.md").read_text(encoding="utf-8")
     assert "e08ff9257ed18d8d805304e32ba85a44553195fc" in validation

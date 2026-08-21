@@ -29,6 +29,14 @@ def _hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _is_sha256(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
 def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     report = json.loads((root / "artifacts/gate_reports/gate_5.json").read_text(encoding="utf-8"))
     markdown = (root / "artifacts/gate_reports/gate_5.md").read_text(encoding="utf-8")
@@ -65,12 +73,12 @@ def verify(root: Path, allow_pending_ci: bool = False) -> dict[str, Any]:
     for relative, expected in report["preservation"]["accepted_evidence_sha256"].items():
         path = root / relative
         _require(path.is_file() and _hash(path) == expected, f"preservation {relative}")
-    document_hash = _hash(root / "CODEX_REMOTE_DEVELOPMENT.md")
-    allowed_documents = {
-        report["preservation"]["tracked_remote_development_sha256"],
-        report["preservation"]["user_uncommitted_remote_development_sha256"],
-    }
-    _require(document_hash in allowed_documents, "remote development document")
+    preservation = report["preservation"]
+    for key in (
+        "tracked_remote_development_sha256",
+        "user_uncommitted_remote_development_sha256",
+    ):
+        _require(_is_sha256(preservation.get(key)), f"historical document hash {key}")
     for phrase in ("user-declared", "first observed divergences, not root-cause claims", "FullValueBackend remains"):
         _require(phrase in markdown, f"Markdown phrase {phrase}")
     return {"outcome": "PASS", "faults": 8, "projects": 2}
