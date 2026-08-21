@@ -16,9 +16,7 @@ Before changing the project, read:
 4. `docs/design.md`
 5. `docs/limitations.md`
 
-Development plans and Gate records under `docs/development/`, `experiments/`,
-and `artifacts/` are historical evidence, not the current maintenance
-workflow.
+These files define the current product and maintenance contract.
 
 ## Product invariants
 
@@ -39,9 +37,9 @@ workflow.
   maintainer instruction.
 - Use a focused branch and make the smallest change that addresses the evidence.
 - Add or update typed tests for public behavior.
-- Follow the risk-based validation tiers in `CONTRIBUTING.md`; do not
-  mechanically run M3, GPU, manual deep validation, compatibility matrices, or
-  release validation when the change does not require them.
+- Follow the risk-based validation tiers in `CONTRIBUTING.md`.
+- Run specialized device, compatibility, or release evidence only when the
+  changed contract requires it.
 - Prefer repository commands exposed through the `Makefile`.
 - Inspect staged and unstaged changes and commit only authorized paths.
 - Submit a focused PR, wait for required verification, obtain maintainer
@@ -51,8 +49,10 @@ workflow.
 
 ## Repository safety
 
-- Preserve accepted historical evidence unless a task explicitly targets it.
-- Do not regenerate historical Gate reports to satisfy current checks.
+- Do not add internal development journals, machine-specific instructions, or
+  maintainer infrastructure metadata to the public tree.
+- Historical provenance belongs in Git history and release tags, not current
+  maintenance files.
 - Do not commit credentials, private data, maintainer-local paths, cluster
   paths, SSH key names, or machine-specific operating instructions.
 - Treat untrusted repositories and checkpoints as untrusted code/data; follow
@@ -67,7 +67,5 @@ workflow.
 - State paths and JSON output must be deterministic.
 - Subprocess behavior must be tested.
 - Keep examples small and reproducible.
-- Record genuine dependency or architectural changes in
-  `docs/development/DECISIONS.md`.
 - If the requested scope is insufficient, stop and report the exact blocker
   instead of broadening the change.

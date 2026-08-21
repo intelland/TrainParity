@@ -39,4 +39,4 @@ jobs:
       - name: Validate distribution metadata and rendered README
         run: python -m twine check dist/*
       - name: Verify release-surface contracts
-        run: python scripts/verify_gate7i.py --fast
+        run: python scripts/verify_release_surface.py

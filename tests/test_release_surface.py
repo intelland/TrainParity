@@ -134,15 +134,16 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert "schedule:" in validation
     assert "id-token: write" not in validation
     assert re.search(r"(?m)^  compatibility:$", validation)
-    full_validation = re.search(
-        r"(?ms)^  full-validation:\n(?P<body>.*?)(?=^  [a-z][a-z-]*:\n|\Z)",
-        validation,
-    )
-    assert full_validation is not None
-    assert re.search(
-        r"(?m)^    if: github\.event_name == 'workflow_dispatch'$",
-        full_validation.group("body"),
-    )
+    assert "full-validation:" not in validation
+    validation_jobs = validation.split("\njobs:\n", 1)
+    assert len(validation_jobs) == 2
+    assert set(re.findall(r"(?m)^  ([a-z][a-z0-9-]*):$", validation_jobs[1])) == {
+        "compatibility"
+    }
+    assert 'torch: ["2.7.0", "2.10.0", "2.13.0"]' in validation
+    assert "scripts/compatibility_check.py" in validation
+    assert "python scripts/verify_release_surface.py" in contents["ci.yml"]
+    assert "verify_gate" not in "\n".join(contents.values())
     release = contents["release.yml"]
     assert "workflow_dispatch:" in release
     assert "github.ref == 'refs/heads/main'" in release
@@ -205,39 +206,22 @@ def test_shipped_release_documents_remain_true_after_publication() -> None:
     assert "pip install trainparity==0.1.0" in stable_notes
 
 
-def test_current_release_validation_does_not_rewrite_gate7i_records() -> None:
+def test_current_release_validation_uses_distribution_scoped_outputs() -> None:
     makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
     release_check = (ROOT / "scripts/release_check.py").read_text(encoding="utf-8")
     assert "dist/.release-validation/release-audit.json" in makefile
     assert 'default=Path("dist/.release-validation/wheel-smoke.json")' in release_check
-    assert "experiments/gate7i/recorded/release_audit.json" not in makefile
-    assert "experiments/gate7i/recorded/wheel_smoke.json" not in release_check
+    assert "verify-gate-" not in makefile
+    assert "artifacts/" not in makefile
+    assert "experiments/" not in release_check
 
 
-def test_repository_hygiene_keeps_current_maintenance_metadata_public_safe() -> None:
-    assert not (ROOT / "CODEX_REMOTE_DEVELOPMENT.md").exists()
-
+def test_agent_guide_points_to_the_current_maintenance_contract() -> None:
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
     assert "CONTRIBUTING.md" in agents
     assert "risk-based validation" in agents
-    for obsolete_instruction in (
-        "For the active Gate",
-        "Do not proceed to the next Gate",
-        "artifacts/gate_reports/gate_<N>",
-        "Create Git checkpoints before and after each Gate",
-    ):
-        assert obsolete_instruction not in agents
-
-    for verifier in (
-        "scripts/verify_gate5.py",
-        "scripts/verify_gate6.py",
-        "scripts/verify_gate7.py",
-        "scripts/verify_gate7i.py",
-    ):
-        source = (ROOT / verifier).read_text(encoding="utf-8")
-        assert "CODEX_REMOTE_DEVELOPMENT.md" not in source
-        assert "tracked_remote_development_sha256" in source
-        assert "user_uncommitted_remote_development_sha256" in source
+    assert "current product and maintenance contract" in agents
+    assert "Historical provenance belongs in Git history and release tags" in agents
 
 
 def test_validation_and_coverage_boundary_are_documented() -> None:

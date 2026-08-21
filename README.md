@@ -410,7 +410,6 @@ for the full boundary.
 | Design                      | [docs/design.md](https://github.com/intelland/TrainParity/blob/main/docs/design.md)                                           |
 | Limitations                 | [docs/limitations.md](https://github.com/intelland/TrainParity/blob/main/docs/limitations.md)                                 |
 | Security                    | [SECURITY.md](https://github.com/intelland/TrainParity/blob/main/SECURITY.md)                                                 |
-| Development provenance      | [docs/development-provenance.md](https://github.com/intelland/TrainParity/blob/main/docs/development-provenance.md)           |
 | Comparison with TrainCheck  | [docs/comparison-with-traincheck.md](https://github.com/intelland/TrainParity/blob/main/docs/comparison-with-traincheck.md)   |
 
 ---
