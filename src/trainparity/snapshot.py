@@ -1,4 +1,4 @@
-"""Gate 2 snapshot schema and full-value capture implementation."""
+"""Snapshot schema and full-value capture implementation."""
 
 from __future__ import annotations
 

@@ -291,8 +291,7 @@ recommended top-level names:
 - `SampleObservation`, `SampleAnomaly`, `SampleViolation`,
   `SampleCoverageResult`, and `audit_rank_iterables`.
 
-Internal runners, snapshot backends, subprocess workers, serializers,
-historical resume protocols, experiments, and Gate tooling are not supported
-public API. A case must be importable in a fresh interpreter; closures and
-serialized live Python objects are not accepted substitutes for the process
-boundary.
+Internal runners, snapshot backends, subprocess workers, serializers, and
+development-only helpers are not supported public API. A case must be
+importable in a fresh interpreter; closures and serialized live Python objects
+are not accepted substitutes for the process boundary.

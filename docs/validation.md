@@ -147,8 +147,8 @@ represented correctly by the parent pytest process:
   would misstate the tested process boundary.
 - `protocols.py` contains structural protocols plus data carriers exercised by
   the runners; protocol placeholder bodies are not executable behavior.
-- `prototypes.py` and `trainparity/examples/` are development fixtures, not
-  the release API, and the examples package is excluded from the wheel.
+- `prototypes.py` and `trainparity/examples/` are outside the documented 0.1
+  public API, and the examples package is excluded from the wheel.
 
 Public facade, importing, comparison, orchestration, serialization, reporting,
 and quickstart modules are included in measured source coverage. Subprocess
