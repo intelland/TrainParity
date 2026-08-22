@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 
 import torch
@@ -33,7 +34,11 @@ TOP_LEVEL_API = {
 
 def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
     assert set(trainparity.__all__) == TOP_LEVEL_API
-    assert trainparity.__version__ == PACKAGE_VERSION == "0.1.0"
+    metadata = tomllib.loads(
+        (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+    )
+    assert trainparity.__version__ == PACKAGE_VERSION == metadata["project"]["version"]
+    assert PACKAGE_VERSION == "0.1.1.dev0"
     assert MACHINE_REPORT_SCHEMA_VERSION == 2
     for internal in (
         "AccumulationRunner",

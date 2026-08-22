@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import tomllib
 from pathlib import Path
 
 import trainparity
@@ -213,8 +214,11 @@ def verify(root: Path) -> dict[str, object]:
     """Verify current public APIs, docs, workflows, and release boundaries."""
     _require(set(trainparity.__all__) == TOP_LEVEL_API, "top-level API")
     _require(set(api.__all__) == ADVANCED_API, "advanced API")
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    project_version = project["version"]
+    _require(isinstance(project_version, str), "project version type")
     _require(
-        trainparity.__version__ == PACKAGE_VERSION == "0.1.0",
+        trainparity.__version__ == PACKAGE_VERSION == project_version,
         "package version",
     )
     _require(MACHINE_REPORT_SCHEMA_VERSION == 2, "machine-report schema")

@@ -154,6 +154,13 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert "download-artifact" not in release
     assert "group: trainparity-pypi-release" in release
     assert "cancel-in-progress: false" in release
+    assert "- name: Resolve and validate release version" in release
+    assert "Refusing to publish development version" in release
+    assert "https://pypi.org/pypi/" in release
+    assert "HTTPError" in release
+    assert "URLError" in release
+    assert "error.code == 404" in release
+    assert 'test "${expected_version}" = "0.1.0"' not in release
     assert release.count("python -m build") == 1
     assert 'sha256sum dist/* > "${RUNNER_TEMP}/trainparity-dist.sha256"' in release
     smoke = "- name: Smoke-test the exact wheel from outside the source tree"
