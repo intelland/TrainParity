@@ -1,6 +1,6 @@
-"""Package and machine-report versions for the v0.1 stable release."""
+"""Package and machine-report versions for the current source tree."""
 
-PACKAGE_VERSION = "0.1.0"
+PACKAGE_VERSION = "0.1.1.dev0"
 MACHINE_REPORT_SCHEMA_VERSION = 2
 
 

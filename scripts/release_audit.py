@@ -7,11 +7,11 @@ import hashlib
 import json
 import re
 import tarfile
+import tomllib
 import zipfile
 from pathlib import Path
 from typing import Any
 
-VERSION = "0.1.0"
 TEXT_SUFFIXES = {".json", ".md", ".py", ".ps1", ".sh", ".toml", ".txt", ".yaml", ".yml"}
 EXCLUDED_PARTS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "build", "dist", "__pycache__"}
 SECRET_PATTERNS = {
@@ -21,8 +21,8 @@ SECRET_PATTERNS = {
     "email_token_query": re.compile(r"[?&]email_token=[A-Za-z0-9]+"),
 }
 LOCAL_PATTERNS = {
-    "windows_user_absolute_path": re.compile(
-        r"\b[A-Za-z]:" + r"\\" + "Users" + r"\\[^\\\s\"'`]+(?:\\[^\s\"'`]*)?"
+    "windows_drive_absolute_path": re.compile(
+        r"\b[A-Za-z]:\\+(?:[^\s\"'`\\]+\\+)*[^\s\"'`\\]+"
     ),
     "macos_user_absolute_path": re.compile(
         "/" + "Users/" + r"[^/\s\"'`]+(?:/[^\s\"'`]*)?"
@@ -31,6 +31,9 @@ LOCAL_PATTERNS = {
         "/" + "home/" + r"[^/\s\"'`]+(?:/[^\s\"'`]*)?"
     ),
     "scratch_absolute_path": re.compile("/" + "scratch" + r"(?:/[^\s\"'`]*)?"),
+    "cluster_filesystem_absolute_path": re.compile(
+        r"/(?:fs04|gpfs)(?:/[^/\s\"'`]*)?"
+    ),
 }
 UNWANTED_SUFFIXES = {".ckpt", ".npy", ".npz", ".pt", ".pth", ".pyc"}
 FORBIDDEN_WHEEL = ("trainparity/examples/",)
@@ -44,6 +47,14 @@ FORBIDDEN_SDIST = (
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _project_version(root: Path) -> str:
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    version = project["version"]
+    if not isinstance(version, str):
+        raise RuntimeError("project.version must be a string")
+    return version
 
 
 def _text_files(root: Path) -> list[Path]:
@@ -91,9 +102,9 @@ def _scan_repository(root: Path) -> dict[str, Any]:
     }
 
 
-def _audit_archives(root: Path) -> dict[str, Any]:
-    wheel = root / "dist" / f"trainparity-{VERSION}-py3-none-any.whl"
-    sdist = root / "dist" / f"trainparity-{VERSION}.tar.gz"
+def _audit_archives(root: Path, version: str) -> dict[str, Any]:
+    wheel = root / "dist" / f"trainparity-{version}-py3-none-any.whl"
+    sdist = root / "dist" / f"trainparity-{version}.tar.gz"
     if not wheel.is_file() or not sdist.is_file():
         raise RuntimeError("expected wheel and sdist were not built")
     with zipfile.ZipFile(wheel) as archive:
@@ -142,8 +153,9 @@ def _audit_archives(root: Path) -> dict[str, Any]:
 
 def run(root: Path) -> dict[str, Any]:
     """Return the deterministic audit report, raising on a release blocker."""
+    version = _project_version(root)
     repository = _scan_repository(root)
-    archives = _audit_archives(root)
+    archives = _audit_archives(root, version)
     blockers = []
     if repository["secret_matches"]:
         blockers.append("secret-like credential material found in repository text")
@@ -155,7 +167,7 @@ def run(root: Path) -> dict[str, Any]:
         blockers.append("secret-like credential material entered a distribution")
     report = {
         "schema_version": 1,
-        "trainparity_version": VERSION,
+        "trainparity_version": version,
         "status": "PASS" if not blockers else "BLOCKED",
         "blockers": blockers,
         "repository": repository,

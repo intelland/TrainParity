@@ -9,9 +9,16 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import tomllib
 from pathlib import Path
 
-VERSION = "0.1.0"
+
+def _project_version(root: Path) -> str:
+    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    version = project["version"]
+    if not isinstance(version, str):
+        raise RuntimeError("project.version must be a string")
+    return version
 
 
 def _run(
@@ -34,7 +41,8 @@ def main() -> None:
     )
     arguments = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    wheel = root / "dist" / f"trainparity-{VERSION}-py3-none-any.whl"
+    version = _project_version(root)
+    wheel = root / "dist" / f"trainparity-{version}-py3-none-any.whl"
     if not wheel.is_file():
         raise SystemExit(f"missing built wheel: {wheel.name}")
     temporary_parent_value = os.environ.get("TRAINPARITY_RELEASE_TEMP_ROOT")
@@ -93,7 +101,7 @@ def main() -> None:
             environment=clean_environment,
         )
         report = json.loads((root / arguments.output).read_text(encoding="utf-8"))
-        if report["trainparity_version"] != VERSION:
+        if report["trainparity_version"] != version:
             raise RuntimeError("installed wheel reported the wrong package version")
         if report["schema_version"] != 2:
             raise RuntimeError("installed wheel reported the wrong machine-report schema")
