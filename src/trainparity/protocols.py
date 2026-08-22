@@ -60,7 +60,7 @@ class ResumeCase(Protocol):
 
 @runtime_checkable
 class ResumeExecutionCase(ResumeCase, Protocol):
-    """Gate 3 extension that exposes stable post-step observations."""
+    """Resume extension that exposes stable post-step observations."""
 
     def observe(self, state: TrainingState) -> StepObservation:
         """Describe the most recently completed batch and supported extra state."""

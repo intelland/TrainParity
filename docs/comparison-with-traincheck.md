@@ -19,8 +19,8 @@ show the earliest observation where two controlled executions cease to match.
 Neither result by itself establishes root cause, and neither tool is a
 universal detector.
 
-Gate 0 compared the approaches using controlled clean and four-fault prototype
-evidence. That evidence supported building the explicit differential design; it
+An early controlled prototype comparison evaluated clean behavior and four
+deliberate faults. That evidence supported building the explicit differential design; it
 was not a benchmark proving general superiority, and no TrainCheck source was
 copied into TrainParity.
 

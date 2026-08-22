@@ -15,7 +15,7 @@ __pycache__/
 dist/
 build/
 
-# Cluster logs and model artifacts
+# Logs and generated model artifacts
 *.out
 *.err
 *.ckpt
@@ -33,6 +33,3 @@ build/
 /logs/
 /outputs/
 /results/
-
-# Local handoff archives
-TrainParity_Codex_Handoff.zip

@@ -14,23 +14,8 @@ include docs/validation.md
 include docs/design.md
 include docs/comparison-with-traincheck.md
 include docs/limitations.md
-include docs/development-provenance.md
-include docs/name-availability.md
 recursive-include docs/assets *.png *.svg
 recursive-include docs/release-notes *.md
-exclude docs/API_PROTOTYPES.md
-exclude docs/COMPETITOR_ANALYSIS.md
-exclude docs/GATE4_GLUE_DECOMPOSITION.md
-exclude docs/GATE4_INTEGRATIONS.md
-exclude docs/GATE5_ACCUMULATION_CONTRACT.md
-exclude docs/GATE6_SAMPLE_COVERAGE_CONTRACT.md
-exclude docs/PRODUCT_CONTRACT.md
-exclude docs/RESUME_EQUIVALENCE.md
-exclude docs/SNAPSHOT_CONTRACT.md
-prune docs/development
-prune docs/launch
-prune artifacts
-prune experiments
 prune scripts
 prune tests
 global-exclude __pycache__ *.py[cod] .DS_Store

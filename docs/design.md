@@ -46,5 +46,5 @@ retaining mutable aliases and represents missing, `None`, empty, zero, NaN, and
 Inf distinctly. Optimizer state is canonicalized by parameter name and
 ambiguous mappings abstain.
 
-The runtime package does not contain project-specific adapters, Gate
-experiments, accepted evidence, launch tooling, an LLM, or an external service.
+The runtime package does not contain project-specific adapters,
+development-only experiment tooling, an LLM, or an external service.

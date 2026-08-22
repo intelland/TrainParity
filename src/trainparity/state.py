@@ -84,7 +84,7 @@ FrozenValue: TypeAlias = FrozenScalar | FrozenTensor | FrozenMapping | FrozenSeq
 
 
 class FullValueBackend:
-    """Gate 2 reference backend that materializes complete immutable values."""
+    """Reference backend that materializes complete immutable values."""
 
     name = "full_value_reference"
 

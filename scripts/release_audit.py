@@ -21,33 +21,24 @@ SECRET_PATTERNS = {
     "email_token_query": re.compile(r"[?&]email_token=[A-Za-z0-9]+"),
 }
 LOCAL_PATTERNS = {
-    "windows_absolute_path": re.compile(r"\b[A-Za-z]:\\(?:Users|STUDY|Program Files)\\"),
-    "cluster_absolute_path": re.compile(r"/(?:scratch|fs04|home)/[^\s\"'`]+"),
-    "cluster_username": re.compile(r"\b(?:jwuu0254|HUAWEI)\b", re.IGNORECASE),
+    "windows_user_absolute_path": re.compile(
+        r"\b[A-Za-z]:" + r"\\" + "Users" + r"\\[^\\\s\"'`]+(?:\\[^\s\"'`]*)?"
+    ),
+    "macos_user_absolute_path": re.compile(
+        "/" + "Users/" + r"[^/\s\"'`]+(?:/[^\s\"'`]*)?"
+    ),
+    "linux_home_absolute_path": re.compile(
+        "/" + "home/" + r"[^/\s\"'`]+(?:/[^\s\"'`]*)?"
+    ),
+    "scratch_absolute_path": re.compile("/" + "scratch" + r"(?:/[^\s\"'`]*)?"),
 }
 UNWANTED_SUFFIXES = {".ckpt", ".npy", ".npz", ".pt", ".pth", ".pyc"}
 FORBIDDEN_WHEEL = ("trainparity/examples/",)
-DEVELOPMENT_DOCS = {
-    "docs/API_PROTOTYPES.md",
-    "docs/COMPETITOR_ANALYSIS.md",
-    "docs/GATE4_GLUE_DECOMPOSITION.md",
-    "docs/GATE4_INTEGRATIONS.md",
-    "docs/GATE5_ACCUMULATION_CONTRACT.md",
-    "docs/GATE6_SAMPLE_COVERAGE_CONTRACT.md",
-    "docs/PRODUCT_CONTRACT.md",
-    "docs/RESUME_EQUIVALENCE.md",
-    "docs/SNAPSHOT_CONTRACT.md",
-}
 FORBIDDEN_SDIST = (
-    "artifacts/",
-    "experiments/",
     "scripts/",
     "tests/",
-    "docs/development/",
-    "docs/launch/",
-    "CODEX_REMOTE_DEVELOPMENT.md",
-    "TrainParity_Codex_Handoff.zip",
-    *tuple(sorted(DEVELOPMENT_DOCS)),
+    ".github/",
+    "AGENTS.md",
 )
 
 
@@ -65,20 +56,6 @@ def _text_files(root: Path) -> list[Path]:
     )
 
 
-def _classify(relative: str) -> str:
-    if relative.startswith(("artifacts/", "experiments/")):
-        return "accepted_or_recorded_evidence"
-    if (
-        relative.startswith("docs/development/")
-        or relative == "CODEX_REMOTE_DEVELOPMENT.md"
-        or relative in DEVELOPMENT_DOCS
-    ):
-        return "development_provenance"
-    if relative.startswith(("scripts/", "tests/")):
-        return "repository_tooling"
-    return "release_facing_source"
-
-
 def _scan_repository(root: Path) -> dict[str, Any]:
     secrets: list[dict[str, str]] = []
     local_metadata: dict[str, dict[str, int]] = {}
@@ -88,14 +65,12 @@ def _scan_repository(root: Path) -> dict[str, Any]:
         for name, pattern in SECRET_PATTERNS.items():
             if pattern.search(text):
                 secrets.append({"file": relative, "pattern": name})
-        classification = _classify(relative)
         for name, pattern in LOCAL_PATTERNS.items():
             count = len(pattern.findall(text))
             if count:
-                key = f"{classification}:{name}"
-                local_metadata.setdefault(key, {"files": 0, "occurrences": 0})
-                local_metadata[key]["files"] += 1
-                local_metadata[key]["occurrences"] += count
+                local_metadata.setdefault(name, {"files": 0, "occurrences": 0})
+                local_metadata[name]["files"] += 1
+                local_metadata[name]["occurrences"] += count
     unwanted = []
     large = []
     for path in sorted(root.rglob("*")):
@@ -108,15 +83,9 @@ def _scan_repository(root: Path) -> dict[str, Any]:
             unwanted.append(relative)
         if path.stat().st_size > 5 * 1024 * 1024:
             large.append({"file": relative, "bytes": path.stat().st_size})
-    release_local = {
-        key: value
-        for key, value in local_metadata.items()
-        if key.startswith("release_facing_source:")
-    }
     return {
         "secret_matches": secrets,
         "local_metadata_summary": local_metadata,
-        "release_facing_local_metadata": release_local,
         "checkpoint_dataset_cache_files": unwanted,
         "large_files_over_5mb": large,
     }
@@ -178,10 +147,10 @@ def run(root: Path) -> dict[str, Any]:
     blockers = []
     if repository["secret_matches"]:
         blockers.append("secret-like credential material found in repository text")
-    if repository["release_facing_local_metadata"]:
-        blockers.append("machine-local path or username found in release-facing source")
+    if repository["local_metadata_summary"]:
+        blockers.append("machine-local absolute path found in repository text")
     if archives["wheel"]["forbidden_files"] or archives["sdist"]["forbidden_files"]:
-        blockers.append("Gate/development content entered a distribution")
+        blockers.append("repository-only content entered a distribution")
     if archives["wheel"]["secret_matches"] or archives["sdist"]["secret_matches"]:
         blockers.append("secret-like credential material entered a distribution")
     report = {
@@ -198,11 +167,6 @@ def run(root: Path) -> dict[str, Any]:
                 "source": "https://github.com/pytorch/pytorch/blob/v2.13.0/LICENSE",
             }
         ],
-        "historical_metadata_policy": (
-            "Machine paths and cluster/user identifiers in accepted evidence, development "
-            "provenance, and repository-only verification tooling are preserved for auditability "
-            "and excluded from distributions."
-        ),
         "environment_values_recorded_by_default": False,
     }
     return report

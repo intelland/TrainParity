@@ -1,4 +1,4 @@
-"""Fresh-process worker used by the Gate 3 orchestrator."""
+"""Fresh-process worker used by the resume orchestrator."""
 
 from __future__ import annotations
 
@@ -59,7 +59,7 @@ def execute(request: dict[str, Any]) -> dict[str, Any]:
     """Execute one worker request; called by CLI and unit tests."""
     case = load_case(str(request["case"]))
     if not isinstance(case, ResumeExecutionCase):
-        raise TypeError("Gate 3 case must implement ResumeExecutionCase")
+        raise TypeError("case must implement ResumeExecutionCase")
     mode = str(request["mode"])
     seed = int(request["seed"])
     steps = int(request["steps"])

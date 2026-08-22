@@ -75,7 +75,7 @@ def test_clean_and_fault_run_in_three_fresh_processes(tmp_path: Path) -> None:
         comparison=ToleranceComparison(rtol=1e-6, atol=1e-7), timeout=60
     )
     clean = runner.run(
-        "experiments.gate5.cases:LinearCase",
+        "tests.fixtures.accumulation_cases:LinearCase",
         candidate=AccumulationExecutionPlan(2),
         report_path=tmp_path / "clean.json",
     )
@@ -89,7 +89,7 @@ def test_clean_and_fault_run_in_three_fresh_processes(tmp_path: Path) -> None:
 
     fault_path = tmp_path / "fault.json"
     fault = runner.run(
-        "experiments.gate5.cases:LinearCase",
+        "tests.fixtures.accumulation_cases:LinearCase",
         candidate=AccumulationExecutionPlan(
             2, scale_accumulated_loss=False, use_explicit_loss_accounting=False
         ),
@@ -104,7 +104,7 @@ def test_clean_and_fault_run_in_three_fresh_processes(tmp_path: Path) -> None:
 def test_setup_error_reports_actionable_cause_deterministically(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    case = "experiments.gate5.cases:MissingAccumulationCase"
+    case = "tests.fixtures.accumulation_cases:MissingAccumulationCase"
     first_path = tmp_path / "first.json"
     second_path = tmp_path / "second.json"
     replacements: list[tuple[Path, Path]] = []
@@ -152,7 +152,7 @@ def test_report_bytes_ignore_platform_text_newline_translation(
     report_path = tmp_path / "report.json"
 
     result = check_accumulation(
-        "experiments.gate5.cases:MissingAccumulationCase",
+        "tests.fixtures.accumulation_cases:MissingAccumulationCase",
         candidate=AccumulationExecutionPlan(2),
         report_path=report_path,
     )

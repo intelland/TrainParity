@@ -13,16 +13,15 @@ def test_first_observed_extracts_difference_violation_and_phase() -> None:
     assert release_smoke._first_observed({}) is None
 
 
-def test_repository_audit_classifies_historical_metadata(tmp_path: Path) -> None:
+def test_repository_audit_detects_machine_local_metadata(tmp_path: Path) -> None:
     (tmp_path / "src").mkdir()
-    (tmp_path / "experiments").mkdir()
     (tmp_path / "src" / "clean.py").write_text("value = 1\n", encoding="utf-8")
-    (tmp_path / "experiments" / "history.json").write_text(
-        json.dumps({"path": "/scratch/project/checkpoint"}), encoding="utf-8"
+    local_path = "/" + "home" + "/example/project/checkpoint"
+    (tmp_path / "src" / "metadata.json").write_text(
+        json.dumps({"path": local_path}), encoding="utf-8"
     )
     report = release_audit._scan_repository(tmp_path)
     assert report["secret_matches"] == []
-    assert report["release_facing_local_metadata"] == {}
-    assert report["local_metadata_summary"][
-        "accepted_or_recorded_evidence:cluster_absolute_path"
-    ]["occurrences"] == 1
+    assert report["local_metadata_summary"] == {
+        "linux_home_absolute_path": {"files": 1, "occurrences": 1}
+    }
