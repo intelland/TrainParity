@@ -139,16 +139,13 @@ compatibility matrix.
 The source-coverage configuration omits modules whose execution is not
 represented correctly by the parent pytest process:
 
-- `accumulation_worker.py`, `process_worker.py`, and `worker.py` run in real
-  fresh subprocesses. `tests/test_accumulation.py`,
-  `tests/test_process_resume.py`, and `tests/test_runner.py` assert their exit,
-  IPC, error, identity, and result behavior. The current coverage run does not
-  combine subprocess coverage files, so counting these files as uncovered
-  would misstate the tested process boundary.
-- `protocols.py` contains structural protocols plus data carriers exercised by
-  the runners; protocol placeholder bodies are not executable behavior.
-- `prototypes.py` and `trainparity/examples/` are outside the documented 0.1
-  public API, and the examples package is excluded from the wheel.
+- `accumulation_worker.py` and `process_worker.py` run in real fresh
+  subprocesses. `tests/test_accumulation.py` and `tests/test_process_resume.py`
+  exercise their process, IPC, and error behavior. The current coverage run
+  does not combine subprocess coverage files, so counting these files as
+  uncovered would misstate the tested process boundary.
+- `protocols.py` contains structural Protocol declarations whose placeholder
+  bodies are not executable runtime behavior.
 
 Public facade, importing, comparison, orchestration, serialization, reporting,
 and quickstart modules are included in measured source coverage. Subprocess

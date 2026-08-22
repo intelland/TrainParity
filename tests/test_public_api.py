@@ -38,10 +38,8 @@ def test_frozen_public_api_excludes_internal_runners_and_backends() -> None:
     for internal in (
         "AccumulationRunner",
         "ProcessResumeRunner",
-        "ResumeRunner",
         "Snapshot",
         "capture_snapshot",
-        "load_case",
         "PACKAGE_VERSION",
         "ExternalProcessEvidence",
         "SampleCoverageAuditor",

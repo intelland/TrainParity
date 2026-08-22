@@ -38,7 +38,6 @@ Issues = "https://github.com/intelland/TrainParity/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-exclude = ["trainparity.examples*"]
 
 [tool.setuptools.package-data]
 trainparity = ["py.typed"]
@@ -50,11 +49,8 @@ testpaths = ["tests"]
 [tool.coverage.run]
 omit = [
   "src/trainparity/accumulation_worker.py",
-  "src/trainparity/examples/*",
   "src/trainparity/protocols.py",
-  "src/trainparity/prototypes.py",
   "src/trainparity/process_worker.py",
-  "src/trainparity/worker.py",
 ]
 
 [tool.ruff]
