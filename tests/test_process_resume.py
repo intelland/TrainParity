@@ -12,7 +12,7 @@ from trainparity.api import ProcessResumeResult
 from trainparity.outcomes import Outcome
 from trainparity.process_resume import ProcessResumeRunner
 
-PREFIX = "trainparity.examples.process_cases:"
+PREFIX = "tests.fixtures.process_resume_cases:"
 
 
 def _resume_semantics(result: ProcessResumeResult) -> tuple[object, ...]:

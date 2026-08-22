@@ -69,7 +69,7 @@ class DeterministicProcessCase:
         command = [
             sys.executable,
             "-m",
-            "trainparity.examples.process_cases",
+            "tests.fixtures.process_resume_cases",
             "train",
             "--run-dir",
             str(plan.run_dir),
@@ -94,10 +94,7 @@ class DeterministicProcessCase:
 
     def observe_checkpoint(self, path: Path) -> dict[str, object]:
         state: dict[str, object] = torch.load(path, map_location="cpu", weights_only=True)
-        return {
-            key: state[key]
-            for key in ("model", "optimizer", "scheduler", "rng")
-        }
+        return {key: state[key] for key in ("model", "optimizer", "scheduler", "rng")}
 
 
 class NondeterministicProcessCase(DeterministicProcessCase):
