@@ -29,12 +29,11 @@ These files define the current product and maintenance contract.
 - Do not claim support for arbitrary Python training scripts.
 - Do not add general Lightning, Transformers, DeepSpeed, DDP, or FSDP adapters
   without an explicitly authorized public-contract proposal.
-- Do not copy code from OrderLab/TrainCheck.
 
 ## Maintenance workflow
 
-- Do not proactively start 0.1.1 or a new feature without a concrete issue or
-  maintainer instruction.
+- Do not promote the current development source into a release or start a new
+  feature without a concrete issue or maintainer instruction.
 - Use a focused branch and make the smallest change that addresses the evidence.
 - Add or update typed tests for public behavior.
 - Follow the risk-based validation tiers in `CONTRIBUTING.md`.

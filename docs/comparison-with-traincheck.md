@@ -19,11 +19,6 @@ show the earliest observation where two controlled executions cease to match.
 Neither result by itself establishes root cause, and neither tool is a
 universal detector.
 
-An early controlled prototype comparison evaluated clean behavior and four
-deliberate faults. That evidence supported building the explicit differential design; it
-was not a benchmark proving general superiority, and no TrainCheck source was
-copied into TrainParity.
-
 TrainParity's additional costs are real: users must express project semantics,
 the full-value reference stores explicit state, and a differential check runs
 multiple executions. TrainCheck and TrainParity should therefore be selected

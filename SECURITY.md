@@ -34,8 +34,6 @@ project.
 Pull-request CI and scheduled validation use an explicit read-only
 `GITHUB_TOKEN`, persist no checkout credential, and receive no repository
 secrets or OIDC permission. The manual release workflow is restricted to the
-default branch and references the `pypi` environment. Before enabling it, the
-repository owner must configure that environment with required human reviewers
-and set `PYPI_ENVIRONMENT_PROTECTED=true`; otherwise the publish job is skipped.
-PyPI publication uses Trusted Publishing with a job-scoped OIDC token and does
+default branch, requires `PYPI_ENVIRONMENT_PROTECTED=true`, targets the `pypi`
+environment, and uses Trusted Publishing with a job-scoped OIDC token. It does
 not consume artifacts from pull-request workflows.
