@@ -169,7 +169,7 @@ def _verify_workflows(root: Path) -> None:
         "validation job inventory",
     )
     for phrase in (
-        'torch: ["2.7.0", "2.10.0", "2.13.0"]',
+        'torch: ["2.6.0", "2.7.0", "2.10.0", "2.13.0"]',
         "https://download.pytorch.org/whl/cpu",
         "python -m build --wheel",
         'cd "$RUNNER_TEMP"',
