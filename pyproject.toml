@@ -9,8 +9,8 @@ description = "Explicit differential tests for PyTorch training semantics"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 license = "MIT"
-authors = [{name = "Zhou Xianhao", email = "593403766@qq.com"}]
-maintainers = [{name = "Zhou Xianhao", email = "593403766@qq.com"}]
+authors = [{name = "Zhou Xianhao", email = "intelland2024@163.com"}]
+maintainers = [{name = "Zhou Xianhao", email = "intelland2024@163.com"}]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",

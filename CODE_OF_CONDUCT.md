@@ -43,7 +43,7 @@ We agree to restrict the following behaviors in our community. Instances, threat
 
 Tensions can occur between community members even when they are trying their best to collaborate. Not every conflict represents a code of conduct violation, and this Code of Conduct reinforces encouraged behaviors and norms that can help avoid conflicts and minimize harm.
 
-When an incident does occur, it is important to report it promptly. To report a possible violation, email the project maintainer, Zhou Xianhao, at [593403766@qq.com](mailto:593403766@qq.com). Do not report conduct incidents in a public issue. The maintainer will handle reports privately and will prioritize the safety and confidentiality of everyone involved.
+When an incident does occur, it is important to report it promptly. To report a possible violation, email the project maintainer, Zhou Xianhao, at [intelland2024@163.com](mailto:intelland2024@163.com). Do not report conduct incidents in a public issue. The maintainer will handle reports privately and will prioritize the safety and confidentiality of everyone involved.
 
 Reports of violations will be taken seriously and reviewed in a timely manner. The maintainer may review relevant messages, logs, or other evidence and may contact witnesses or participants. Enforcement actions are carried out privately with the involved parties, although a community-facing communication may be part of a mutually agreed resolution.
 

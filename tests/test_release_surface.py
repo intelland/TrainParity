@@ -63,7 +63,7 @@ def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:
         "project"
     ]
     assert project["authors"] == [
-        {"name": "Zhou Xianhao", "email": "593403766@qq.com"}
+        {"name": "Zhou Xianhao", "email": "intelland2024@163.com"}
     ]
     assert project["maintainers"] == project["authors"]
     assert "Development Status :: 3 - Alpha" in project["classifiers"]
