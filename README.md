@@ -39,6 +39,18 @@ TrainParity returns four distinct outcomes:
 A `FAIL` localizes the **first observed divergence or policy violation**. It is not a root-cause claim.
 
 ---
+## What it catches
+
+A run can load a checkpoint and continue without crashing while still violating the training semantics you intended.
+
+| Declared relation | Example result |
+| --- | --- |
+| Correct fresh-process resume | `PASS` |
+| Scheduler state not restored | `FAIL` at `scheduler._step_count` |
+| CUDA RNG not restored | `FAIL` with propagated model/optimizer drift |
+| Correct gradient accumulation | `PASS` |
+| Missing accumulated-loss scaling | `FAIL` at `loss_accounting` |
+
 
 ## Installation
 
