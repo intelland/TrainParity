@@ -75,6 +75,11 @@ def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:
 def test_readme_preserves_public_onboarding_contract() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "already has a compatible PyTorch build" in readme
+    for phrase in (
+        "What it catches", "Scheduler state not restored", "CUDA RNG not restored",
+        "Missing accumulated-loss scaling",
+    ):
+        assert phrase in readme
     assert "PyTorch selector" in readme
     assert "SampleObservation" in readme
     assert "img.shields.io/pypi/v/trainparity.svg" in readme
