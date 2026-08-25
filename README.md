@@ -42,21 +42,27 @@ A `FAIL` localizes the **first observed divergence or policy violation**. It is 
 
 ## Installation
 
+If the environment already has a compatible PyTorch build, install TrainParity directly. Pip reuses that installed build when it satisfies TrainParity's version range:
+
 ```bash
-pip install trainparity
+python -m pip install trainparity
 ```
 
 To pin the current stable release:
 
 ```bash
-pip install trainparity==0.1.0
+python -m pip install trainparity==0.1.0
 ```
+
+For a fresh GPU environment, first use the [PyTorch selector](https://pytorch.org/get-started/locally/) to install a build compatible with the GPU, driver, and CUDA runtime. Then install TrainParity with the same command.
+
+TrainParity does not choose a CUDA build. Its PyTorch version range does not guarantee CUDA-runtime, driver, or GPU-architecture compatibility.
 
 Package metadata currently requires:
 
 ```text
 Python >=3.11,<3.12
-PyTorch >=2.7,<2.14
+PyTorch >=2.6,<2.14
 ```
 
 See [Compatibility](#compatibility) for the explicitly validated environments.
@@ -82,6 +88,20 @@ Each emits machine-readable JSON for both a clean case and an intentional failur
 | Sample coverage | `PASS`     | `FAIL` at `coverage.same_rank_duplicate` |
 
 No repository checkout is required.
+
+For example, this public-API check reports the duplicate stable ID:
+
+```python
+from trainparity import ExactlyOnce, Outcome, audit_sample_coverage
+from trainparity.api import SampleObservation
+
+result = audit_sample_coverage(
+    [SampleObservation(sample_id=value, rank=0, epoch=0, position=index)
+     for index, value in enumerate((0, 1, 1, 3))],
+    ExactlyOnce((0, 1, 2, 3)),
+)
+assert result.outcome is Outcome.FAIL
+```
 
 ---
 
@@ -343,12 +363,13 @@ Package metadata permits:
 
 ```text
 Python >=3.11,<3.12
-PyTorch >=2.7,<2.14
+PyTorch >=2.6,<2.14
 ```
 
 The `0.1.0` release was explicitly validated on CPython 3.11.15 with CPU PyTorch:
 
 * 2.7.0
+* 2.6.0
 * 2.10.0
 * 2.13.0
 
@@ -356,6 +377,8 @@ Same-device GPU evidence uses PyTorch 2.7.0 with the exact CUDA and GPU fixtures
 [docs/validation.md](https://github.com/intelland/TrainParity/blob/main/docs/validation.md).
 
 Intermediate PyTorch versions are permitted by the declared dependency range but were not independently validated.
+
+NumPy is not a TrainParity runtime dependency. If a selected PyTorch build prints its optional NumPy initialization warning, install NumPy in that environment; TrainParity captures NumPy RNG state only when NumPy is installed.
 
 CPU-only users who want to avoid resolving the default CUDA-enabled PyTorch package can install a CPU wheel first, for example:
 

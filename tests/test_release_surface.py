@@ -74,6 +74,9 @@ def test_release_metadata_has_real_maintainer_and_no_console_script() -> None:
 
 def test_readme_preserves_public_onboarding_contract() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "already has a compatible PyTorch build" in readme
+    assert "PyTorch selector" in readme
+    assert "SampleObservation" in readme
     assert "img.shields.io/pypi/v/trainparity.svg" in readme
     assert "pip install trainparity" in readme
     assert "pip install trainparity==0.1.0" in readme
@@ -130,6 +133,7 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert "id-token: write" not in contents["ci.yml"]
     assert "secrets." not in contents["ci.yml"]
     validation = contents["validation.yml"]
+    assert "python -m pip install --no-deps dist/*.whl" in validation
     assert "workflow_dispatch:" in validation
     assert "schedule:" in validation
     assert "id-token: write" not in validation
@@ -140,7 +144,7 @@ def test_workflows_are_split_pinned_and_least_privilege() -> None:
     assert set(re.findall(r"(?m)^  ([a-z][a-z0-9-]*):$", validation_jobs[1])) == {
         "compatibility"
     }
-    assert 'torch: ["2.7.0", "2.10.0", "2.13.0"]' in validation
+    assert 'torch: ["2.6.0", "2.7.0", "2.10.0", "2.13.0"]' in validation
     assert "scripts/compatibility_check.py" in validation
     assert "python scripts/verify_release_surface.py" in contents["ci.yml"]
     assert "verify_gate" not in "\n".join(contents.values())
